@@ -8,6 +8,10 @@ on:
 jobs:
   checks:
     runs-on: ubuntu-latest
+    env:
+      # GitHub Pages project sites serve at /<repo>/; build and budget check
+      # must agree on the base path. Other hosts: drop this or set to /
+      BASE_PATH: /${{ github.event.repository.name }}/
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -18,9 +22,6 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run build
-        env:
-          # GitHub Pages project sites serve at /<repo>/; other hosts override or drop this
-          BASE_PATH: /${{ github.event.repository.name }}/
       - run: npm run budgets
       - uses: actions/upload-pages-artifact@v3
         if: github.ref == 'refs/heads/main'

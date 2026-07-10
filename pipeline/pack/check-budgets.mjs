@@ -66,10 +66,14 @@ const refs = [
   ...html.matchAll(/<link[^>]+href="([^"]+)"[^>]+rel="(?:stylesheet|modulepreload)"/g),
 ].map((m) => m[1]);
 
+// Refs are URL paths prefixed with vite's `base`. BASE_PATH must match what
+// the build used (CI sets it job-wide); default "/" for local root builds.
+const base = process.env.BASE_PATH ?? "/";
 let initialGz = gz(indexPath);
 for (const ref of new Set(refs)) {
   if (/^(https?:)?\/\//.test(ref)) continue; // external — nothing should be, but don't crash
-  initialGz += gz(join(dist, ref.replace(/^[./]*/, "")));
+  const rel = (ref.startsWith(base) ? ref.slice(base.length) : ref).replace(/^[./]*/, "");
+  initialGz += gz(join(dist, rel));
 }
 report(
   initialGz <= budgets.initial_route_gz_bytes,
