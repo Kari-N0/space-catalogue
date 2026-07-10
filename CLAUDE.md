@@ -2,7 +2,7 @@
 
 Visual-first web catalogue of space/future engineering concepts: Babylon.js + Gaussian splats (SOG) + PBR meshes, produced by a local RTX 4090 pipeline (WSL2 + Windows Blender). **PLAN.md** = full plan & budgets. **SETUP.md** = environment bootstrap doc. **setup-log.md** = what is actually installed, all versions, VERIFY results, and every deviation — read it before assuming anything about this machine. **ADDON.md** = spec for the "Catalogue Tools" Blender add-on (milestone M2.5, runs after the M3 vertical slice).
 
-Stack (per PLAN.md): Vite + TypeScript + Babylon.js (v9, WebGPU→WebGL2 fallback), static site, content-driven from `content/concepts/*.json`. **The web app does not exist yet — next milestone is M0 (scaffold).**
+Stack (per PLAN.md): Vite + TypeScript + Babylon.js (v9, WebGPU→WebGL2 fallback), static site, content-driven from `content/concepts/*.json`. Web app lives in `apps/web` (npm workspace from repo root; **no Babylon on the landing route** — engine lazy-loads on first 3D interaction). **Next milestone: M1 (viewer core).**
 
 ## Machine & environments (all verified 2026-07-09/10)
 
@@ -19,6 +19,7 @@ Stack (per PLAN.md): Vite + TypeScript + Babylon.js (v9, WebGPU→WebGL2 fallbac
 
 ## Commands
 
+- Web app (repo root, needs `. ~/.nvm/nvm.sh` in non-interactive shells): `npm run dev` / `build` / `lint` / `typecheck` / `budgets` (budget checker: `pipeline/pack/check-budgets.mjs`, limits in `budgets.json` — CI-enforced, never raise a budget to pass)
 - ComfyUI server: `scripts/comfy-server.sh` → txt2img: `scripts/comfy_txt2img.py "<prompt>" --template scripts/comfy-templates/{qwen2512,flux2_klein}.json` (qwen: `--steps 50 --cfg 4.0 --width 1328 --height 1328`; klein: `--steps 4 --cfg 1.0`)
 - Windows Cycles render from WSL (full OptiX): `pipeline/blender/blender-win.sh -b --python <script>` (converts absolute path args via wslpath)
 - Dataset D:→ext4: `pipeline/blender/sync-dataset.sh <scene>` (training I/O must be on ext4, never /mnt/*)
@@ -41,9 +42,9 @@ Stack (per PLAN.md): Vite + TypeScript + Babylon.js (v9, WebGPU→WebGL2 fallbac
 - Babylon splat rendering: set `material.compensation = true` (defaults false; without it splats look soft), `kernelSize` 0.3. SOG SH quantization can show as color mottling in Babylon: for diffuse scenes strip SH (`splat-transform -H 0`, huge size win); for hero scenes export cleaned **PLY** from SuperSplat and encode locally with `splat-transform -i 50`.
 - Full chain timing (toy scene): render 120 views 3 min → train 10k iters 105 s (PSNR 38.5) → SOG 3.6 MB (0.8 MB without SH).
 
-## Where we left off (2026-07-10)
+## Where we left off (2026-07-10, evening)
 
-1. Rehearsal complete through all joints; only open cosmetic question: user's verdict on `rehearsal-sh0.sog` / high-`-i` SOG variants (files in `pipeline/rehearsal/web/`).
-2. **Next: PLAN.md M0** — repo scaffold (git init!), Vite+TS app, CI (lint/typecheck/budget-check), static deploy. Note: this directory is not yet a git repo.
-3. Then M1 (viewer core) using rehearsal learnings; M2 scripts incl. `export_dataset.py`. **All M2 pipeline scripts must be importable functions with a thin argparse main (not just CLIs)** — the M2.5 Blender add-on (ADDON.md) calls them in-process; bpy-side scripts must stay ML-free so Blender never imports the ML stack.
+1. **M0 scaffolded and committed locally** (initial commit on `main`): Vite+TS app in `apps/web`, budget checker verified both pass and fail paths, CI workflow with GitHub Pages deploy ready. **Open: no remote yet** — M0's "deploys automatically" done-criterion needs Kari's call on repo host/name/visibility (workflow assumes GitHub Pages; `BASE_PATH` handles the sub-path).
+2. Rehearsal cosmetic question still open: user's verdict on `rehearsal-sh0.sog` / high-`-i` SOG variants (files in `pipeline/rehearsal/web/`, gitignored).
+3. **Next: PLAN.md M1** (viewer core) using rehearsal learnings; then M2 scripts incl. `export_dataset.py`. **All M2 pipeline scripts must be importable functions with a thin argparse main (not just CLIs)** — the M2.5 Blender add-on (ADDON.md) calls them in-process; bpy-side scripts must stay ML-free so Blender never imports the ML stack.
 4. Background: TRELLIS.2 activation when DINOv3 arrives (see setup-log.md Phase 5 for the exact procedure).
