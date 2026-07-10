@@ -44,7 +44,7 @@ Stack (per PLAN.md): Vite + TypeScript + Babylon.js (v9, WebGPU→WebGL2 fallbac
 
 ## Where we left off (2026-07-10, evening)
 
-1. **M0 scaffolded and committed locally** (initial commit on `main`): Vite+TS app in `apps/web`, budget checker verified both pass and fail paths, CI workflow with GitHub Pages deploy ready. **Open: no remote yet** — M0's "deploys automatically" done-criterion needs Kari's call on repo host/name/visibility (workflow assumes GitHub Pages; `BASE_PATH` handles the sub-path).
+1. **M0 COMPLETE.** Public repo **https://github.com/Kari-N0/space-catalogue** (gh CLI authed as Kari-N0, credential helper wired), CI (lint/typecheck/build/budgets) + GitHub Pages deploy verified live: **https://kari-n0.github.io/space-catalogue/**. Push to `main` = deploy. CI builds with job-wide `BASE_PATH=/space-catalogue/` (Pages sub-path) — build and budget checker must share it; details in setup-log.md "M0" entry.
 2. Rehearsal cosmetic question still open: user's verdict on `rehearsal-sh0.sog` / high-`-i` SOG variants (files in `pipeline/rehearsal/web/`, gitignored).
 3. **Next: PLAN.md M1** (viewer core) using rehearsal learnings; then M2 scripts incl. `export_dataset.py`. **All M2 pipeline scripts must be importable functions with a thin argparse main (not just CLIs)** — the M2.5 Blender add-on (ADDON.md) calls them in-process; bpy-side scripts must stay ML-free so Blender never imports the ML stack.
 4. Background: TRELLIS.2 activation when DINOv3 arrives (see setup-log.md Phase 5 for the exact procedure).

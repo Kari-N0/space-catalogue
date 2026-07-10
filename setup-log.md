@@ -283,3 +283,19 @@ Symptom: SOG (and to a lesser degree PLY) looked softer in Babylon than in Super
 3. Viewer (`pipeline/rehearsal/web/viewer.html`) now has URL toggles: `f=` file, `comp=0`, `kernel=`, `sogtex=1`; HUD reports engine/kernel/comp/shDegree. Serve with `cd pipeline/rehearsal/web && python3 -m http.server 8321`.
 
 **Session end 2026-07-10:** rehearsal validated through all joints (dataset → train → clean → SOG → web); remaining cosmetic item is the user's verdict on the sh0/high-iteration SOG variants. Continuation notes in CLAUDE.md.
+
+---
+
+## M0 — repo, CI, GitHub Pages deploy — 2026-07-10
+
+**Repo:** `git init -b main` in `~/dev/space-catalogue`; repo-local identity Kari Nöjd <kari.nojd@vidro.fi> (no global git identity on this machine). Heavy dirs gitignored: `assets_src/`, `jobs/`, rehearsal `*.ply`/`*.sog`, `.claude/settings.local.json`.
+
+**Web app:** `apps/web` — Vite 7 + TypeScript 5.8 (strict) + ESLint 9 flat config, npm workspace from repo root (root scripts: `dev/build/lint/typecheck/budgets`; non-interactive shells need `. ~/.nvm/nvm.sh`). Node v24.18.0 / npm 11.16.0. No Babylon on the landing route (lazy-loads in M1, PLAN.md §3). esbuild postinstall needed `npm approve-scripts esbuild` (allow-scripts guard).
+
+**Budget checker:** `pipeline/pack/check-budgets.mjs` + `budgets.json` (PLAN.md §6 values; gz initial route, engine chunk by `/babylon/i` name, `.sog`/`.glb` tiered by `-m`/`-d` suffix, untiered ⇒ mobile budget). Fail path VERIFIED locally: 5 MB fake GLB passes as `-d`, fails as `-m` with exit 1.
+
+**GitHub:** gh CLI 2.45.0 (Ubuntu apt, `noble-updates`). Device-flow auth as **Kari-N0**; default scopes lacked `workflow` (push containing `.github/workflows/` was rejected) → `gh auth refresh -s workflow` second device-flow round. `gh auth setup-git` wires the credential helper. Public repo: **https://github.com/Kari-N0/space-catalogue**. Pages enabled via API (`gh api -X POST repos/…/pages -f build_type=workflow`) — no UI clicks needed.
+
+**CI (`.github/workflows/ci.yml`):** lint → typecheck → build → budgets on push/PR; Pages deploy from `main`. First run FAILED — real bug: build uses job-wide `BASE_PATH=/space-catalogue/` (Pages project-site sub-path), checker joined the `/space-catalogue/assets/…` URL refs onto `dist/` verbatim (ENOENT). Fixed: checker strips the `BASE_PATH` prefix (build and checker share the job-wide env); verified locally under both base-path and root builds. Second run: **success**, checks 26 s + deploy.
+
+**VERIFY (live):** https://kari-n0.github.io/space-catalogue/ → 200, correct title, JS (825 B) and CSS (661 B) both 200. Initial route 1.3 KB gz of 200 KB budget. **M0 done-criterion met: push to main → automatic deploy.**
