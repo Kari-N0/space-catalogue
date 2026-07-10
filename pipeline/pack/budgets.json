@@ -1,0 +1,11 @@
+{
+  "comment": "Asset budgets from PLAN.md §6. CI-enforced by check-budgets.mjs — never raise a value to make a build pass (CLAUDE.md hard rule).",
+  "initial_route_gz_bytes": 204800,
+  "engine_chunk_gz_bytes": 1153434,
+  "assets": {
+    "sog_mobile_bytes": 15728640,
+    "sog_desktop_bytes": 41943040,
+    "glb_mobile_bytes": 4194304,
+    "glb_desktop_bytes": 10485760
+  }
+}

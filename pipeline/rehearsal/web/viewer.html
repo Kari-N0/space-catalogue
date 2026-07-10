@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Rehearsal SOG viewer</title>
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#111}
+  #c{width:100%;height:100%;touch-action:none;display:block}
+  #hud{position:fixed;left:12px;top:10px;color:#ddd;font:13px/1.4 system-ui,sans-serif;
+       background:rgba(0,0,0,.55);padding:6px 10px;border-radius:6px;pointer-events:none}
+</style>
+<script src="https://cdn.babylonjs.com/babylon.js"></script>
+<script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="hud">loading…</div>
+<script>
+(async () => {
+  const canvas = document.getElementById("c");
+  const hud = document.getElementById("hud");
+
+  // Experiment toggles (URL params):
+  //   f=<file>      file to load (default rehearsal.sog; rehearsal-ab.ply = same splats, uncompressed)
+  //   comp=0        disable dilation opacity compensation (default ON — PlayCanvas/SuperSplat-like)
+  //   kernel=<v>    splat point-spread kernel (default 0.3 = classic 3DGS)
+  //   sogtex=1      SOG: GPU-texture dequantize path instead of CPU decode
+  const p = new URLSearchParams(location.search);
+  const file = p.get("f") || "rehearsal.sog";
+  const kernel = parseFloat(p.get("kernel") ?? "0.3");
+  const comp = p.get("comp") !== "0";
+  const sogtex = p.get("sogtex") === "1";
+
+  let engine, engineName;
+  if (navigator.gpu) {
+    engine = new BABYLON.WebGPUEngine(canvas, { adaptToDeviceRatio: true, antialias: true });
+    await engine.initAsync();
+    engineName = "WebGPU";
+  } else {
+    engine = new BABYLON.Engine(canvas, true, { adaptToDeviceRatio: true });
+    engineName = "WebGL2";
+  }
+
+  const scene = new BABYLON.Scene(engine);
+  scene.clearColor = new BABYLON.Color4(0.07, 0.07, 0.08, 1);
+
+  const cam = new BABYLON.ArcRotateCamera("cam", -Math.PI / 2, 1.1, 8,
+      new BABYLON.Vector3(0, 0.6, 0), scene);
+  cam.attachControl(canvas, true);
+  cam.wheelPrecision = 30;
+  cam.lowerRadiusLimit = 2;
+  cam.upperRadiusLimit = 20;
+  cam.minZ = 0.05;
+  cam.fov = 0.847;
+
+  try {
+    const r = await BABYLON.ImportMeshAsync("./" + file, scene, {
+      pluginOptions: { splat: { useSogTextures: sogtex } },
+    });
+    const splat = r.meshes.find(m => m.getClassName?.() === "GaussianSplattingMesh") || r.meshes[0];
+    const mat = splat && splat.material;
+    if (mat) {
+      mat.kernelSize = kernel;
+      mat.compensation = comp;
+    }
+    hud.textContent = `${file} · ${engineName} · kernel ${kernel} · comp ${comp ? "on" : "off"}`
+      + (file.endsWith(".sog") ? ` · sogtex ${sogtex ? "gpu" : "cpu"}` : "")
+      + ` · shDeg ${splat?.shDegree ?? "?"}`;
+  } catch (e) {
+    hud.textContent = "LOAD ERROR: " + (e.message || e);
+    console.error(e);
+  }
+
+  engine.runRenderLoop(() => scene.render());
+  addEventListener("resize", () => engine.resize());
+})();
+</script>
+</body>
+</html>
