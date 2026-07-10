@@ -21,3 +21,7 @@ pipeline/rehearsal/web/*.splat
 # misc
 *.blend1
 .DS_Store
+
+# python
+__pycache__/
+*.pyc
