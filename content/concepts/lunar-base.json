@@ -1,0 +1,17 @@
+{
+  "id": "lunar-base",
+  "title": "Artemis Lunar Base",
+  "status": "in-development",
+  "era": "Post-Artemis IV buildout, ~2030–2035",
+  "stats": {},
+  "summary": "[stub — in production; scene definition in assets_src/lunar-base/SCENE-BIBLE.md]",
+  "physics_notes": [],
+  "sources": [],
+  "assets": {
+    "poster": null,
+    "hero_sog": { "mobile": null, "desktop": null },
+    "inspect_glb": null,
+    "env": null
+  },
+  "hotspots": []
+}

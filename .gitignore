@@ -6,8 +6,11 @@ dist/
 # runtime job state (ADDON.md §6)
 jobs/
 
-# heavy source assets live outside git (PLAN.md §8) — git-lfs later if needed
-assets_src/
+# heavy source assets live outside git (PLAN.md §8) — git-lfs later if needed;
+# markdown (scene bibles, notes) IS tracked
+assets_src/**
+!assets_src/**/
+!assets_src/**/*.md
 pipeline/rehearsal/web/*.ply
 pipeline/rehearsal/web/*.sog
 pipeline/rehearsal/web/*.splat
