@@ -299,3 +299,9 @@ Symptom: SOG (and to a lesser degree PLY) looked softer in Babylon than in Super
 **CI (`.github/workflows/ci.yml`):** lint → typecheck → build → budgets on push/PR; Pages deploy from `main`. First run FAILED — real bug: build uses job-wide `BASE_PATH=/space-catalogue/` (Pages project-site sub-path), checker joined the `/space-catalogue/assets/…` URL refs onto `dist/` verbatim (ENOENT). Fixed: checker strips the `BASE_PATH` prefix (build and checker share the job-wide env); verified locally under both base-path and root builds. Second run: **success**, checks 26 s + deploy.
 
 **VERIFY (live):** https://kari-n0.github.io/space-catalogue/ → 200, correct title, JS (825 B) and CSS (661 B) both 200. Initial route 1.3 KB gz of 200 KB budget. **M0 done-criterion met: push to main → automatic deploy.**
+
+---
+
+## Phase change — asset creation; M1 on hold — 2026-07-10
+
+Kari's decision after M0 went live: **pause M1 (viewer core)** and enter an **asset-creation phase** — content production ahead of further web/app work. Toolchain for this phase is what's already installed and verified above: ComfyUI (Qwen-Image-2512 / FLUX.2 klein) for references, Blender 5.1.2 + GN for structures, TRELLIS 1 for props (`formats=['mesh','radiance_field']`, never `'gaussian'`), the rehearsal splat chain (blender-win.sh → sync-dataset.sh → gsplat → splat-transform) for scene tests. Sources: `assets_src/` (gitignored) and `D:\renders` staging — never C:. Provenance JSONs are written by hand this phase (M2 tooling doesn't exist yet); license matrix PLAN.md §5 governs as always. M1 resumes on Kari's call; milestone order recorded in CLAUDE.md.

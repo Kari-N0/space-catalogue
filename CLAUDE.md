@@ -2,7 +2,7 @@
 
 Visual-first web catalogue of space/future engineering concepts: Babylon.js + Gaussian splats (SOG) + PBR meshes, produced by a local RTX 4090 pipeline (WSL2 + Windows Blender). **PLAN.md** = full plan & budgets. **SETUP.md** = environment bootstrap doc. **setup-log.md** = what is actually installed, all versions, VERIFY results, and every deviation — read it before assuming anything about this machine. **ADDON.md** = spec for the "Catalogue Tools" Blender add-on (milestone M2.5, runs after the M3 vertical slice).
 
-Stack (per PLAN.md): Vite + TypeScript + Babylon.js (v9, WebGPU→WebGL2 fallback), static site, content-driven from `content/concepts/*.json`. Web app lives in `apps/web` (npm workspace from repo root; **no Babylon on the landing route** — engine lazy-loads on first 3D interaction). **Next milestone: M1 (viewer core).**
+Stack (per PLAN.md): Vite + TypeScript + Babylon.js (v9, WebGPU→WebGL2 fallback), static site, content-driven from `content/concepts/*.json`. Web app lives in `apps/web` (npm workspace from repo root; **no Babylon on the landing route** — engine lazy-loads on first 3D interaction). **Current phase: asset creation (M1 viewer core ON HOLD per Kari, 2026-07-10).**
 
 ## Machine & environments (all verified 2026-07-09/10)
 
@@ -46,5 +46,6 @@ Stack (per PLAN.md): Vite + TypeScript + Babylon.js (v9, WebGPU→WebGL2 fallbac
 
 1. **M0 COMPLETE.** Public repo **https://github.com/Kari-N0/space-catalogue** (gh CLI authed as Kari-N0, credential helper wired), CI (lint/typecheck/build/budgets) + GitHub Pages deploy verified live: **https://kari-n0.github.io/space-catalogue/**. Push to `main` = deploy. CI builds with job-wide `BASE_PATH=/space-catalogue/` (Pages sub-path) — build and budget checker must share it; details in setup-log.md "M0" entry.
 2. Rehearsal cosmetic question still open: user's verdict on `rehearsal-sh0.sog` / high-`-i` SOG variants (files in `pipeline/rehearsal/web/`, gitignored).
-3. **Next: PLAN.md M1** (viewer core) using rehearsal learnings; then M2 scripts incl. `export_dataset.py`. **All M2 pipeline scripts must be importable functions with a thin argparse main (not just CLIs)** — the M2.5 Blender add-on (ADDON.md) calls them in-process; bpy-side scripts must stay ML-free so Blender never imports the ML stack.
-4. Background: TRELLIS.2 activation when DINOv3 arrives (see setup-log.md Phase 5 for the exact procedure).
+3. **Current phase: asset creation** (Kari's call, 2026-07-10) — **M1 (viewer core) is ON HOLD**; resume it when Kari says so. Asset work uses the already-validated tools: ComfyUI reference images, GN modeling in Blender, TRELLIS 1 image→3D (mesh+radiance_field only), rehearsal splat chain for scene tests. Outputs go to `assets_src/` (gitignored) / `D:\renders` staging; every generated asset still needs its provenance JSON (hard rule) even though the M2 provenance tooling isn't built yet — write them by hand.
+4. After the asset phase: M1, then M2 scripts incl. `export_dataset.py`. **All M2 pipeline scripts must be importable functions with a thin argparse main (not just CLIs)** — the M2.5 Blender add-on (ADDON.md) calls them in-process; bpy-side scripts must stay ML-free so Blender never imports the ML stack.
+5. Background: TRELLIS.2 activation when DINOv3 arrives (see setup-log.md Phase 5 for the exact procedure).
