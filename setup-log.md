@@ -305,3 +305,9 @@ Symptom: SOG (and to a lesser degree PLY) looked softer in Babylon than in Super
 ## Phase change — asset creation; M1 on hold — 2026-07-10
 
 Kari's decision after M0 went live: **pause M1 (viewer core)** and enter an **asset-creation phase** — content production ahead of further web/app work. Toolchain for this phase is what's already installed and verified above: ComfyUI (Qwen-Image-2512 / FLUX.2 klein) for references, Blender 5.1.2 + GN for structures, TRELLIS 1 for props (`formats=['mesh','radiance_field']`, never `'gaussian'`), the rehearsal splat chain (blender-win.sh → sync-dataset.sh → gsplat → splat-transform) for scene tests. Sources: `assets_src/` (gitignored) and `D:\renders` staging — never C:. Provenance JSONs are written by hand this phase (M2 tooling doesn't exist yet); license matrix PLAN.md §5 governs as always. M1 resumes on Kari's call; milestone order recorded in CLAUDE.md.
+
+---
+
+## conda env `terrain` — 2026-07-11
+
+py3.12 + rasterio + pyproj + openexr-python + pillow (all conda-forge), backing `pipeline/terrain/` (DEM→EXR displacement, vantage computation, contact sheets). Created for the lunar-base D2 terrain audition. VERIFY: synthetic polar-stereographic GeoTIFF round-trip (sub-mm) 2026-07-10; three real PGDA 5 m/px tiles converted 2026-07-11.

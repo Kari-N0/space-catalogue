@@ -1,0 +1,26 @@
+{
+  "type": "reference",
+  "used_for": "lunar-base D2 terrain audition + production terrain (SCENE-BIBLE.md §6): 5 m/px LOLA DEMs -> dem_to_displacement.py -> 1:1 Blender displacement",
+  "accessed": "2026-07-11",
+  "publisher": "NASA GSFC Planetary Geodynamics Lab (PGDA)",
+  "usage_terms": "US Government work / public domain (NASA PDS policy: free, unrestricted); attribution requested",
+  "citation": "Barker, M.K. et al. (2021), 'Improved LOLA elevation maps for south pole landing sites', Planetary and Space Science 203, doi:10.1016/j.pss.2020.105119",
+  "product_page": "https://pgda.gsfc.nasa.gov/products/78",
+  "entries": [
+    {
+      "source": "https://pgda.gsfc.nasa.gov/data/LOLA_5mpp/Site01/Site01_final_adj_5mpp_surf.tif",
+      "sha256": "3ba7b97cb00a2bcf21189c3aeb535f65afc21207154ab9f0d43c5bdc1f7e747e",
+      "notes": "Connecting Ridge (Mazarico Site 001); 3200x3200 @ 5 m/px, relief 2483 m; local: assets_src/lunar-base/terrain/"
+    },
+    {
+      "source": "https://pgda.gsfc.nasa.gov/data/LOLA_5mpp/Site04/Site04_final_adj_5mpp_surf.tif",
+      "sha256": "38ff70dbdf2f066c2cfa94a646c3a59d653ce7f6b4528b15fc1b43ee397ce758",
+      "notes": "Shackleton rim; 3200x3200 @ 5 m/px, relief 4653 m; local: assets_src/lunar-base/terrain/"
+    },
+    {
+      "source": "https://pgda.gsfc.nasa.gov/data/LOLA_5mpp/Site11/Site11_final_adj_5mpp_surf.tif",
+      "sha256": "58f3372c35bbd6baf38ffd5633c1c96b59bd89dbd252150581d12893a43136e5",
+      "notes": "de Gerlache rim (Rim 2 region); 3200x3200 @ 5 m/px, relief 2621 m; local: assets_src/lunar-base/terrain/"
+    }
+  ]
+}

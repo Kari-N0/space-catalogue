@@ -1,6 +1,6 @@
 # SCENE BIBLE — Artemis Lunar Base
 
-Concept: `lunar-base` · Era: **post-Artemis-IV buildout, ~2030–2035** · Status: **DRAFT for Kari's review — GATE 1**
+Concept: `lunar-base` · Era: **post-Artemis-IV buildout — scene pinned to 2032 (D4)** · Status: **GATE 1 reviewed 2026-07-11 — D2 site audition in progress (checkpoint 2)**
 Research compiled 2026-07-10 from current NASA / ESA / JAXA / contractor sources (per-fact URLs below; full list in `pipeline/provenance/lunar-base/references.json`). Facts marked **[UNCONFIRMED]** are concept-level, render-derived, or analyst figures — never treat them as specs.
 
 ---
@@ -25,7 +25,7 @@ Era anchors (all current, mid-2026):
 | Foundation Surface Habitat | early 2030s | https://ntrs.nasa.gov/citations/20220013669 |
 | ESA Moonlight relay constellation full ops | ~2030 | https://www.esa.int/Applications/Connectivity_and_Secure_Communications/ESA_s_Moonlight_programme_Pioneering_the_path_for_lunar_exploration |
 
-**Implication for set dressing:** LTVs are 4–6 years old (dusty, patched, most-weathered items on site); Lunar Cruiser and the reactor are recent arrivals; FSH is newly commissioned; the landing pad is semi-improved (sintered center, built berm) rather than pristine; Moonlight satellites are overhead (comms dishes track slowly).
+**Implication for set dressing (at the 2032 pin, D4):** LTVs are ~4 years old (dusty, patched, most-weathered items on site); Lunar Cruiser is freshly delivered (clean, NET-2032 anchor); the reactor is in commissioning ~1 km out; **FSH is mid-commissioning — cables still being routed, some MLI covers on** (its NET-2033 delivery anchor is stretched ~1 yr by the pin; logged under the fiction contract's "invent" column and reinforces the construction-site premise); the landing pad is semi-improved (sintered center, built berm) rather than pristine; Moonlight satellites are overhead (comms dishes track slowly).
 
 ## 2. Fiction contract
 
@@ -107,7 +107,7 @@ Artemis III context first: of the original 13 candidate regions (Aug 2022), NASA
 - **Earth:** fixed in azimuth (toward ~0° lunar longitude), "bobbing" with libration **±7.9° lon / ±6.68° lat** (~27-day periods). From Connecting Ridge the mean Earth-center elevation ≈ **−0.4°** — Earth sits *half-set on the horizon* (that's the money composition, and it's physically true). Angular size **1.8–2.0°** (~3.7× the sun). Phase is art direction (D7).
   (https://amt.copernicus.org/articles/16/1527/2023/ · https://www.sciencedirect.com/science/article/pii/S2589004223019302)
 - **Earthshine:** near-full-Earth irradiance at the surface ≈ **0.15 W/m² ≈ 10⁻⁴ of sunlight** (~13 lux vs ~130 klux [derived]) — cool blue-white fill; the reason polar shadows are *not* pitch black. (https://arxiv.org/pdf/1904.00236)
-- **Star policy — OPEN (D3):** physically correct = no stars at daylight exposure. Artistic = faint starfield. **Recommendation: physically-off in hero splat and posters** (it reinforces the documentary realism contract; the fact layer can say why), optional faint stars only in the Earth-composition poster P7.
+- **Star policy — DECIDED (D3, Kari 2026-07-11): stars OFF everywhere** — physically correct at daylight exposure; the fact layer explains why the sky is black. Applies to hero splat, all posters including P7.
 - **Cycles rig:** single Sun light, `angle 0.53°`, energy per irradiance above; world = pure black; no atmosphere/volumetrics; validation: the Mazarico LOLA illumination rasters (§6) give per-pixel ground truth to sanity-check sun azimuth/elevation choices against the real terrain self-shadowing.
 
 ## 6. Terrain & DEM plan
@@ -149,14 +149,14 @@ The central cluster from a shallow arc: FSH + Lunar Cruiser docked at suitport +
 | ID | Decision | Status |
 |---|---|---|
 | D1 | Both landers (HLS + Mk2) appear in the scene | **DECIDED** (Kari, 2026-07-10) |
-| D2 | Site: Shackleton rim / Connecting Ridge / de Gerlache | **OPEN — Kari at gate** (§4; recommendation: **Connecting Ridge Site 001**) |
-| D3 | Star policy (physically-off vs faint artistic) | **OPEN — Kari at gate** |
-| D4 | Era pin within 2030–2035 (drives weathering + what's present) | **OPEN** — proposal: ~2032 |
+| D2 | Site: Shackleton rim / Connecting Ridge / de Gerlache | **OPEN — in audition** (Kari, 2026-07-11): all three sites get identical 1:1 terrain builds + 24-azimuth sun studies; Kari reviews three contact sheets and flies all three .blends before ruling. **Checkpoint 2 = the comparison.** See `terrain/AUDITION.md` |
+| D3 | Star policy | **DECIDED** (Kari, 2026-07-11): **stars OFF everywhere** (physically correct) |
+| D4 | Era pin | **DECIDED** (Kari, 2026-07-11): **2032** — note FSH's NET-2033 anchor stretches ~1 yr; depicted mid-commissioning (fiction contract "invent" column) |
 | D5 | FSP design basis (Lockheed concept vs generic 100 kW) — award unannounced | **OPEN** — re-verify news before FSP modeling |
-| D6 | Foreground LTV: Pegasus, CLV-1, or both | **OPEN** — proposal: both (they're both under contract) |
+| D6 | Foreground LTV | **DECIDED** (Claude, per Kari's delegation, 2026-07-11): **both** — both under contract for 2028 delivery so both era-consistent by 2032; Pegasus = crewed hero foreground (open cockpit, Apollo cues), CLV-1 = robotic workhorse parked at the ISRU vignette (arm + pallet) |
 | D7 | Earth phase + azimuth composition | **OPEN** — art direction during look-dev |
-| D8 | Which lander sits on the improved pad | **OPEN** — proposal: Mk2 on pad (HLS predates the pad, landed off-pad — also explains the ejecta streaks) |
-| D9 | Class B inspect model = FSH | **OPEN — proposal** |
+| D8 | Lander placement | **DECIDED** (Kari, 2026-07-11): **Mk2 on the improved pad; Starship HLS distant, off-pad** (HLS predates the pad — explains the ejecta streaks) |
+| D9 | Class B inspect model | **DECIDED** (Kari, 2026-07-11): **FSH** |
 
 ## 9. Production notes
 

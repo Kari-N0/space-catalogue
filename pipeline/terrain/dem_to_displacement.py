@@ -92,6 +92,7 @@ def dem_to_displacement(dem_path: str, out_dir: str, stem: str | None = None) ->
         transform = src.transform
         crs = src.crs
         nodata = src.nodata
+        bounds = src.bounds  # projected meters; row 0 = bounds.top
 
         # meters/pixel from the affine transform; geographic (degrees) CRS is
         # converted at the Moon's mean radius but flagged — polar work should
@@ -138,6 +139,11 @@ def dem_to_displacement(dem_path: str, out_dir: str, stem: str | None = None) ->
             else "from projected CRS (meters)"
         ),
         "crs": str(crs) if crs else "[UNCONFIRMED] no CRS in file",
+        "projected_bounds_m": {
+            "left": bounds.left, "bottom": bounds.bottom,
+            "right": bounds.right, "top": bounds.top,
+            "note": "pixel (0,0) is the (left, top) corner; Blender plane center = bounds center",
+        },
         "elevation_min_m": emin,
         "elevation_max_m": emax,
         "elevation_range_m": emax - emin,

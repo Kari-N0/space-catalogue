@@ -13,6 +13,7 @@ Stack (per PLAN.md): Vite + TypeScript + Babylon.js (v9, WebGPU→WebGL2 fallbac
   - `trellis1` — py3.10, torch 2.4.0+cu124. **Active image→3D generator** (TRELLIS 1, `~/apps/TRELLIS`).
   - `trellis2` — py3.10, torch 2.6.0+cu124. **DORMANT** (TRELLIS.2, `~/apps/TRELLIS.2` + 16 GB weights cached) — blocked on gated DINOv3 encoder (Meta rejected HF request; Meta-direct download pending). On grant: convert checkpoint to HF format, run `pipeline/checks/check_trellis2.py`, record DINOv3 license in provenance.
   - `py312` — utility interpreter that backs ComfyUI's venv. Don't delete.
+  - `terrain` — py3.12, rasterio + pyproj + openexr-python + pillow. DEM→displacement tooling (`pipeline/terrain/`).
 - ComfyUI `~/apps/ComfyUI` (own `.venv`, torch 2.13+cu130) with **Qwen-Image-2512** (fp8) and **FLUX.2 klein 4B** (+ 4-step Lightning LoRA for Qwen).
 - Node LTS via nvm (non-interactive shells must `. ~/.nvm/nvm.sh` first): gltfpack, @playcanvas/splat-transform.
 - Windows Blender **5.1.2** with Splats extension + Blender MCP addon (port 9876; `.mcp.json` configures the `blender` MCP server — Blender must be running with the addon connected).
