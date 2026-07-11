@@ -11,9 +11,9 @@ before any row reads `approved`.
 
 | # | Asset | Bible row | Status | Files | Notes |
 |---|---|---|---|---|---|
-| 001 | GN kit (truss, panel array, MLI wrap, scaffold, regolith berm, disturbance scatter) | §4.2 kit | **draft v003 — art pass round 3** | `assets/gn_kit/gn_kit_v003.blend` | v001 feedback applied: truss braces on all 4 faces + chord-connected; berm = cosine-bell pile, tapered closed ends (`End Taper`), `Ground` shrinkwrap; scatter = rock-collection instancing (`Rocks`/`Scale Min/Max`/`Yaw`/`Tilt Random`) + `gn_kit_rocks` demo set. v003: End Taper fixed — Blender 5.x Curve-to-Mesh takes an explicit Scale input, radius attribute is ignored. Validator 8/8; turnarounds `D:\renders\lunar-base\assets\gn_kit_v003\` |
+| 001 | GN kit (truss, panel array, MLI wrap, scaffold, regolith berm, disturbance scatter) | §4.2 kit | **APPROVED** (Kari, 2026-07-13; v003) | `assets/gn_kit/gn_kit_v003.blend` | LOD policy N/A (generator library — LODs come per consuming asset). | v001 feedback applied: truss braces on all 4 faces + chord-connected; berm = cosine-bell pile, tapered closed ends (`End Taper`), `Ground` shrinkwrap; scatter = rock-collection instancing (`Rocks`/`Scale Min/Max`/`Yaw`/`Tilt Random`) + `gn_kit_rocks` demo set. v003: End Taper fixed — Blender 5.x Curve-to-Mesh takes an explicit Scale input, radius attribute is ignored. Validator 8/8; turnarounds `D:\renders\lunar-base\assets\gn_kit_v003\` |
 | 001b | Landing pad + berm (on real terrain @ approved location) | 11 | **draft v002 — art pass round 2** | `assets/pad/pad_v002.blend` | berm wired to patch via `Ground`; scatter uses rock set; spec bumped to 69 m outer / ground tol 1.5 m (terrain-following berm). Validator 8/8; turnarounds `D:\renders\lunar-base\assets\pad_v002\` |
-| 002 | Blue Moon Mk2 | 3 | queued | — | **brief first** from `ref/` NASA PDFs; re-fetch blueorigin.com numbers (bible §9) |
+| 002 | Blue Moon Mk2 | 3 | **brief — at gate** | `assets/mk2/BRIEF.md` | blueorigin.com re-fetch still blocked (429 + archive unreachable) — NASA-sourced dims stand; browser check optional |
 | 003 | Foundation Surface Habitat | 1 | queued | — | inspect-model grade (D9 — Class B centerpiece) |
 | 004 | Starship HLS | 2 | queued | — | mid detail (distant per D8) |
 | 005 | Lunar Cruiser | 6 | queued | — | |
