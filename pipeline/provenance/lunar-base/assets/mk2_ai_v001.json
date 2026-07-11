@@ -1,0 +1,15 @@
+{
+  "type": "generated",
+  "asset": "/home/karin/dev/space-catalogue/assets_src/lunar-base/assets/mk2/ai/mk2_ai.glb",
+  "tool": "TRELLIS 1 (microsoft/TRELLIS-image-large)",
+  "model_version": "TRELLIS-image-large, trellis1 env (torch 2.4.0+cu124)",
+  "prompt_or_input": "NASA_2_HLS_(cropped)_Blue_Moon_MK2.webp.png (sha256 184ce9b02778cf58930396861c21019df0b4f4652a73d2b8bbe9a92f8d87ef32)",
+  "seed": 7,
+  "formats": [
+    "mesh",
+    "radiance_field"
+  ],
+  "date": "2026-07-11",
+  "license_at_generation": "TRELLIS 1 MIT; rembg/u2net MIT; INPUT IMAGE LICENSE GOVERNS THE OUTPUT \u2014 shipping NOT CLEARED until Kari rules on the input's terms",
+  "notes": "simplify 0.95, texture 1024px; radiance-field bake (diffoctreerast)"
+}
