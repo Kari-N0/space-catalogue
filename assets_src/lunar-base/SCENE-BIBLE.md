@@ -1,6 +1,6 @@
 # SCENE BIBLE — Artemis Lunar Base
 
-Concept: `lunar-base` · Era: **post-Artemis-IV buildout — scene pinned to 2032 (D4)** · Status: **GATE 1 reviewed 2026-07-11 — D2 site audition in progress (checkpoint 2)**
+Concept: `lunar-base` · Era: **post-Artemis-IV buildout — scene pinned to 2032 (D4)** · Site: **de Gerlache Rim 2 (D2)** · Status: **all gate decisions in except D5/D7 — pre-production**
 Research compiled 2026-07-10 from current NASA / ESA / JAXA / contractor sources (per-fact URLs below; full list in `pipeline/provenance/lunar-base/references.json`). Facts marked **[UNCONFIRMED]** are concept-level, render-derived, or analyst figures — never treat them as specs.
 
 ---
@@ -77,7 +77,9 @@ Dimensions in meters. **Bold** = official/published; [UNCONFIRMED] = concept/ren
 10. **Comms** — gold-MLI boxes, patch/whip antennas, one slowly-tracking Ka dish per major element; **no blinking LEDs** (not a thing on vacuum hardware) — detail via radiator paint and connector panels.
 11. **Pad** — dark vitrified bluish center ring → lighter compacted apron → berm with corridor gap; scorch fan + radial ejecta streaks; nav reflector posts.
 
-## 4. Site comparison — **DECISION D2 FOR KARI**
+## 4. Site comparison — **D2 DECIDED (Kari, 2026-07-11): de Gerlache Rim 2 (site11)**
+
+Chosen after the three-site terrain audition (`terrain/AUDITION.md`, checkpoint 2): broadest buildable ground of the three, lit through most of the azimuth circle, and the only candidate inside a current official Artemis III landing region. Production terrain = PGDA Site11 5 m/px tile + 10 m/px context skirt (§6). The audition vantage was an illumination proxy — the actual base position within the tile is chosen at layout blockout. Comparison table kept below for the fact layer / sources page.
 
 Artemis III context first: of the original 13 candidate regions (Aug 2022), NASA's Oct 2024 down-select to nine **dropped all Shackleton-adjacent regions** (Peak Near Shackleton, Connecting Ridge, Connecting Ridge Extension, de Gerlache Rim 1) but **kept de Gerlache Rim 2**. NASA's LPSC 2026 abstract stresses the drop reflects Artemis-III-specific constraints (slope variability in the ellipse, DTE comms, illumination robustness) and "does not imply that removed regions are unsuitable for future exploration" — and JSC scientists have separately called the Shackleton–de Gerlache ridge "a strong candidate for the location of a lunar field station." A *base* on Connecting Ridge is therefore fully defensible; de Gerlache Rim 2 is the strict-Artemis-III-fidelity pick.
 (Sources: https://www.nasa.gov/news-release/nasa-provides-update-on-artemis-iii-moon-landing-regions/ · https://www.hou.usra.edu/meetings/lpsc2026/pdf/1901.pdf · https://www.hou.usra.edu/meetings/lunarsurface2020/pdf/5082.pdf)
@@ -149,7 +151,7 @@ The central cluster from a shallow arc: FSH + Lunar Cruiser docked at suitport +
 | ID | Decision | Status |
 |---|---|---|
 | D1 | Both landers (HLS + Mk2) appear in the scene | **DECIDED** (Kari, 2026-07-10) |
-| D2 | Site: Shackleton rim / Connecting Ridge / de Gerlache | **OPEN — in audition** (Kari, 2026-07-11): all three sites get identical 1:1 terrain builds + 24-azimuth sun studies; Kari reviews three contact sheets and flies all three .blends before ruling. **Checkpoint 2 = the comparison.** See `terrain/AUDITION.md` |
+| D2 | Site | **DECIDED** (Kari, 2026-07-11, after 3-site terrain audition — checkpoint 2): **de Gerlache Rim 2 (site11)**. Base position within the tile chosen at layout blockout; audition vantage was an illumination proxy |
 | D3 | Star policy | **DECIDED** (Kari, 2026-07-11): **stars OFF everywhere** (physically correct) |
 | D4 | Era pin | **DECIDED** (Kari, 2026-07-11): **2032** — note FSH's NET-2033 anchor stretches ~1 yr; depicted mid-commissioning (fiction contract "invent" column) |
 | D5 | FSP design basis (Lockheed concept vs generic 100 kW) — award unannounced | **OPEN** — re-verify news before FSP modeling |

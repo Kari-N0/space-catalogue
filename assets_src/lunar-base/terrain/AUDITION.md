@@ -1,5 +1,9 @@
 # D2 Terrain Audition — three candidate sites, identical methodology
 
+> **OUTCOME (checkpoint 2, Kari 2026-07-11): D2 = site11 — de Gerlache Rim 2.**
+> site01/site04 assets stay on disk as comparison record; production continues
+> on Site11 only. This document is the audition record.
+
 Purpose: Kari rules on **D2 (base site)** at **checkpoint 2** by comparing three
 contact sheets and flying three .blends. Everything except the terrain data and
 the vantage is identical by construction (same scripts, same parameters).
