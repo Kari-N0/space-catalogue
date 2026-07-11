@@ -21,6 +21,11 @@
       "source": "https://pgda.gsfc.nasa.gov/data/LOLA_5mpp/Site11/Site11_final_adj_5mpp_surf.tif",
       "sha256": "58f3372c35bbd6baf38ffd5633c1c96b59bd89dbd252150581d12893a43136e5",
       "notes": "de Gerlache rim (Rim 2 region); 3200x3200 @ 5 m/px, relief 2621 m; local: assets_src/lunar-base/terrain/"
+    },
+    {
+      "source": "https://pgda.gsfc.nasa.gov/data/LOLA_5mpp/Site11/Site11_final_adj_5mpp_slp.tif",
+      "sha256": "c7f3eca389cf323e276955ed8e77b3eb870c576f4adf6b481014a1de6a403e23",
+      "notes": "Site11 slope companion (deg); used by select_base_site.py for the layout blockout; local: assets_src/lunar-base/terrain/"
     }
   ]
 }

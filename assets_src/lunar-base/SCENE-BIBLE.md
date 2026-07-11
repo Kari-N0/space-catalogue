@@ -133,7 +133,7 @@ Terrain outputs land in `assets_src/lunar-base/terrain/`; every DEM download get
 ## 7. Shot list — DRAFT (both landers per Kari's decision)
 
 **Class A hero splat (one bounded vista, ~200–400 m playable envelope):**
-The central cluster from a shallow arc: FSH + Lunar Cruiser docked at suitport + one LTV in foreground; VSAT masts catching sun mid-ground; **Blue Moon Mk2 on the pad ~400 m out; Starship HLS further out (~800 m+), off-pad on compacted regolith** — both landers always in frame as the scale backdrop. Camera envelope hugs the cluster (splat quality lives here); landers are set dressing at distance, never approached. Sun azimuth chosen so HLS backlights with a km-long shadow crossing the scene. Envelope authored per ADDON.md §3 once terrain is in.
+The central cluster from a shallow arc: FSH + Lunar Cruiser docked at suitport + LTVs in foreground; VSAT masts catching sun mid-ground; **Blue Moon Mk2 on the pad 1.5 km out; Starship HLS at 2.35 km, off-pad on compacted regolith** (actual layout distances — LAYOUT.md; the draft's 400/800 m didn't survive contact with real slope data). Both landers as the scale backdrop — whether both stay in every frame or enter with the envelope's swing is a gate question (LAYOUT.md composition note). Camera envelope hugs the cluster (splat quality lives here); landers are set dressing at distance, never approached. Sun azimuth chosen so HLS backlights with a km-long shadow crossing the scene (provisional az 135 tile-frame from the blockout sweep; D7). Envelope authored per ADDON.md §3.
 
 **Class C posters/stills (Cycles, same set):**
 - P1 — Wide establishing from a rise: full base, Earth low on horizon, HLS + Mk2 silhouettes.
