@@ -1,0 +1,10 @@
+{
+  "type": "generated",
+  "asset": "assets_src/lunar-base/assets/pad/pad_v003.blend",
+  "tool": "Blender 5.1.2 (Windows, headless) — procedural, no AI models",
+  "generator": "pipeline/blender/build_asset_pad.py @ repo commit 09f17f1",
+  "prompt_or_input": "terrain: PGDA Site11 5 m/px DEM crop at pad location (see terrain-dems.json); pad anatomy per NTRS 2025 landing-pad study (references.json)",
+  "date": "2026-07-12",
+  "license_at_generation": "project-original; terrain data US Gov public domain (Barker et al. 2021 citation requested)",
+  "notes": "draft v003, validator 8/8; scatter in CTX_pad; asset +Y = corridor toward habitat"
+}

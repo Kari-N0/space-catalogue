@@ -92,7 +92,11 @@ def run_checks(slug: str, specs: dict) -> list:
 
     bad_names = [o.name for o in objs if not o.name.startswith(f"{slug}_")]
     bad_mats = [m.name for o in meshes for m in o.data.materials if m and not m.name.startswith("M_")]
-    bad_gn = [g.name for g in bpy.data.node_groups if g.type == "GEOMETRY" and not g.name.startswith("GN_")]
+    bad_gn = [
+        g.name for g in bpy.data.node_groups
+        if g.type == "GEOMETRY" and not g.name.startswith("GN_")
+        and not g.name.startswith(".") and g.name != "Smooth by Angle"  # Blender-internal essentials
+    ]
     ok("A006", not (bad_names or bad_mats or bad_gn),
        f"naming (objs {bad_names or 'ok'}, mats {bad_mats or 'ok'}, GN {bad_gn or 'ok'})")
 

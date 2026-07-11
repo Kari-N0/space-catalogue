@@ -1,0 +1,10 @@
+{
+  "type": "generated",
+  "asset": "assets_src/lunar-base/assets/mk2/mk2_v001.blend",
+  "tool": "Blender 5.1.2 (Windows, headless) — procedural, no AI models",
+  "generator": "pipeline/blender/build_asset_mk2.py @ repo commit 09f17f1",
+  "prompt_or_input": "assets/mk2/BRIEF.md (gate-approved 2026-07-13): 16.0 m NASA datum; official renders in ref/nasa-hls-one-pager-2025.pdf + IAC PDF; body dia 6.4 m and leg span [UNCONFIRMED render-derived]",
+  "date": "2026-07-13",
+  "license_at_generation": "project-original work; dimensional facts from NASA public documents",
+  "notes": "draft v001, 106 objects, validator 8/8; emissive windows, no interior (per gate)"
+}
