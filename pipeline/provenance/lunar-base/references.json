@@ -351,6 +351,12 @@
       "publisher": "NASA / Blue Origin",
       "usage_terms": "modeling reference only \u2014 artist's concept courtesy of Blue Origin via NASA; not redistributed",
       "notes": "local: assets_src/lunar-base/ref/blue_moon_mk2_crewed/NASA_2_HLS_(cropped)_Blue_Moon_MK2.webp.png; primary visual basis for mk2_v002 remodel (Kari-supplied, 2026-07-13)"
+    },
+    {
+      "source": "Gemini-generated 6-view Mk2 turnaround sheet (Kari-supplied, derived from the official Blue Origin render)",
+      "publisher": "Google Gemini output (AI-generated)",
+      "usage_terms": "modeling reference only; AI-generated derivative of Blue Origin artist's concept",
+      "notes": "local: assets_src/lunar-base/ref/blue_moon_mk2_crewed/Gemini_Generated_Image_gpl34kgpl34kgpl3.png; used for mk2_v003 detail pass (switchback stair, catwalk, two-tone legs, underside). CONFLICT NOTED: sheet shows 7 engine bells; NASA documentation says 3x BE-7 \u2014 modeled 3 per NASA."
     }
   ]
 }

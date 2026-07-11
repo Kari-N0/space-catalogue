@@ -1,0 +1,10 @@
+{
+  "type": "generated",
+  "asset": "assets_src/lunar-base/assets/mk2/mk2_v003.blend",
+  "tool": "Blender 5.1.2 (Windows, headless) — procedural, no AI models in the build",
+  "generator": "pipeline/blender/build_asset_mk2.py @ repo commit 33a1e7a",
+  "prompt_or_input": "official BO render + Kari's Gemini 6-view sheet (both in references.json); 16.0 m datum; engine count 3x BE-7 per NASA docs over the AI sheet's 7; proportions [UNCONFIRMED render-derived]",
+  "date": "2026-07-12",
+  "license_at_generation": "project-original work; references are BO artist's concept + AI derivative (reference only)",
+  "notes": "v003 detail+materials pass: 224 objects, procedural PBR (paint/MLI-white/MLI-gold/alu/blue/glass), switchback stairs, catwalk, two-tone legs, text objects (BLUE ORIGIN, UNITED STATES); validator 8/8"
+}
