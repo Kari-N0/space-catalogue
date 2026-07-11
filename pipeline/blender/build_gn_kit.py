@@ -238,8 +238,6 @@ def gn_regolith_berm():
     tm2 = add(tr, "ShaderNodeMath", 7, 3, ins={0: t.outputs[0], 1: 2.0}, operation="MULTIPLY")
     a3 = add(tr, "ShaderNodeMath", 7.5, 3, ins={0: 3.0, 1: tm2.outputs[0]}, operation="SUBTRACT")
     smooth_t = add(tr, "ShaderNodeMath", 8, 2.5, ins={0: t2.outputs[0], 1: a3.outputs[0]}, operation="MULTIPLY")
-    rad = add(tr, "GeometryNodeSetCurveRadius", 5, 0,
-              ins={"Curve": res.outputs["Curve"], "Radius": smooth_t.outputs[0]})
     # cosine-bell profile: zero slope at BOTH ground contacts and at the crest
     # (angle-of-repose pile, not a half-ellipse); profile local +Y maps DOWN in
     # the sweep -> negate, FlipFaces later restores winding
@@ -257,8 +255,11 @@ def gn_regolith_berm():
     pset = add(tr, "GeometryNodeSetPosition", 7.5, 4,
                ins={"Geometry": pline.outputs["Mesh"], "Position": ppos.outputs["Vector"]})
     pcurve = add(tr, "GeometryNodeMeshToCurve", 8, 4, ins={"Mesh": pset.outputs["Geometry"]})
+    # Blender 5.x: Curve to Mesh takes an explicit per-point Scale field (the
+    # radius attribute is NOT used implicitly) — the taper feeds Scale directly
     swept = add(tr, "GeometryNodeCurveToMesh", 6, 0,
-                ins={"Curve": rad.outputs["Curve"], "Profile Curve": pcurve.outputs["Curve"]})
+                ins={"Curve": res.outputs["Curve"], "Profile Curve": pcurve.outputs["Curve"],
+                     "Scale": smooth_t.outputs[0]})
     # noise displacement
     pos = add(tr, "GeometryNodeInputPosition", 6, 2)
     noise = add(tr, "ShaderNodeTexNoise", 7, 2, noise_dimensions="4D",

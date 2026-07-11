@@ -1,0 +1,10 @@
+{
+  "type": "generated",
+  "asset": "assets_src/lunar-base/assets/gn_kit/gn_kit_v003.blend",
+  "tool": "Blender 5.1.2 (Windows, headless) — procedural, no AI models",
+  "generator": "pipeline/blender/build_gn_kit.py @ repo commit 7535e4e",
+  "prompt_or_input": "none (parametric node groups)",
+  "date": "2026-07-12",
+  "license_at_generation": "project-original work; Blender GPL is tool-only",
+  "notes": "6 GN generators + demo objects; validator 8/8"
+}
