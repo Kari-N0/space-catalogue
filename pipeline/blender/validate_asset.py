@@ -84,8 +84,9 @@ def run_checks(slug: str, specs: dict) -> list:
         ok("A003", abs(lo.z) <= gtol, f"grounded: min-Z {lo.z:+.2f} m (want 0 +-{gtol})")
         center = (lo + hi) / 2
         max_ext = max(size.x, size.y, 1.0)
-        ok("A004", abs(center.x) <= 0.1 * max_ext and abs(center.y) <= 0.1 * max_ext,
-           f"footprint centered: ({center.x:+.1f}, {center.y:+.1f}) m")
+        ctol = spec.get("center_tol_frac", 0.1)
+        ok("A004", abs(center.x) <= ctol * max_ext and abs(center.y) <= ctol * max_ext,
+           f"footprint centered: ({center.x:+.1f}, {center.y:+.1f}) m (tol {ctol:.0%} of {max_ext:.0f} m)")
 
     unapplied = [o.name for o in meshes if any(abs(s - 1.0) > 1e-4 for s in o.scale)]
     ok("A005", not unapplied, f"applied scale (offenders: {unapplied or 'none'})")

@@ -14,7 +14,7 @@
     "skip_origin_checks": true,
     "note": "generator kit — demo objects on a display row; no canonical dims or origin semantics; structural checks only"
   },
-  "mk2": { "collection": "AST_mk2", "dims_m": [7.7, 7.7, 16.0], "tolerance_frac": 0.15, "note": "16.0 m datum (gate-approved). XY = AXIS-ALIGNED bbox with legs on diagonals (tip-to-tip span 10.1 m [UNCONFIRMED render-derived]); body 6.4 m within the 7 m New Glenn fairing" },
+  "mk2": { "collection": "AST_mk2", "dims_m": [8.6, 11.3, 16.0], "tolerance_frac": 0.15, "center_tol_frac": 0.15, "note": "16.0 m datum (gate-approved), v002 remodel to the official render. XY = axis-aligned bbox: diagonal legs (stance 5.3 m radius) + stair gantry deployed on +Y (hence the asymmetry and loose centering); body 6.4 m within the 7 m fairing. All proportions [UNCONFIRMED render-derived]" },
   "fsh": { "collection": "AST_fsh", "dims_m": [6.5, 6.5, 10.0], "tolerance_frac": 0.25, "note": "concept-level dims, [UNCONFIRMED] in bible" },
   "hls": { "collection": "AST_hls", "dims_m": [9.0, 9.0, 52.0], "tolerance_frac": 0.1 },
   "lunar_cruiser": { "collection": "AST_lunar_cruiser", "dims_m": [6.0, 5.2, 3.8], "tolerance_frac": 0.1 }
