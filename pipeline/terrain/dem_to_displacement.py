@@ -79,10 +79,13 @@ def _sha256(path: str) -> str:
     return h.hexdigest()
 
 
-def dem_to_displacement(dem_path: str, out_dir: str, stem: str | None = None) -> dict:
+def dem_to_displacement(dem_path: str, out_dir: str, stem: str | None = None,
+                        crop_center: tuple | None = None, crop_size_m: float | None = None) -> dict:
     """Convert a DEM GeoTIFF to a float32 EXR displacement map + meta.json.
 
-    Returns the meta dict (also written to <stem>.meta.json).
+    crop_center (x, y) is in the tile-local frame (tile-bounds center = origin,
+    +X east, +Y north — same frame as layout/vantage JSONs); crop_size_m is the
+    square window edge. Returns the meta dict (also written to <stem>.meta.json).
     """
     os.makedirs(out_dir, exist_ok=True)
     stem = stem or os.path.splitext(os.path.basename(dem_path))[0]
@@ -93,6 +96,21 @@ def dem_to_displacement(dem_path: str, out_dir: str, stem: str | None = None) ->
         crs = src.crs
         nodata = src.nodata
         bounds = src.bounds  # projected meters; row 0 = bounds.top
+
+    if crop_center is not None:
+        px_ = abs(transform.a)
+        cx_, cy_ = (bounds.left + bounds.right) / 2, (bounds.bottom + bounds.top) / 2
+        col_c = ((crop_center[0] + cx_) - bounds.left) / px_
+        row_c = (bounds.top - (crop_center[1] + cy_)) / px_
+        h_px = crop_size_m / 2 / px_
+        r0, r1 = max(0, int(row_c - h_px)), min(elev.shape[0], int(row_c + h_px))
+        c0, c1 = max(0, int(col_c - h_px)), min(elev.shape[1], int(col_c + h_px))
+        elev = elev[r0:r1, c0:c1]
+        from rasterio.coords import BoundingBox
+        bounds = BoundingBox(
+            left=bounds.left + c0 * px_, right=bounds.left + c1 * px_,
+            top=bounds.top - r0 * px_, bottom=bounds.top - r1 * px_,
+        )
 
         # meters/pixel from the affine transform; geographic (degrees) CRS is
         # converted at the Moon's mean radius but flagged — polar work should
@@ -164,8 +182,12 @@ def main() -> None:
     ap.add_argument("dem", help="input DEM GeoTIFF (Moon Trek / PGDA export)")
     ap.add_argument("--out-dir", default=".", help="output directory (default: cwd)")
     ap.add_argument("--stem", default=None, help="output basename (default: input stem)")
+    ap.add_argument("--crop-center", nargs=2, type=float, default=None,
+                    metavar=("X", "Y"), help="crop window center, tile-local meters")
+    ap.add_argument("--crop-size", type=float, default=None, help="crop window edge, meters")
     args = ap.parse_args()
-    meta = dem_to_displacement(args.dem, args.out_dir, args.stem)
+    meta = dem_to_displacement(args.dem, args.out_dir, args.stem,
+                               crop_center=args.crop_center, crop_size_m=args.crop_size)
     print(json.dumps(meta, indent=2))
 
 

@@ -36,6 +36,11 @@ Stack (per PLAN.md): Vite + TypeScript + Babylon.js (v9, WebGPU→WebGL2 fallbac
 - Every generated asset gets a provenance JSON (tool, model+version, prompt/seed, date, license at generation time) — pipeline/provenance/ (to be built in M2).
 - Asset budgets in PLAN.md §6 are CI-enforced once M0 lands; never raise a budget to pass.
 
+## Art direction boundaries (Kari, 2026-07-12 — absolute)
+
+- **Claude never proposes or decides composition, camera angles, lenses, or shot framing.** Claude supports the camera envelope and shots Kari authors. Utility cameras for neutral review renders (turnarounds, validation views) are fine — they follow fixed documented defaults, never framing judgment.
+- **Claude never modifies a .blend Kari has edited without asking first.** New work goes into new version files (`v002`, `v003`, …); the file Kari touched is theirs.
+
 ## Splat pipeline learnings (from the validated rehearsal, 2026-07-10)
 
 - `pipeline/rehearsal/make_scene.py` is the seed of `pipeline/blender/export_dataset.py` (**M2 priority**): golden-angle hemisphere rig, COLMAP text export, OpenGL→OpenCV pose conversion (the one nontrivial bit — PSNR 38.5 proved it exact), init cloud from mesh vertices. Camera envelope definition must be shared with the web viewer limits.

@@ -1,7 +1,14 @@
-# Base layout blockout — de Gerlache Rim 2 (D2) — GATE: checkpoint 3
+# Base layout blockout — de Gerlache Rim 2 (D2) — checkpoint 3
+
+> **APPROVED as placed (Kari, 2026-07-12).** Pad stays in the 165° sector, FSP
+> stays at its flagged position. Position nudges are Kari's, made directly in
+> the blend — per CLAUDE.md "Art direction boundaries", Claude asks before
+> touching any .blend Kari has edited; new work goes into new version files.
+> The composition question below is **withdrawn**: cameras, lenses and framing
+> are exclusively Kari's domain.
 
 Deliverable 2 after D2: the actual base position inside the Site11 tile plus a
-true-dimension proxy blockout. **Status: awaiting Kari's layout review.**
+true-dimension proxy blockout.
 Method + parameters: `pipeline/terrain/select_base_site.py` (all criteria and
 weights documented in-file); proxies: `pipeline/blender/blockout_lunar_base.py`.
 

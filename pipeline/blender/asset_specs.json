@@ -1,0 +1,20 @@
+{
+  "comment": "Expected bounding boxes (meters, [x, y, z]) per asset collection, from SCENE-BIBLE.md §3. tolerance_frac is per-axis relative slack. Axes may be swapped in-plane (assets can be authored rotated); validator checks sorted XY extents.",
+  "pad": {
+    "collection": "AST_pad",
+    "dims_m": [63.0, 63.0, 3.0],
+    "tolerance_frac": 0.2,
+    "note": "40 m pad + berm ring at 30 m radius (outer ~63 m); height = berm ~2.5 m + noise"
+  },
+  "gn_kit": {
+    "collection": "AST_gn_kit",
+    "dims_m": null,
+    "tolerance_frac": null,
+    "skip_origin_checks": true,
+    "note": "generator kit — demo objects on a display row; no canonical dims or origin semantics; structural checks only"
+  },
+  "mk2": { "collection": "AST_mk2", "dims_m": [7.0, 7.0, 16.0], "tolerance_frac": 0.15 },
+  "fsh": { "collection": "AST_fsh", "dims_m": [6.5, 6.5, 10.0], "tolerance_frac": 0.25, "note": "concept-level dims, [UNCONFIRMED] in bible" },
+  "hls": { "collection": "AST_hls", "dims_m": [9.0, 9.0, 52.0], "tolerance_frac": 0.1 },
+  "lunar_cruiser": { "collection": "AST_lunar_cruiser", "dims_m": [6.0, 5.2, 3.8], "tolerance_frac": 0.1 }
+}
