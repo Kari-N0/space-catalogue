@@ -80,7 +80,8 @@ def run_checks(slug: str, specs: dict) -> list:
         ok("A003", True, "grounding check skipped per spec")
         ok("A004", True, "centering check skipped per spec")
     else:
-        ok("A003", abs(lo.z) <= 0.5, f"grounded: min-Z {lo.z:+.2f} m (want 0 +-0.5)")
+        gtol = spec.get("ground_tol_m", 0.5)
+        ok("A003", abs(lo.z) <= gtol, f"grounded: min-Z {lo.z:+.2f} m (want 0 +-{gtol})")
         center = (lo + hi) / 2
         max_ext = max(size.x, size.y, 1.0)
         ok("A004", abs(center.x) <= 0.1 * max_ext and abs(center.y) <= 0.1 * max_ext,

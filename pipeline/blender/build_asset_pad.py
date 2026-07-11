@@ -73,9 +73,14 @@ def build_pad(patch_exr: str, patch_meta: str, kit_blend: str, out_path: str) ->
     scene = bpy.context.scene
     scene.unit_settings.system = "METRIC"
 
-    # bring in the kit generators
+    # bring in the kit generators + demo rock set (swap rocks per-scene later)
     for group in ("GN_regolith_berm", "GN_surface_disturbance"):
         bpy.ops.wm.append(directory=os.path.join(kit_blend, "NodeTree") + os.sep, filename=group)
+    bpy.ops.wm.append(directory=os.path.join(kit_blend, "Collection") + os.sep, filename="gn_kit_rocks")
+    rocks_coll = bpy.data.collections["gn_kit_rocks"]
+    for rock in rocks_coll.objects:
+        rock.hide_render = True
+        rock.hide_viewport = True
 
     ast = bpy.data.collections.new("AST_pad")
     ctx = bpy.data.collections.new("CTX_pad")
@@ -152,9 +157,10 @@ def build_pad(patch_exr: str, patch_meta: str, kit_blend: str, out_path: str) ->
     berm_mesh.materials.append(m_regolith)  # slot mirrors the GN Set Material (validator A007)
     mod = berm.modifiers.new("berm", "NODES")
     mod.node_group = bpy.data.node_groups["GN_regolith_berm"]
-    mat_id = next(it.identifier for it in mod.node_group.interface.items_tree
-                  if it.item_type == "SOCKET" and it.in_out == "INPUT" and it.name == "Material")
-    mod[mat_id] = m_regolith
+    bids = {it.name: it.identifier for it in mod.node_group.interface.items_tree
+            if it.item_type == "SOCKET" and it.in_out == "INPUT"}
+    mod[bids["Material"]] = m_regolith
+    mod[bids["Ground"]] = patch  # shrinkwrap: berm follows the real terrain
     into(ast, berm)
 
     # ---- disturbance scatter on a patch-shaped host, ring 34..70 m ----
@@ -168,6 +174,7 @@ def build_pad(patch_exr: str, patch_meta: str, kit_blend: str, out_path: str) ->
     smod[ids["Inner Radius"]] = 34.0
     smod[ids["Falloff Radius"]] = 70.0
     smod[ids["Density"]] = 0.15
+    smod[ids["Rocks"]] = rocks_coll
     smod[ids["Material"]] = m_regolith
     # scatter rides natural terrain out to 70 m — site dressing, not the
     # linkable pad: lives in CTX (keeps AST bbox = pad+berm per asset_specs)

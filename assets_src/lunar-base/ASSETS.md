@@ -11,8 +11,8 @@ before any row reads `approved`.
 
 | # | Asset | Bible row | Status | Files | Notes |
 |---|---|---|---|---|---|
-| 001 | GN kit (truss, panel array, MLI wrap, scaffold, regolith berm, disturbance scatter) | §4.2 kit | **draft — art pass pending** | `assets/gn_kit/gn_kit_v001.blend` | validator 8/8; demos in AST_gn_kit; turnarounds in `D:\renders\lunar-base\assets\gn_kit\` |
-| 001b | Landing pad + berm (on real terrain @ approved location) | 11 | **draft — art pass pending** | `assets/pad/pad_v001.blend` | validator 8/8; asset +Y = corridor→habitat; scatter in CTX_pad; turnarounds in `D:\renders\lunar-base\assets\pad\` |
+| 001 | GN kit (truss, panel array, MLI wrap, scaffold, regolith berm, disturbance scatter) | §4.2 kit | **draft v002 — art pass round 2** | `assets/gn_kit/gn_kit_v002.blend` | v001 feedback applied: truss braces on all 4 faces + chord-connected; berm = cosine-bell pile, tapered closed ends (`End Taper`), `Ground` shrinkwrap; scatter = rock-collection instancing (`Rocks`/`Scale Min/Max`/`Yaw`/`Tilt Random`) + `gn_kit_rocks` demo set. Validator 8/8; turnarounds `D:\renders\lunar-base\assets\gn_kit_v002\` |
+| 001b | Landing pad + berm (on real terrain @ approved location) | 11 | **draft v002 — art pass round 2** | `assets/pad/pad_v002.blend` | berm wired to patch via `Ground`; scatter uses rock set; spec bumped to 69 m outer / ground tol 1.5 m (terrain-following berm). Validator 8/8; turnarounds `D:\renders\lunar-base\assets\pad_v002\` |
 | 002 | Blue Moon Mk2 | 3 | queued | — | **brief first** from `ref/` NASA PDFs; re-fetch blueorigin.com numbers (bible §9) |
 | 003 | Foundation Surface Habitat | 1 | queued | — | inspect-model grade (D9 — Class B centerpiece) |
 | 004 | Starship HLS | 2 | queued | — | mid detail (distant per D8) |

@@ -2,9 +2,10 @@
   "comment": "Expected bounding boxes (meters, [x, y, z]) per asset collection, from SCENE-BIBLE.md §3. tolerance_frac is per-axis relative slack. Axes may be swapped in-plane (assets can be authored rotated); validator checks sorted XY extents.",
   "pad": {
     "collection": "AST_pad",
-    "dims_m": [63.0, 63.0, 3.0],
+    "dims_m": [69.0, 69.0, 4.0],
     "tolerance_frac": 0.2,
-    "note": "40 m pad + berm ring at 30 m radius (outer ~63 m); height = berm ~2.5 m + noise"
+    "ground_tol_m": 1.5,
+    "note": "40 m pad + berm at 30 m radius, 9 m cosine-bell base (outer ~69 m); berm shrinkwraps to real terrain so it rides the natural slope — hence the loose ground tolerance"
   },
   "gn_kit": {
     "collection": "AST_gn_kit",
