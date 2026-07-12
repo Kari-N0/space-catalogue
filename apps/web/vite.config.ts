@@ -42,6 +42,10 @@ export default defineConfig({
         main: resolve(__dirname, "index.html"),
         // unlinked M1 dev harness; not referenced from index.html
         devViewer: resolve(__dirname, "dev/viewer.html"),
+        // unlinked structure mockups for Kari's pick (plan Part C)
+        mockupA: resolve(__dirname, "mockups/a.html"),
+        mockupB: resolve(__dirname, "mockups/b.html"),
+        mockupC: resolve(__dirname, "mockups/c.html"),
       },
       output: {
         // Babylon v9 materials pull shaders via per-file dynamic import();

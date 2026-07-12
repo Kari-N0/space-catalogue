@@ -1,0 +1,809 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>Concept 001: Artemis Lunar Base — Mockup C (Section Rhythm)</title>
+  <link rel="stylesheet" href="../src/styles/fonts.css">
+  <link rel="stylesheet" href="../src/styles/tokens.css">
+  <style>
+    /* ================================================================
+       MOCKUP C — "Section rhythm" (vidro.fi sibling)
+       Static structure mockup. No JavaScript, no external requests.
+       All brand values via tokens.css; literals are pure layout only.
+       ================================================================ */
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-body);
+      font-size: var(--text-body);
+      font-weight: var(--weight-body);
+      line-height: var(--leading-body);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img { max-width: 100%; display: block; }
+
+    a {
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      transition: color var(--dur-base) var(--ease-brand);
+    }
+    a:hover { color: var(--color-text-emphasis); }
+
+    .container {
+      max-width: var(--container-max);
+      margin-inline: auto;
+      padding-inline: 20px;
+    }
+    @media (min-width: 768px) {
+      .container { padding-inline: 32px; }
+    }
+
+    /* -- shared label grammar (BRAND §3) ------------------------------ */
+
+    .ref-label {
+      font-family: var(--font-mono);
+      font-size: var(--text-ref);
+      font-weight: var(--weight-medium);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-label);
+      color: var(--color-text-secondary);
+    }
+
+    .kicker {
+      font-family: var(--font-mono);
+      font-size: var(--text-kicker);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-label);
+      color: var(--color-text-secondary);
+    }
+
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: var(--text-ref);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-label);
+      color: var(--chip-blue-text);
+      background: var(--chip-blue-bg);
+      border: 1px solid var(--chip-blue-border);
+      border-radius: var(--radius-chip);
+      padding: 2px 8px;
+    }
+    .status-chip .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: var(--radius-pill);
+      background: var(--chip-blue-text);
+      animation: pulse-dot calc(var(--dur-base) * 6) var(--ease-brand) infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
+    }
+
+    .scrim-chip {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      font-family: var(--font-body);
+      font-size: var(--text-ref);
+      font-weight: var(--weight-medium);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-label);
+      color: var(--color-text);
+      background: var(--scrim-chip-bg);
+      backdrop-filter: blur(var(--scrim-chip-blur));
+      -webkit-backdrop-filter: blur(var(--scrim-chip-blur));
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-chip);
+      padding: 2px 8px;
+    }
+
+    /* -- pills (BRAND §5) --------------------------------------------- */
+
+    .pill-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-body);
+      font-size: var(--text-body);
+      font-weight: var(--weight-medium);
+      color: var(--color-bg);
+      background: var(--color-text-emphasis);
+      border: 1px solid var(--color-text-emphasis);
+      border-radius: var(--radius-pill);
+      padding: 12px 28px;
+      cursor: pointer;
+      transition: opacity var(--dur-base) var(--ease-brand);
+    }
+    .pill-primary:hover { opacity: 0.85; }
+
+    .pill-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-body);
+      font-size: var(--text-kicker);
+      font-weight: var(--weight-medium);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-nav);
+      color: var(--color-text);
+      background: transparent;
+      border: 1px solid var(--hairline-strong);
+      border-radius: var(--radius-pill);
+      padding: 13px 28px;
+      cursor: pointer;
+      transition: border-color var(--dur-base) var(--ease-brand),
+                  color var(--dur-base) var(--ease-brand);
+    }
+    .pill-secondary:hover {
+      border-color: var(--color-text-emphasis);
+      color: var(--color-text-emphasis);
+    }
+
+    /* -- fixed glass nav ------------------------------------------------ */
+
+    .nav {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 10;
+      background: var(--glass-nav-bg);
+      backdrop-filter: blur(var(--glass-nav-blur));
+      -webkit-backdrop-filter: blur(var(--glass-nav-blur));
+      border-bottom: 1px solid var(--hairline-faint);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+    .nav-lockup {
+      font-family: var(--font-body);
+      font-size: var(--text-kicker);
+      font-weight: var(--weight-medium);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-nav);
+      color: var(--color-text);
+    }
+    .nav-lockup span { color: var(--color-text-secondary); }
+
+    .vidro-credit {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-body);
+      font-size: var(--text-ref);
+      font-weight: var(--weight-medium);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-label);
+      color: var(--color-text-secondary);
+      transition: color var(--dur-base) var(--ease-brand);
+    }
+    .vidro-credit:hover { color: var(--color-text); }
+    .vidro-credit img { height: 20px; width: auto; }
+
+    /* -- hero ------------------------------------------------------------ */
+
+    .hero {
+      position: relative;
+      min-height: var(--hero-min-height);
+      height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+    }
+    .hero video,
+    .hero .hero-poster {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+    .hero .hero-poster { display: none; }
+    .hero-scrim {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      /* strong center emphasis: the placeholder frame is bright exactly where
+         the centered title sits — text must win over any hero footage */
+      background:
+        radial-gradient(ellipse 70% 55% at 50% 52%, color-mix(in srgb, var(--color-bg) 72%, transparent), transparent 100%),
+        linear-gradient(
+          to bottom,
+          color-mix(in srgb, var(--color-bg) 70%, transparent),
+          color-mix(in srgb, var(--color-bg) 45%, transparent) 45%,
+          color-mix(in srgb, var(--color-bg) 85%, transparent)
+        );
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      padding-inline: 20px;
+    }
+    .hero-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: var(--text-hero);
+      font-weight: var(--weight-display);
+      line-height: var(--leading-display);
+      letter-spacing: var(--tracking-display);
+      text-transform: uppercase;
+      color: var(--color-text-emphasis);
+    }
+    .hero-title .tone-2 {
+      display: block;
+      color: var(--color-text-secondary);
+    }
+    .hero-lead {
+      font-size: var(--text-lead);
+      font-weight: var(--weight-light);
+      line-height: var(--leading-tight);
+      color: var(--color-text-secondary);
+      max-width: 40ch;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 8px;
+    }
+    .scroll-cue {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .scroll-cue img { width: 22px; height: auto; opacity: 0.6; }
+
+    /* -- sections --------------------------------------------------------- */
+
+    .section {
+      border-top: 1px solid var(--hairline-faint);
+      padding-block: var(--space-section-sm);
+    }
+    @media (min-width: 768px) {
+      .section { padding-block: var(--space-section); }
+    }
+    .section-head { margin-bottom: 40px; }
+
+    /* concept header strip (sits directly under hero) */
+    .concept-header .title-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 12px 20px;
+      margin-top: 12px;
+    }
+    .concept-title {
+      font-family: var(--font-display);
+      font-size: var(--text-title);
+      font-weight: var(--weight-display);
+      letter-spacing: var(--tracking-tight);
+      line-height: var(--leading-tight);
+      color: var(--color-text-emphasis);
+    }
+    .era {
+      font-family: var(--font-mono);
+      font-size: var(--text-kicker);
+      letter-spacing: var(--tracking-label);
+      text-transform: uppercase;
+      color: var(--color-text-secondary);
+      margin-top: 16px;
+    }
+
+    /* overview */
+    .overview-lead {
+      font-size: var(--text-lead);
+      font-weight: var(--weight-light);
+      line-height: var(--leading-body);
+      color: var(--color-text);
+      max-width: 62ch;
+      margin-bottom: 48px;
+    }
+    .notes-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0 48px;
+    }
+    @media (min-width: 1024px) {
+      .notes-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .note-row {
+      display: flex;
+      gap: 16px;
+      align-items: baseline;
+      padding-block: 16px;
+      border-top: 1px solid var(--hairline-faint);
+    }
+    .note-row .idx {
+      font-family: var(--font-mono);
+      font-size: var(--text-ref);
+      letter-spacing: var(--tracking-label);
+      color: var(--color-text-secondary);
+      flex: 0 0 auto;
+    }
+    .note-row p {
+      font-size: var(--text-small);
+      color: var(--color-text);
+    }
+
+    /* specifications */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+      margin-bottom: 16px;
+    }
+    @media (min-width: 768px) {
+      .stats-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    .stat .value {
+      font-family: var(--font-display);
+      font-size: var(--text-display);
+      font-weight: var(--weight-display);
+      letter-spacing: var(--tracking-tight);
+      line-height: var(--leading-display);
+      color: var(--color-text-emphasis);
+    }
+    .stat .label {
+      display: block;
+      margin-top: 10px;
+      font-family: var(--font-mono);
+      font-size: var(--text-ref);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-label);
+      color: var(--color-text-secondary);
+    }
+    .stats-footnote {
+      font-family: var(--font-mono);
+      font-size: var(--text-ref);
+      letter-spacing: var(--tracking-label);
+      color: var(--color-text-secondary);
+      margin-bottom: 56px;
+    }
+    .spec-table { width: 100%; border-collapse: collapse; }
+    .spec-table th,
+    .spec-table td {
+      text-align: left;
+      padding-block: 14px;
+      border-top: 1px solid var(--hairline-faint);
+      vertical-align: baseline;
+    }
+    .spec-table th {
+      font-family: var(--font-mono);
+      font-size: var(--text-ref);
+      font-weight: var(--weight-body);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-label);
+      color: var(--color-text-secondary);
+      width: 40%;
+      padding-right: 24px;
+    }
+    .spec-table td {
+      font-size: var(--text-small);
+      color: var(--color-text);
+    }
+
+    /* visual record */
+    .filmstrip {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    @media (min-width: 768px) {
+      .filmstrip { grid-template-columns: repeat(3, 1fr); }
+    }
+    .frame { position: relative; }
+    .frame img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      border-radius: var(--radius-card);
+      border: 1px solid var(--hairline-card);
+    }
+    .frame figcaption {
+      margin-top: 10px;
+      font-family: var(--font-mono);
+      font-size: var(--text-ref);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-label);
+      color: var(--color-text-secondary);
+    }
+
+    /* sources */
+    .source-row {
+      display: flex;
+      gap: 16px;
+      align-items: baseline;
+      padding-block: 16px;
+      border-top: 1px solid var(--hairline-faint);
+      font-family: var(--font-mono);
+      font-size: var(--text-kicker);
+      letter-spacing: var(--tracking-label);
+      color: var(--color-text-secondary);
+    }
+    .source-row:last-child { border-bottom: 1px solid var(--hairline-faint); }
+    .source-row .idx { color: var(--color-text); flex: 0 0 auto; }
+
+    /* notify band */
+    .notify {
+      text-align: center;
+      background: var(--color-surface);
+      padding-block: var(--space-section-sm);
+    }
+    @media (min-width: 768px) {
+      .notify { padding-block: var(--space-section-lg); }
+    }
+    .notify-title {
+      font-family: var(--font-display);
+      font-size: var(--text-display);
+      font-weight: var(--weight-display);
+      letter-spacing: var(--tracking-display);
+      line-height: var(--leading-display);
+      text-transform: uppercase;
+      color: var(--color-text-emphasis);
+    }
+    .notify-title .tone-2 {
+      display: block;
+      color: var(--color-text-secondary);
+    }
+    .notify .kicker { display: block; margin-bottom: 20px; }
+    .notify-form { margin-top: 40px; }
+    .notify-form fieldset {
+      border: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    .notify-form label {
+      font-family: var(--font-mono);
+      font-size: var(--text-ref);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-label);
+      color: var(--color-text-secondary);
+    }
+    .field-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      max-width: 480px;
+    }
+    .notify-form input[type="email"] {
+      flex: 1 1 240px;
+      font-family: var(--font-body);
+      font-size: var(--text-body);
+      color: var(--color-text);
+      background: var(--color-bg);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-pill);
+      padding: 12px 24px;
+      transition: border-color var(--dur-base) var(--ease-brand);
+    }
+    .notify-form input[type="email"]::placeholder { color: var(--color-text-secondary); }
+    .notify-form input[type="email"]:hover { border-color: var(--hairline-strong); }
+    .notify-note {
+      margin-top: 20px;
+      font-family: var(--font-mono);
+      font-size: var(--text-ref);
+      letter-spacing: var(--tracking-label);
+      text-transform: uppercase;
+      color: var(--color-text-secondary);
+    }
+
+    /* footer */
+    .footer {
+      border-top: 1px solid var(--hairline-faint);
+      padding-block: 48px;
+    }
+    .footer-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    @media (min-width: 768px) {
+      .footer-inner {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      font-family: var(--font-body);
+      font-size: var(--text-kicker);
+      font-weight: var(--weight-medium);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-nav);
+    }
+    .footer-meta {
+      font-family: var(--font-mono);
+      font-size: var(--text-ref);
+      letter-spacing: var(--tracking-label);
+      text-transform: uppercase;
+      color: var(--color-text-secondary);
+    }
+
+    /* -- reduced motion ---------------------------------------------------- */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .hero video { display: none; }
+      .hero .hero-poster { display: block; }
+      .status-chip .dot { animation: none; }
+      * { transition: none !important; }
+    }
+    /* keyboard focus on a near-black page needs an explicit ring */
+    a:focus-visible, button:focus-visible, input:focus-visible {
+      outline: 2px solid var(--hairline-strong);
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ fixed glass nav ============ -->
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="#" class="nav-lockup">Space Engineering <span>Catalogue</span></a>
+      <a href="#" class="vidro-credit">
+        <img src="../assets/placeholders/logo_vidro_placeholder.png" alt="Vidro logo">
+        Visuals by Vidro
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ hero ============ -->
+    <section class="hero" aria-label="Concept hero">
+      <video
+        src="../assets/placeholders/rerender.mp4"
+        poster="../assets/placeholders/moon_site_image_placeholder.webp"
+        autoplay muted loop playsinline
+        aria-hidden="true"></video>
+      <img
+        class="hero-poster"
+        src="../assets/placeholders/moon_site_image_placeholder.webp"
+        alt="Rendered lunar surface site for the Artemis lunar base concept">
+      <div class="hero-scrim" aria-hidden="true"></div>
+
+      <div class="hero-content">
+        <div class="hero-meta">
+          <span class="ref-label">Concept 001</span>
+          <span class="status-chip"><span class="dot" aria-hidden="true"></span>In Development</span>
+        </div>
+        <h1 class="hero-title">Artemis<span class="tone-2">Lunar Base</span></h1>
+        <p class="hero-lead">[sample copy — a permanent foothold at the lunar south pole, visualized]</p>
+        <div class="hero-actions">
+          <button type="button" class="pill-primary">Enter 3D</button>
+          <button type="button" class="pill-secondary">Watch Flyover</button>
+        </div>
+      </div>
+
+      <div class="scroll-cue" aria-hidden="true">
+        <img src="../assets/placeholders/icon_mouse_placeholder.webp" alt="">
+      </div>
+    </section>
+
+    <!-- ============ concept header ============ -->
+    <section class="section concept-header" aria-label="Concept header">
+      <div class="container">
+        <span class="kicker">Concept File</span>
+        <div class="title-row">
+          <span class="ref-label">Concept 001</span>
+          <h2 class="concept-title">Artemis Lunar Base</h2>
+          <span class="status-chip"><span class="dot" aria-hidden="true"></span>In Development</span>
+        </div>
+        <p class="era">Post-Artemis IV buildout, ~2030–2035</p>
+      </div>
+    </section>
+
+    <!-- ============ overview ============ -->
+    <section class="section" aria-labelledby="kicker-overview">
+      <div class="container">
+        <div class="section-head">
+          <span class="kicker" id="kicker-overview">Overview</span>
+        </div>
+        <p class="overview-lead">
+          [sample copy — content in production] A crewed surface habitat cluster near the
+          lunar south pole, built out in the years following Artemis IV. [sample copy — the
+          final summary will follow the scene bible and cover habitat modules, power, and
+          surface logistics.]
+        </p>
+        <div class="notes-grid" role="list" aria-label="Physics notes">
+          <div class="note-row" role="listitem">
+            <span class="idx">NOTE_01</span>
+            <p>[sample — surface gravity is one-sixth of Earth's; structural loads and crew locomotion differ accordingly]</p>
+          </div>
+          <div class="note-row" role="listitem">
+            <span class="idx">NOTE_02</span>
+            <p>[sample — a lunar day-night cycle lasts about 29.5 Earth days; polar sites trade this for near-continuous solar exposure]</p>
+          </div>
+          <div class="note-row" role="listitem">
+            <span class="idx">NOTE_03</span>
+            <p>[sample — with no atmosphere, habitats must handle micrometeoroids and a ~300 °C surface temperature swing]</p>
+          </div>
+          <div class="note-row" role="listitem">
+            <span class="idx">NOTE_04</span>
+            <p>[sample — regolith shielding of a few meters attenuates galactic cosmic radiation for long-duration stays]</p>
+          </div>
+          <div class="note-row" role="listitem">
+            <span class="idx">NOTE_05</span>
+            <p>[sample — permanently shadowed craters nearby may hold water ice for propellant and life support]</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ specifications ============ -->
+    <section class="section" aria-labelledby="kicker-specs">
+      <div class="container">
+        <div class="section-head">
+          <span class="kicker" id="kicker-specs">Specifications</span>
+        </div>
+        <div class="stats-grid">
+          <div class="stat">
+            <span class="value">6</span>
+            <span class="label">Crew Capacity</span>
+          </div>
+          <div class="stat">
+            <span class="value">42 t</span>
+            <span class="label">Landed Mass</span>
+          </div>
+          <div class="stat">
+            <span class="value">1/6 g</span>
+            <span class="label">Surface Gravity</span>
+          </div>
+        </div>
+        <p class="stats-footnote">[sample values — final figures pending scene definition]</p>
+
+        <table class="spec-table">
+          <caption class="kicker" style="text-align: left; caption-side: top; padding-bottom: 16px;">Spec Sheet — [sample rows]</caption>
+          <tbody>
+            <tr>
+              <th scope="row">Site</th>
+              <td>[sample — lunar south pole region, elevated ridge]</td>
+            </tr>
+            <tr>
+              <th scope="row">Habitat Modules</th>
+              <td>[sample — 3 pressurized modules + regolith-shielded core]</td>
+            </tr>
+            <tr>
+              <th scope="row">Power</th>
+              <td>[sample — solar arrays with fission surface power backup]</td>
+            </tr>
+            <tr>
+              <th scope="row">Surface Mobility</th>
+              <td>[sample — 2 unpressurized rovers, 1 pressurized rover]</td>
+            </tr>
+            <tr>
+              <th scope="row">Resupply Cadence</th>
+              <td>[sample — cargo landers at ~6-month intervals]</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ visual record ============ -->
+    <section class="section" aria-labelledby="kicker-visual">
+      <div class="container">
+        <div class="section-head">
+          <span class="kicker" id="kicker-visual">Visual Record</span>
+        </div>
+        <div class="filmstrip">
+          <figure class="frame">
+            <img src="../assets/placeholders/moon_site_image_placeholder.webp"
+                 alt="Placeholder render of the lunar base site from surface level">
+            <span class="scrim-chip">Site Overview</span>
+            <figcaption>FRAME_01</figcaption>
+          </figure>
+          <figure class="frame">
+            <img src="../assets/placeholders/rover_image_placeholder.webp"
+                 alt="Placeholder render of a rover traversing the lunar surface">
+            <span class="scrim-chip">Surface Ops</span>
+            <figcaption>FRAME_02</figcaption>
+          </figure>
+          <figure class="frame">
+            <img src="../assets/placeholders/satellite_orbit_image_placeholder.webp"
+                 alt="Placeholder render of a spacecraft in lunar orbit above the base">
+            <span class="scrim-chip">Orbital Approach</span>
+            <figcaption>FRAME_03</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ sources ============ -->
+    <section class="section" aria-labelledby="kicker-sources">
+      <div class="container">
+        <div class="section-head">
+          <span class="kicker" id="kicker-sources">Sources</span>
+        </div>
+        <div role="list" aria-label="Source references">
+          <div class="source-row" role="listitem">
+            <span class="idx">SRC_01</span>
+            <span>— [sample: agency reference architecture document — citation in production]</span>
+          </div>
+          <div class="source-row" role="listitem">
+            <span class="idx">SRC_02</span>
+            <span>— [sample: peer-reviewed habitat shielding study — citation in production]</span>
+          </div>
+          <div class="source-row" role="listitem">
+            <span class="idx">SRC_03</span>
+            <span>— [sample: polar volatiles survey data — citation in production]</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ notify band ============ -->
+    <section class="notify" aria-labelledby="notify-heading">
+      <div class="container">
+        <span class="kicker">Notify</span>
+        <h2 class="notify-title" id="notify-heading">Follow the<span class="tone-2">Buildout</span></h2>
+        <form class="notify-form" action="#">
+          <fieldset disabled>
+            <label for="notify-email">Email Address</label>
+            <div class="field-row">
+              <input type="email" id="notify-email" name="email" placeholder="you@example.com" autocomplete="email">
+              <button type="submit" class="pill-primary">Notify Me</button>
+            </div>
+          </fieldset>
+        </form>
+        <p class="notify-note">Activates at launch — no data is collected by this mockup</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ footer ============ -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <a href="#" class="vidro-credit">
+        <img src="../assets/placeholders/logo_vidro_placeholder.png" alt="Vidro logo">
+        Visuals by Vidro
+      </a>
+      <nav class="footer-links" aria-label="Footer">
+        <a href="#">Privacy</a>
+        <a href="#">Sources &amp; Methods</a>
+      </nav>
+      <span class="footer-meta">Concept 001 / Mockup C</span>
+    </div>
+  </footer>
+
+</body>
+</html>

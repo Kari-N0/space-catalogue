@@ -1,0 +1,667 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>Mockup B — Split Dossier · Concept 001: Artemis Lunar Base</title>
+  <link rel="stylesheet" href="../src/styles/fonts.css">
+  <link rel="stylesheet" href="../src/styles/tokens.css">
+  <style>
+    /* ============================================================
+       VARIANT B — "Split dossier", sticky fact rail
+       Layout literals (grid ratios, breakpoints, max-widths) only;
+       every brand value comes from tokens.css.
+       ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-body);
+      font-size: var(--text-body);
+      font-weight: var(--weight-body);
+      line-height: var(--leading-body);
+    }
+
+    img, video { display: block; max-width: 100%; }
+    a { color: inherit; }
+
+    .container {
+      max-width: var(--container-max);
+      margin-inline: auto;
+      padding-inline: 1.25rem;
+    }
+
+    /* ---- shared label grammar (BRAND §3) ------------------------ */
+    .ref-label {
+      font-family: var(--font-mono);
+      font-size: var(--text-ref);
+      font-weight: var(--weight-body);
+      letter-spacing: var(--tracking-label);
+      text-transform: uppercase;
+      color: var(--color-text-secondary);
+    }
+
+    .kicker {
+      font-family: var(--font-mono);
+      font-size: var(--text-kicker);
+      letter-spacing: var(--tracking-label);
+      text-transform: uppercase;
+      color: var(--color-text-secondary);
+      margin: 0 0 1rem;
+    }
+
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: var(--text-ref);
+      letter-spacing: var(--tracking-label);
+      text-transform: uppercase;
+      color: var(--chip-blue-text);
+      background: var(--chip-blue-bg);
+      border: 1px solid var(--chip-blue-border);
+      border-radius: var(--radius-chip);
+      padding: 0.125rem 0.5rem;
+    }
+
+    .status-dot {
+      position: relative;
+      width: 0.375rem;
+      height: 0.375rem;
+      border-radius: var(--radius-pill);
+      background: var(--chip-blue-text);
+      flex: none;
+    }
+    .status-dot::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: var(--radius-pill);
+      background: var(--chip-blue-text);
+      animation: ping calc(var(--dur-base) * 5) var(--ease-brand) infinite;
+    }
+    @keyframes ping {
+      0%   { transform: scale(1);    opacity: 0.8; }
+      80%, 100% { transform: scale(2.5); opacity: 0; }
+    }
+
+    .scrim-chip {
+      position: absolute;
+      left: 1rem;
+      bottom: 1rem;
+      font-family: var(--font-body);
+      font-size: var(--text-ref);
+      font-weight: var(--weight-medium);
+      letter-spacing: var(--tracking-label);
+      text-transform: uppercase;
+      color: var(--color-text);
+      background: var(--scrim-chip-bg);
+      -webkit-backdrop-filter: blur(var(--scrim-chip-blur));
+      backdrop-filter: blur(var(--scrim-chip-blur));
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-chip);
+      padding: 0.25rem 0.5rem;
+    }
+
+    /* ---- pills (BRAND §5) --------------------------------------- */
+    .pill-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-body);
+      font-size: var(--text-body);
+      font-weight: var(--weight-medium);
+      color: var(--color-on-emphasis); /* black-on-white primary pill, BRAND §5 */
+      background: var(--color-text-emphasis);
+      border: 0;
+      border-radius: var(--radius-pill);
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      transition: opacity var(--dur-base) var(--ease-brand),
+                  transform var(--dur-base) var(--ease-brand);
+    }
+    .pill-primary:hover { opacity: 0.85; }
+
+    .pill-secondary {
+      display: inline-flex;
+      align-items: center;
+      font-family: var(--font-body);
+      font-size: var(--text-kicker);
+      font-weight: var(--weight-medium);
+      letter-spacing: var(--tracking-nav);
+      text-transform: uppercase;
+      color: var(--color-text);
+      background: transparent;
+      border: 1px solid var(--hairline-strong);
+      border-radius: var(--radius-pill);
+      padding: 0.5rem 1.25rem;
+      cursor: pointer;
+      transition: border-color var(--dur-base) var(--ease-brand),
+                  color var(--dur-base) var(--ease-brand);
+    }
+    .pill-secondary:hover {
+      border-color: var(--color-text-emphasis);
+      color: var(--color-text-emphasis);
+    }
+
+    /* ---- nav: slim glass bar ------------------------------------ */
+    .site-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 10;
+      background: var(--glass-nav-bg);
+      -webkit-backdrop-filter: blur(var(--glass-nav-blur));
+      backdrop-filter: blur(var(--glass-nav-blur));
+      border-bottom: 1px solid var(--hairline-faint);
+    }
+    .site-nav .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-block: 0.75rem;
+    }
+    .site-title {
+      font-family: var(--font-body);
+      font-size: var(--text-kicker);
+      font-weight: var(--weight-medium);
+      letter-spacing: var(--tracking-nav);
+      text-transform: uppercase;
+      color: var(--color-text);
+      text-decoration: none;
+      transition: color var(--dur-base) var(--ease-brand);
+    }
+    .site-title:hover { color: var(--color-text-emphasis); }
+
+    .vidro-credit {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-body);
+      font-size: var(--text-ref);
+      font-weight: var(--weight-medium);
+      letter-spacing: var(--tracking-label);
+      text-transform: uppercase;
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      transition: color var(--dur-base) var(--ease-brand);
+    }
+    .vidro-credit:hover { color: var(--color-text); }
+    .vidro-credit img { height: 1.25rem; width: auto; }
+
+    /* ---- dossier layout ----------------------------------------- */
+    /* Mobile first: one flowing column. display:contents flattens the
+       rail/media wrappers so their children can be reordered:
+       hero → header → media/facts → rail body. */
+    .dossier {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-section-sm);
+      padding-block: var(--space-section-sm);
+    }
+    .rail, .media-col { display: contents; }
+
+    .hero-figure   { order: 1; }
+    .rail-head     { order: 2; }
+    .media-figure  { order: 3; }
+    .fact-layer    { order: 4; }
+    .rail-body     { order: 5; }
+
+    /* ---- hero ---------------------------------------------------- */
+    .hero-figure {
+      position: relative;
+      margin: 0;
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      border: 1px solid var(--hairline-card);
+      background: var(--color-surface);
+    }
+    .hero-figure video,
+    .hero-figure .hero-poster {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+    .hero-poster { display: none; }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+    .hero-overlay .pill-primary { pointer-events: auto; }
+
+    /* ---- rail head (concept header) ------------------------------ */
+    .rail-head { display: block; }
+    .concept-title {
+      margin: 0.75rem 0 1rem;
+      font-family: var(--font-display);
+      font-weight: var(--weight-display);
+      font-size: var(--text-display);
+      line-height: var(--leading-display);
+      letter-spacing: var(--tracking-display);
+      text-transform: uppercase;
+      color: var(--color-text-emphasis);
+    }
+    .concept-title .tone-2 {
+      display: block;
+      color: var(--color-text-secondary);
+    }
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .era { /* era string from concept JSON */
+      font-family: var(--font-mono);
+      font-size: var(--text-ref);
+      letter-spacing: var(--tracking-label);
+      text-transform: uppercase;
+      color: var(--color-text-secondary);
+    }
+    .lead {
+      margin: 0;
+      font-size: var(--text-lead);
+      font-weight: var(--weight-light);
+      line-height: var(--leading-body);
+      color: var(--color-text-secondary);
+    }
+    .sample-note {
+      display: block;
+      margin-top: 0.75rem;
+      font-family: var(--font-mono);
+      font-size: var(--text-ref);
+      letter-spacing: var(--tracking-label);
+      text-transform: uppercase;
+      color: var(--color-text-secondary);
+    }
+
+    /* ---- rail body ------------------------------------------------ */
+    .rail-body {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-section-sm);
+    }
+    .rail-section {
+      border-top: 1px solid var(--hairline-faint);
+      padding-top: var(--space-card);
+    }
+
+    /* stats */
+    .stat-stack {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-card);
+    }
+    .stat .stat-num {
+      font-family: var(--font-display);
+      font-weight: var(--weight-display);
+      font-size: var(--text-display);
+      line-height: var(--leading-display);
+      letter-spacing: var(--tracking-tight);
+      color: var(--color-text-emphasis);
+    }
+    .stat .stat-label {
+      display: block;
+      margin-top: 0.375rem;
+      font-family: var(--font-mono);
+      font-size: var(--text-ref);
+      letter-spacing: var(--tracking-label);
+      text-transform: uppercase;
+      color: var(--color-text-secondary);
+    }
+    .stat-footnote {
+      margin: 1.5rem 0 0;
+      font-family: var(--font-mono);
+      font-size: var(--text-ref);
+      letter-spacing: var(--tracking-label);
+      text-transform: uppercase;
+      color: var(--color-text-secondary);
+    }
+
+    /* sources */
+    .sources-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-mono);
+      font-size: var(--text-kicker);
+      color: var(--color-text-secondary);
+    }
+    .sources-list li {
+      display: flex;
+      gap: 0.75rem;
+      padding-block: 0.75rem;
+      border-bottom: 1px solid var(--hairline-faint);
+    }
+    .sources-list .src-idx { color: var(--color-text); flex: none; }
+
+    /* email capture (static mock) */
+    .capture fieldset {
+      border: 0;
+      margin: 0;
+      padding: 0;
+    }
+    .capture label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: var(--text-ref);
+      letter-spacing: var(--tracking-label);
+      text-transform: uppercase;
+      color: var(--color-text-secondary);
+      margin-bottom: 0.5rem;
+    }
+    .capture-row {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .capture input[type="email"] {
+      flex: 1 1 10rem;
+      min-width: 0;
+      font-family: var(--font-body);
+      font-size: var(--text-small);
+      color: var(--color-text);
+      background: var(--color-surface);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-pill);
+      padding: 0.5rem 1rem;
+    }
+    .capture input[type="email"]::placeholder { color: var(--color-text-secondary); }
+    .capture .pill-secondary { flex: none; }
+    .capture-note {
+      margin: 0.75rem 0 0;
+      font-size: var(--text-small);
+      color: var(--color-text-secondary);
+    }
+
+    /* ---- media column -------------------------------------------- */
+    .media-figure {
+      position: relative;
+      margin: 0;
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      border: 1px solid var(--hairline-card);
+      background: var(--color-surface);
+    }
+    .media-figure img { width: 100%; height: auto; }
+
+    /* fact layer */
+    .fact-layer {
+      border-top: 1px solid var(--hairline-faint);
+      padding-top: var(--space-card);
+    }
+    .fact-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .fact-list li {
+      display: flex;
+      gap: 1rem;
+      padding-block: 1rem;
+      border-bottom: 1px solid var(--hairline-faint);
+      font-size: var(--text-small);
+      color: var(--color-text);
+    }
+    .fact-list .fact-idx {
+      font-family: var(--font-mono);
+      font-size: var(--text-ref);
+      letter-spacing: var(--tracking-label);
+      color: var(--color-text-secondary);
+      flex: none;
+      padding-top: 0.25rem;
+    }
+
+    /* ---- footer ---------------------------------------------------- */
+    .site-footer {
+      border-top: 1px solid var(--hairline-faint);
+      padding-block: 3rem; /* BRAND §5: minimal footer, 48px padding */
+    }
+    .site-footer .container {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+      font-family: var(--font-body);
+      font-size: var(--text-kicker);
+      font-weight: var(--weight-medium);
+      letter-spacing: var(--tracking-nav);
+      text-transform: uppercase;
+    }
+    .footer-links a {
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      transition: color var(--dur-base) var(--ease-brand);
+    }
+    .footer-links a:hover { color: var(--color-text-emphasis); }
+
+    /* ================================================================
+       Desktop (>=1024px): two columns — sticky rail left ~38%,
+       scrolling media column right.
+       ================================================================ */
+    @media (min-width: 1024px) {
+      .dossier {
+        display: grid;
+        grid-template-columns: 38% 1fr;
+        gap: var(--space-section-sm);
+        align-items: start;
+        padding-block: var(--space-section);
+      }
+      .rail {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-section-sm);
+        position: sticky;
+        top: 5rem;               /* clears the fixed glass nav */
+        max-height: calc(100vh - 6rem);
+        overflow-y: auto;
+        padding-right: 0.5rem;
+      }
+      .media-col {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-section-sm);
+      }
+      /* reset the mobile interleave */
+      .hero-figure, .rail-head, .media-figure, .fact-layer, .rail-body { order: 0; }
+    }
+
+    /* ================================================================
+       Reduced motion: poster instead of autoplaying video; no ping.
+       ================================================================ */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .hero-figure video { display: none; }
+      .hero-poster { display: block; }
+      .status-dot::before { animation: none; display: none; }
+      * { transition: none !important; }
+    }
+    /* keyboard focus on a near-black page needs an explicit ring */
+    a:focus-visible, button:focus-visible, input:focus-visible {
+      outline: 2px solid var(--hairline-strong);
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ====================== NAV: slim glass bar ====================== -->
+  <nav class="site-nav" aria-label="Site">
+    <div class="container">
+      <a class="site-title" href="#">Space Engineering Catalogue</a>
+      <a class="vidro-credit" href="#">
+        <img src="../assets/placeholders/logo_vidro_placeholder.png" alt="Vidro logo">
+        <span>Visuals by Vidro</span>
+      </a>
+    </div>
+  </nav>
+
+  <main class="container" style="padding-top: 3.5rem;">
+    <div class="dossier">
+
+      <!-- =================== LEFT: sticky fact rail =================== -->
+      <aside class="rail" aria-label="Concept dossier">
+
+        <!-- concept header -->
+        <header class="rail-head">
+          <p class="ref-label">CONCEPT 001</p>
+          <h1 class="concept-title">
+            Artemis
+            <span class="tone-2">Lunar Base</span>
+          </h1>
+          <div class="meta-row">
+            <span class="status-chip"><span class="status-dot" aria-hidden="true"></span>In Development</span>
+            <span class="era">Post-Artemis IV buildout, ~2030&ndash;2035</span>
+          </div>
+          <p class="lead">
+            [sample copy &mdash; content in production] A permanent surface habitat
+            at the lunar south pole, assembled from landed modules and shielded
+            with sintered regolith. [The final summary lands with the scene
+            bible; this stand-in only demonstrates lead length and tone.]
+          </p>
+          <span class="sample-note">[summary stub &mdash; see scene-bible]</span>
+        </header>
+
+        <div class="rail-body">
+
+          <!-- stats -->
+          <section class="rail-section" aria-label="Key figures">
+            <h2 class="kicker">Key Figures</h2>
+            <div class="stat-stack">
+              <div class="stat">
+                <div class="stat-num">4</div>
+                <span class="stat-label">Crew Capacity</span>
+              </div>
+              <div class="stat">
+                <div class="stat-num">180 d</div>
+                <span class="stat-label">Surface Stay</span>
+              </div>
+              <div class="stat">
+                <div class="stat-num">12 t</div>
+                <span class="stat-label">Landed Module Mass</span>
+              </div>
+            </div>
+            <p class="stat-footnote">[sample values &mdash; pending scene bible]</p>
+          </section>
+
+          <!-- sources -->
+          <section class="rail-section" aria-label="Sources">
+            <h2 class="kicker">Sources</h2>
+            <ul class="sources-list">
+              <li><span class="src-idx">S-01</span><span>[sample row] NASA Artemis campaign overview, 2025 rev. &mdash; citation in production</span></li>
+              <li><span class="src-idx">S-02</span><span>[sample row] Lunar regolith shielding study, conference paper &mdash; citation in production</span></li>
+              <li><span class="src-idx">S-03</span><span>[sample row] South-pole illumination &amp; PSR survey data &mdash; citation in production</span></li>
+            </ul>
+          </section>
+
+          <!-- email capture (static mock) -->
+          <section class="rail-section capture" aria-label="Updates">
+            <h2 class="kicker">Follow This Concept</h2>
+            <form>
+              <fieldset disabled>
+                <label for="capture-email">Email for launch updates</label>
+                <div class="capture-row">
+                  <input id="capture-email" type="email" placeholder="you@example.com" autocomplete="off">
+                  <button class="pill-secondary" type="submit">Notify Me</button>
+                </div>
+              </fieldset>
+              <p class="capture-note">Activates at launch &mdash; no data is collected by this mockup.</p>
+            </form>
+          </section>
+
+          <!-- rail credit -->
+          <section class="rail-section">
+            <a class="vidro-credit" href="#">
+              <img src="../assets/placeholders/logo_vidro_placeholder.png" alt="Vidro logo">
+              <span>Visuals by Vidro</span>
+            </a>
+          </section>
+
+        </div>
+      </aside>
+
+      <!-- ================ RIGHT: scrolling media column ================ -->
+      <div class="media-col">
+
+        <!-- hero video (live splat slot) -->
+        <figure class="hero-figure">
+          <video src="../assets/placeholders/rerender.mp4"
+                 poster="../assets/placeholders/moon_site_image_placeholder.webp"
+                 autoplay muted loop playsinline
+                 aria-label="Artemis lunar base hero loop, placeholder render"></video>
+          <img class="hero-poster"
+               src="../assets/placeholders/moon_site_image_placeholder.webp"
+               alt="Artemis lunar base site, placeholder still">
+          <div class="hero-overlay">
+            <button class="pill-primary" type="button">Enter 3D</button>
+          </div>
+          <span class="scrim-chip">Hero &mdash; Live Splat Slot</span>
+        </figure>
+
+        <!-- media strip -->
+        <figure class="media-figure">
+          <img src="../assets/placeholders/moon_site_image_placeholder.webp"
+               alt="Overview of the lunar base site, placeholder image">
+          <figcaption class="scrim-chip">Site Overview</figcaption>
+        </figure>
+
+        <figure class="media-figure">
+          <img src="../assets/placeholders/rover_image_placeholder.webp"
+               alt="Surface rover near the habitat modules, placeholder image">
+          <figcaption class="scrim-chip">Surface Rover</figcaption>
+        </figure>
+
+        <figure class="media-figure">
+          <img src="../assets/placeholders/satellite_orbit_image_placeholder.webp"
+               alt="Relay satellite in lunar orbit, placeholder image">
+          <figcaption class="scrim-chip">Orbital Relay</figcaption>
+        </figure>
+
+        <!-- fact layer -->
+        <section class="fact-layer" aria-label="Fact layer">
+          <h2 class="kicker">Fact Layer</h2>
+          <ul class="fact-list">
+            <li><span class="fact-idx">F-01</span><span>[sample] Site latitude ~89&deg;S: near-continuous solar exposure on ridge crests, with permanently shadowed regions within rover range.</span></li>
+            <li><span class="fact-idx">F-02</span><span>[sample] Regolith overburden of ~2.5 m over habitat modules targets GCR dose reduction for long-stay crews.</span></li>
+            <li><span class="fact-idx">F-03</span><span>[sample] Lunar night at lower latitudes lasts ~14 Earth days; the polar site trades this for grazing light and long shadows.</span></li>
+            <li><span class="fact-idx">F-04</span><span>[sample] Surface gravity 1.62 m/s&sup2; drives structure sizing, dust dynamics, and crew locomotion in the scene.</span></li>
+            <li><span class="fact-idx">F-05</span><span>[sample] One-way light time to Earth ~1.3 s; comms relay shown in orbit covers far-side and PSR operations.</span></li>
+          </ul>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ============================ FOOTER ============================ -->
+  <footer class="site-footer">
+    <div class="container">
+      <a class="vidro-credit" href="#">
+        <img src="../assets/placeholders/logo_vidro_placeholder.png" alt="Vidro logo">
+        <span>Visuals by Vidro</span>
+      </a>
+      <nav class="footer-links" aria-label="Footer">
+        <a href="#">Privacy</a>
+        <a href="#">Sources &amp; Methods</a>
+      </nav>
+    </div>
+  </footer>
+
+</body>
+</html>

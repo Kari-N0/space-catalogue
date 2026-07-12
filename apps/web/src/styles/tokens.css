@@ -11,6 +11,8 @@
   --color-text: #eeeef0;
   --color-text-emphasis: #ffffff;
   --color-text-secondary: #888891;
+  /* ink on emphasis surfaces (BRAND §5 primary pill: white bg, black text) */
+  --color-on-emphasis: #030304;
 
   /* hairlines & overlays */
   --hairline-faint: rgba(255, 255, 255, 0.05);
