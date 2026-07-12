@@ -21,6 +21,8 @@ pipeline/rehearsal/web/*.splat
 # misc
 *.blend1
 .DS_Store
+# Windows NTFS ADS copy artifacts (Explorer copies into WSL)
+*:Zone.Identifier
 
 # python
 __pycache__/

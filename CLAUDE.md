@@ -2,7 +2,7 @@
 
 Visual-first web catalogue of space/future engineering concepts: Babylon.js + Gaussian splats (SOG) + PBR meshes, produced by a local RTX 4090 pipeline (WSL2 + Windows Blender). **PLAN.md** = full plan & budgets. **SETUP.md** = environment bootstrap doc. **setup-log.md** = what is actually installed, all versions, VERIFY results, and every deviation — read it before assuming anything about this machine. **ADDON.md** = spec for the "Catalogue Tools" Blender add-on (milestone M2.5, runs after the M3 vertical slice).
 
-Stack (per PLAN.md): Vite + TypeScript + Babylon.js (v9, WebGPU→WebGL2 fallback), static site, content-driven from `content/concepts/*.json`. Web app lives in `apps/web` (npm workspace from repo root; **no Babylon on the landing route** — engine lazy-loads on first 3D interaction). **Current phase: asset creation (M1 viewer core ON HOLD per Kari, 2026-07-10).**
+Stack (per PLAN.md): Vite + TypeScript + Babylon.js (v9, WebGPU→WebGL2 fallback), static site, content-driven from `content/concepts/*.json`. Web app lives in `apps/web` (npm workspace from repo root; **no Babylon on the landing route** — engine lazy-loads on first 3D interaction). **Current phases (2026-07-12): asset creation (Kari, in Blender) + web workstream (Claude owns `apps/web`; M1 resumed within it) running in parallel. Launch strategy: single-concept launch — PLAN.md §9 "Launch strategy" + M3.5.**
 
 ## Machine & environments (all verified 2026-07-09/10)
 
@@ -40,6 +40,14 @@ Stack (per PLAN.md): Vite + TypeScript + Babylon.js (v9, WebGPU→WebGL2 fallbac
 
 - **Claude never proposes or decides composition, camera angles, lenses, or shot framing.** Claude supports the camera envelope and shots Kari authors. Utility cameras for neutral review renders (turnarounds, validation views) are fine — they follow fixed documented defaults, never framing judgment.
 - **Claude never modifies a .blend Kari has edited without asking first.** New work goes into new version files (`v002`, `v003`, …); the file Kari touched is theirs.
+- **Claude never decides brand, theme, layout, or page sections (web).** Brand rules derive from vidro.fi via BRAND.md + design tokens that Kari approves; page/section structures are proposed as static mockups for Kari to pick from. Claude implements the approved choice and nothing beyond it.
+
+## Web workstream rules (Kari in Blender in parallel — 2026-07-12)
+
+- **All stand-in media comes from `apps/web/public/assets/placeholders/` exclusively; never generate or fetch other media. Go-live = JSON path swap + folder deletion.**
+- Integration points only: `content/concepts/lunar-base.json`, Kari's drops into `assets/placeholders/`, and later final assets in `apps/web/public/assets/`. Never touch `assets_src/` or any `.blend` in this workstream.
+- Commit often; push to `main` = continuous deploy to the dev URL (GitHub Pages) for Kari's phone review.
+- Any placeholder file >20 MB: flag and STOP for Kari's compress-vs-LFS call before committing (pending: `hero_moon_site_placeholder.sog` 25.8 MiB, `loop_video_placeholder.mp4` 25.3 MiB).
 
 ## Splat pipeline learnings (from the validated rehearsal, 2026-07-10)
 
@@ -54,4 +62,5 @@ Stack (per PLAN.md): Vite + TypeScript + Babylon.js (v9, WebGPU→WebGL2 fallbac
 2. Rehearsal cosmetic question still open: user's verdict on `rehearsal-sh0.sog` / high-`-i` SOG variants (files in `pipeline/rehearsal/web/`, gitignored).
 3. **Current phase: asset creation** (Kari's call, 2026-07-10) — **M1 (viewer core) is ON HOLD**; resume it when Kari says so. Asset work uses the already-validated tools: ComfyUI reference images, GN modeling in Blender, TRELLIS 1 image→3D (mesh+radiance_field only), rehearsal splat chain for scene tests. Outputs go to `assets_src/` (gitignored) / `D:\renders` staging; every generated asset still needs its provenance JSON (hard rule) even though the M2 provenance tooling isn't built yet — write them by hand.
 4. After the asset phase: M1, then M2 scripts incl. `export_dataset.py`. **All M2 pipeline scripts must be importable functions with a thin argparse main (not just CLIs)** — the M2.5 Blender add-on (ADDON.md) calls them in-process; bpy-side scripts must stay ML-free so Blender never imports the ML stack.
-5. Background: TRELLIS.2 activation when DINOv3 arrives (see setup-log.md Phase 5 for the exact procedure).
+5. Background: TRELLIS.2 activation when DINOv3 arrives (see setup-log.md Phase 5 for the exact procedure). 2026-07-12: Comfy-Org TRELLIS.2 repack ruled out on license grounds (setup-log.md entry + PLAN.md §5) — still TRELLIS 1 + Meta-direct application.
+6. **Web workstream opened 2026-07-12** (see "Web workstream rules" above). Pending Kari gates: >20 MB placeholder call (compress vs LFS), BRAND.md approval, concept-page structure pick, email-capture/analytics service choice.

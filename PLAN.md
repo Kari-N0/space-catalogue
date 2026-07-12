@@ -111,6 +111,7 @@ Blender → GLB export (real-world scale, meters) → `gltfpack -cc` (meshopt co
 | TRELLIS.2 (installed, **dormant** — encoder gated) / TripoSR | AI 3D gen | MIT (encoder: DINOv3 License) | ⏸ pending DINOv3 access |
 | **briaai RMBG-2.0** (TRELLIS.2's upstream default bg remover) | Background removal | **CC BY-NC 4.0** | ❌ never — patched to rembg (MIT) |
 | **mip-splatting `diff-gaussian-rasterization`** (TRELLIS 1 optional dep, `--mipgaussian`) | 3DGS rendering | **Inria non-commercial** | ❌ never — excluded from install |
+| **Comfy-Org/TRELLIS.2 HF repack** (`clip_vision/dino_v3_vit_l.safetensors`) | TRELLIS.2-for-ComfyUI weights | Tagged "MIT", but the encoder file is verbatim Meta DINOv3 weights; no DINOv3 license text in repo | ❌ not for the DINOv3 encoder (2026-07-12 audit, setup-log.md) |
 | Qwen-Image (all versions), FLUX.1 schnell, FLUX.2 klein, Z-Image Turbo | AI images | Apache-2.0 | ✅ |
 | Stable Diffusion 3.5, Stable Fast 3D | AI images / 3D | Stability Community License | ✅ under $1M annual revenue |
 | Instant Meshes | Retopo | BSD | ✅ |
@@ -122,6 +123,8 @@ Blender → GLB export (real-world scale, meters) → `gltfpack -cc` (meshopt co
 | **FLUX.1 [dev], FLUX.2 [dev]** | AI images | Non-commercial weights | ❌ (use schnell/klein) |
 
 **3D-gen stack notes (2026-07-10 setup):** TRELLIS 1 is the working image→3D generator. Its install *excludes* `--mipgaussian` (Inria-derived non-commercial rasterizer); consequently pipelines must request `formats=['mesh', 'radiance_field']` — never `'gaussian'` — and GLB texture baking runs via diffoctreerast (MIT). Background removal in both TRELLIS versions is rembg/u2net (MIT); TRELLIS.2's code carries a license guard that overrides its upstream RMBG-2.0 (CC BY-NC) default. TRELLIS.2 is pending DINOv3 access; on grant, review Meta's DINOv3 license terms and record them in the provenance log before commercial use.
+
+**DINOv3 / Comfy-Org audit (2026-07-12, full detail in setup-log.md):** DINOv3 license full text verified — commercial use permitted worldwide (no EU exclusion, no AUP, no revenue/MAU caps); redistribution is allowed only *under the Agreement with the license text attached*, and the ai.meta.com variant (the text gate acceptance references) additionally requires a prominent "Built with DINOv3" notice when distributing weights/derivatives. Generated assets are *outputs*, not derivative works, and carry no such duties. The Comfy-Org/TRELLIS.2 HF repack ships the DINOv3 encoder ungated, relabeled MIT, without the license text → fails §1.b.i; never source the encoder from it (matrix row above). TRELLIS.2 stays dormant pending the Meta-direct grant; ComfyUI-native TRELLIS.2 support exists only on a staging branch (Comfy-Org/ComfyUI PR #14718), not in any release.
 
 Two hygiene rules: keep a **provenance log** per asset (tool, model + version, prompt/seed, date, license at time of generation) — it's cheap insurance and Claude Code can maintain it as JSON; and remember that purely AI-generated outputs may have limited copyright protection in many jurisdictions — your curation, modification and assembly are what create protectable work, which your Blender-centric pipeline naturally provides. (Not legal advice; worth a one-hour review with a lawyer before commercial launch.)
 
@@ -226,6 +229,8 @@ Scripts worth having Claude Code write early, because they multiply your through
 
 ## 9. Milestones (each one is a good Claude Code work session or two)
 
+**Launch strategy (Kari, 2026-07-12):** launch with ONE concept — **"Concept 001: Artemis Lunar Base"**, the premiere of a numbered series (matching vidro.fi's Ref-code convention) — not an empty catalogue. The concept page IS the launch product; the grid landing page moves to M4. **Hard acceptance criterion:** the concept page is a TEMPLATE, 100% driven by `content/concepts/<id>.json` + its assets; a future concept = new JSON + assets, **zero new code**.
+
 **M0 — Scaffold.** Repo, Vite+TS app, CI with lint/typecheck/budget-check, deploy pipeline to a static host. *Done when a hello-world page deploys automatically.*
 
 **M1 — Viewer core.** Babylon bootstrap (WebGPU→WebGL2 fallback), SOG loading with camera envelope constraints, GLB inspect mode with `.env` IBL and hotspots, device tiering, scene disposal. Use any placeholder splat + model. *Done when both modes hit budget frame rates on your phone.*
@@ -236,7 +241,9 @@ Scripts worth having Claude Code write early, because they multiply your through
 
 **M2.5 — Catalogue Tools Blender add-on.** Runs *after* the vertical slice (numbered 2.5 because it packages the M2 scripts into an artist cockpit — M3 must prove the pipeline by hand first). Full spec: **ADDON.md**. A Blender 5.1 add-on where every operator is a thin wrapper over `pipeline/` scripts that also run headless; Blender never imports the ML stack; long jobs launch in WSL and report via status files. Modules: camera-envelope designer (one JSON drives trainer rig and web camera limits), hotspot authoring via empties → concept JSON, scene validator, dataset export, job panel (render/train/pack/preview with stage gates), GN megastructure asset library, TRELLIS prop intake. *Done when the M3 lunar-base scene can be revised, re-exported, retrained, packed and previewed end-to-end from the Blender UI, and its envelope + hotspots round-trip into the live concept page.*
 
-**M4 — Catalogue shell.** Landing grid, routing, concept-page template generalized from the slice, prefetching, SEO/meta, basic analytics. *Done when adding a concept means adding one JSON + assets, no code.*
+**M3.5 — Concept 001 launch.** Ship the single-concept site: concept-page template (JSON-driven per the launch acceptance criterion above), sources & methods page, email capture, OG/social meta, privacy-friendly analytics, custom-domain readiness, and a soft→hard launch checklist. *Done when Concept 001 is live on the public URL, the template criterion holds (a second concept would need only JSON + assets), and analytics + email capture run GDPR-clean for an EU operator (cookieless, no consent banner).*
+
+**M4 — Catalogue shell** *(moved out of launch scope 2026-07-12 — the site launches as Concept 001's page)*. Landing grid, routing, concept-page template generalized from the slice, prefetching, SEO/meta, basic analytics. *Done when adding a concept means adding one JSON + assets, no code.*
 
 **M5 — Content sprint.** Batch-produce remaining concepts through the now-proven pipeline. Realistic pace once M2/M3 are solid: roughly 1–2 concepts per focused day.
 

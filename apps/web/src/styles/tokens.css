@@ -1,0 +1,84 @@
+/*
+ * Design tokens — derived from the vidro.fi rendered audit 2026-07-12 (BRAND.md).
+ * PROPOSAL: not imported by any stylesheet until Kari approves BRAND.md
+ * (CLAUDE.md brand boundary). Dark theme only, per brand direction.
+ */
+:root {
+  /* -- color: neutrals ------------------------------------------------- */
+  --color-bg: #030304;
+  --color-surface: #0b0b0d;
+  --color-text: #eeeef0;
+  --color-text-emphasis: #ffffff;
+  --color-text-secondary: #888891;
+
+  /* hairlines & overlays */
+  --hairline-faint: rgba(255, 255, 255, 0.05);
+  --hairline-card: rgba(255, 255, 255, 0.06);
+  --hairline: rgba(255, 255, 255, 0.1);
+  --hairline-strong: rgba(255, 255, 255, 0.2);
+  --glass-nav-bg: rgba(3, 3, 4, 0.7);
+  --glass-nav-blur: 12px;
+  --scrim-chip-bg: rgba(0, 0, 0, 0.5);
+  --scrim-chip-blur: 8px;
+
+  /* -- color: functional accents (labels only, never washes) ----------- */
+  --accent-live: #22c55e;
+  --accent-live-ping: #4ade80;
+  /* category/status chip triads: text / bg / border */
+  --chip-blue-text: #60a5fa;
+  --chip-blue-bg: rgba(59, 130, 246, 0.1);
+  --chip-blue-border: rgba(59, 130, 246, 0.2);
+  --chip-purple-text: #c084fc;
+  --chip-purple-bg: rgba(168, 85, 247, 0.1);
+  --chip-purple-border: rgba(168, 85, 247, 0.2);
+  --chip-orange-text: #fb923c;
+  --chip-orange-bg: rgba(249, 115, 22, 0.1);
+  --chip-orange-border: rgba(249, 115, 22, 0.2);
+
+  /* -- typography ------------------------------------------------------ */
+  /* self-hosted woff2 (OFL 1.1); never the Google Fonts CDN (BRAND.md §2) */
+  --font-display: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+
+  --text-hero: clamp(3.75rem, 9vw, 8rem);        /* 60 → 128px, lh 1.0 */
+  --text-display: clamp(2.25rem, 4.2vw, 3.75rem); /* 36 → 60px, uppercase */
+  --text-title: 2.25rem;                          /* 36px project/page titles */
+  --text-h2: 1.875rem;                            /* 30px */
+  --text-lead: 1.25rem;                           /* 20px, weight 300 */
+  --text-body: 1rem;                              /* 16px / 24px */
+  --text-small: 0.875rem;
+  --text-kicker: 0.75rem;                         /* 12px mono uppercase */
+  --text-ref: 0.625rem;                           /* 10px mono uppercase */
+
+  --weight-display: 500; /* Space Grotesk ships in w500 only on-brand */
+  --weight-body: 400;
+  --weight-light: 300;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+
+  --tracking-display: -0.05em; /* hero */
+  --tracking-tight: -0.025em;  /* titles/H2 */
+  --tracking-label: 0.1em;     /* mono kickers/refs, uppercase */
+  --tracking-nav: 0.025em;     /* 12px uppercase nav links */
+
+  --leading-display: 1.0;
+  --leading-tight: 1.1;
+  --leading-body: 1.5;
+
+  /* -- layout & spacing ------------------------------------------------- */
+  --container-max: 1280px;
+  --space-section-lg: 8rem; /* 128px major rhythm */
+  --space-section: 6rem;    /* 96px standard */
+  --space-section-sm: 5rem; /* 80px minor */
+  --space-card: 2rem;       /* 32px card padding */
+  --radius-card: 12px;
+  --radius-chip: 4px;
+  --radius-pill: 9999px;
+  --hero-min-height: 700px;
+
+  /* -- motion ------------------------------------------------------------ */
+  --ease-brand: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-base: 300ms;
+}
