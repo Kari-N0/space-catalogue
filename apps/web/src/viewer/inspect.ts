@@ -52,6 +52,7 @@ export async function buildInspectScene(
   concept: ConceptDoc,
   hotspotLayer: HTMLElement | null,
   onProgress: (p: ViewerProgress) => void,
+  onHotspotSelect?: (h: Hotspot) => void,
 ): Promise<InspectScene> {
   const glbPath = concept.assets.inspect_glb;
   if (!glbPath) throw new Error("concept has no inspect_glb");
@@ -59,7 +60,7 @@ export async function buildInspectScene(
 
   const scene = new Scene(engine);
   try {
-    return await fillInspectScene(scene, concept, glbPath, hotspotLayer, onProgress);
+    return await fillInspectScene(scene, concept, glbPath, hotspotLayer, onProgress, onHotspotSelect);
   } catch (err) {
     // a failed import must not leave a half-built scene registered on the engine
     scene.dispose();
@@ -73,6 +74,7 @@ async function fillInspectScene(
   glbPath: string,
   hotspotLayer: HTMLElement | null,
   onProgress: (p: ViewerProgress) => void,
+  onHotspotSelect?: (h: Hotspot) => void,
 ): Promise<InspectScene> {
   scene.clearColor = new Color4(0.012, 0.012, 0.016, 1);
 
@@ -97,7 +99,9 @@ async function fillInspectScene(
   onProgress({ phase: "ready" });
 
   const hotspots =
-    hotspotLayer && concept.hotspots.length > 0 ? mountHotspots(scene, hotspotLayer, concept.hotspots as Hotspot[]) : null;
+    hotspotLayer && concept.hotspots.length > 0
+      ? mountHotspots(scene, hotspotLayer, concept.hotspots as Hotspot[], onHotspotSelect)
+      : null;
 
   return { scene, camera, hotspots };
 }

@@ -1,6 +1,12 @@
 // Hotspots as DOM overlays (no @babylonjs/gui — cheaper on the engine budget,
 // and DOM text stays crisp, selectable, and accessible). Projection runs per
 // rendered frame; elements are hidden when behind the camera or off-viewport.
+//
+// DOM contract per hotspot (pages style these classes with brand tokens):
+//   button.viewer-hotspot            — positioned pin, click => onSelect(h)
+//     span.viewer-hotspot__pin       — the visual marker
+//     span.viewer-hotspot__label     — title, revealed on hover/focus by CSS
+//   span.viewer-hotspot__desc        — visually-hidden sibling, aria-describedby
 
 import type { Scene } from "@babylonjs/core/scene";
 import { Vector3, Matrix } from "@babylonjs/core/Maths/math.vector";
@@ -13,26 +19,43 @@ export interface HotspotLayer {
 
 let hotspotDescSeq = 0; // unique aria-describedby ids across remounts
 
-export function mountHotspots(scene: Scene, layer: HTMLElement, hotspots: Hotspot[]): HotspotLayer {
+export function mountHotspots(
+  scene: Scene,
+  layer: HTMLElement,
+  hotspots: Hotspot[],
+  onSelect?: (h: Hotspot) => void,
+): HotspotLayer {
   const items = hotspots.map((h, i) => {
     const el = document.createElement("button");
     el.type = "button";
     el.className = "viewer-hotspot";
-    el.textContent = h.title;
     el.style.position = "absolute";
     el.style.transform = "translate(-50%, -50%)";
+
+    const pin = document.createElement("span");
+    pin.className = "viewer-hotspot__pin";
+    pin.setAttribute("aria-hidden", "true");
+    el.appendChild(pin);
+
+    const label = document.createElement("span");
+    label.className = "viewer-hotspot__label";
+    label.textContent = h.title;
+    el.appendChild(label);
+
     let desc: HTMLElement | null = null;
     if (h.body) {
       el.title = h.body;
       // screen-reader description as a visually-hidden SIBLING (inside the
       // button it would concatenate into the accessible name)
       desc = document.createElement("span");
+      desc.className = "viewer-hotspot__desc";
       desc.id = `viewer-hotspot-desc-${hotspotDescSeq}-${i}`;
       desc.textContent = h.body;
       desc.style.cssText = "position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)";
       el.setAttribute("aria-describedby", desc.id);
       layer.appendChild(desc);
     }
+    if (onSelect) el.addEventListener("click", () => onSelect(h));
     layer.appendChild(el);
     return { el, desc, pos: new Vector3(h.position_m[0], h.position_m[1], h.position_m[2]) };
   });

@@ -46,6 +46,7 @@ export default defineConfig({
         mockupA: resolve(__dirname, "mockups/a.html"),
         mockupB: resolve(__dirname, "mockups/b.html"),
         mockupC: resolve(__dirname, "mockups/c.html"),
+        mockupC2: resolve(__dirname, "mockups/c2.html"),
       },
       output: {
         // Babylon v9 materials pull shaders via per-file dynamic import();
@@ -57,10 +58,13 @@ export default defineConfig({
           return undefined;
         },
         // check-budgets.mjs finds the engine chunks by /babylon/i on the file
-        // name — force the prefix onto every chunk that carries engine-side code.
+        // name — force the prefix onto every chunk that carries engine bytes.
+        // (Any chunk with engine code contains @babylonjs/fflate module ids;
+        // Babylon-free viewer helpers like tiering/types must NOT get the
+        // prefix — they load eagerly with page entries.)
         chunkFileNames(chunk) {
           const engineSide = chunk.moduleIds.some(
-            (m) => m.includes("@babylonjs") || m.includes("node_modules/fflate/") || m.includes("/src/viewer/"),
+            (m) => m.includes("@babylonjs") || m.includes("node_modules/fflate/"),
           );
           return engineSide && !/babylon/i.test(chunk.name)
             ? "assets/babylon-[name]-[hash].js"

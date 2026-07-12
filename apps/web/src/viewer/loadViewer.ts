@@ -81,7 +81,9 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
       return;
     }
     swapScene(hero.scene, "hero", false);
-    if (hotspotLayer && concept.hotspots.length > 0) hotspots = mountHotspots(hero.scene, hotspotLayer, concept.hotspots);
+    if (hotspotLayer && concept.hotspots.length > 0) {
+      hotspots = mountHotspots(hero.scene, hotspotLayer, concept.hotspots, opts.onHotspotSelect);
+    }
   };
 
   const enterInspect = async () => {
@@ -89,7 +91,7 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
     const gen = ++generation;
     // second lazy boundary: glTF/KTX2/meshopt code loads only on demand
     const { buildInspectScene } = await import("./inspect");
-    const inspect = await buildInspectScene(engine, concept, hotspotLayer, progressFor(gen));
+    const inspect = await buildInspectScene(engine, concept, hotspotLayer, progressFor(gen), opts.onHotspotSelect);
     if (disposed || gen !== generation) {
       inspect.hotspots?.dispose();
       inspect.scene.dispose();

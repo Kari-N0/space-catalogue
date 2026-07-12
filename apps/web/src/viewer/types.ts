@@ -1,7 +1,7 @@
 // Viewer public types — deliberately free of Babylon imports so landing-route
 // code can import them at zero bundle cost.
 
-import type { ConceptDoc } from "../catalogue/concept";
+import type { ConceptDoc, Hotspot } from "../catalogue/concept";
 
 export type EngineKind = "webgpu" | "webgl2";
 export type Tier = "mobile" | "desktop";
@@ -31,6 +31,8 @@ export interface ViewerOptions {
   profile: TierProfile;
   onProgress?: (p: ViewerProgress) => void;
   onModeChange?: (m: ViewerMode) => void;
+  /** Fired when the user clicks a hotspot pin (pages open their popup here). */
+  onHotspotSelect?: (h: Hotspot) => void;
 }
 
 export interface ViewerHandle {
