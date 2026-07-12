@@ -1,6 +1,6 @@
 # BRAND.md — Space Engineering Catalogue brand rules
 
-**STATUS: PROPOSAL — pending Kari's approval (CLAUDE.md brand boundary: brand, theme, layout, and sections are Kari's decisions).**
+**STATUS: APPROVED by Kari, 2026-07-12** — with these decisions on the §8 questions: (1) ref label format is **"CONCEPT 001"** (mono uppercase, three-digit series number — no "Ref:" prefix); (2) Vidro credit appears in **both** nav and footer; (3) **a single accent triad for all status chips** (blue triad as the default pick — one-line token change if Kari prefers another); (4) **two-tone display treatment: yes**; (5) no amendments. `tokens.css` is ground truth from this date. Layout/sections still follow the mockup pick (CLAUDE.md brand boundary).
 Source: rendered audit of https://www.vidro.fi on 2026-07-12 (computed styles + screenshots; method in §9). Companion file: `apps/web/src/styles/tokens.css` (not imported anywhere until approved).
 
 The catalogue is a Vidro production and should read as a sibling of vidro.fi: same dark, engineering-calm surface; same type system; same Ref-code labeling language. Below, "observed" = measured on vidro.fi; "proposed" = adaptation for the catalogue needing Kari's sign-off.
@@ -79,13 +79,13 @@ Proposed for the catalogue: same single duration/easing token pair for all UI; 3
 
 Short declarative UPPERCASE displays ("VISUALIZING THE FUTURE", "READY TO START?"); technical-precision framing; mono microcopy in system-log style ("CLIENT_STORIES_01-03"). Catalogue equivalents should keep fact-layer honesty (status labels per PLAN.md §10 "scale honesty").
 
-## 8. Open questions for Kari (gate)
+## 8. Open questions — RESOLVED by Kari 2026-07-12
 
-1. **Ref prefix** for the concept series: `SC-001`, `C-001`, `CONCEPT 001`, other?
-2. **Header/credit lockup** on the catalogue: its own site title + "Visuals by Vidro" credit where (nav? footer? both)?
-3. **Status-chip color mapping** (concept `status` → which triad, or a single accent for all?).
-4. Two-tone display treatment on the concept page hero: yes/no?
-5. Anything above you want changed before it becomes `tokens.css` ground truth?
+1. **Ref format:** `CONCEPT 001` (mono 10–12px uppercase tracked label, three-digit series number).
+2. **Credit lockup:** Vidro credit in **both** nav and footer.
+3. **Status chips:** one accent triad for all statuses — **blue** (`--chip-blue-*`) as the standing default; swap is a one-line token edit if Kari ever prefers another.
+4. **Two-tone display treatment:** yes — line 1 near-white, line 2 secondary/faded, per vidro.fi.
+5. No amendments; §1–§7 stand as written.
 
 ## 9. Method / provenance
 

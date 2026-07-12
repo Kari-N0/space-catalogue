@@ -1,7 +1,8 @@
 /*
  * Design tokens — derived from the vidro.fi rendered audit 2026-07-12 (BRAND.md).
- * PROPOSAL: not imported by any stylesheet until Kari approves BRAND.md
- * (CLAUDE.md brand boundary). Dark theme only, per brand direction.
+ * APPROVED by Kari 2026-07-12 (BRAND.md §8 resolutions) — this file is ground
+ * truth. Dark theme only, per brand direction. Status chips use the blue triad
+ * for all statuses (§8 Q3).
  */
 :root {
   /* -- color: neutrals ------------------------------------------------- */

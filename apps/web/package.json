@@ -13,6 +13,8 @@
   "devDependencies": {
     "@babylonjs/ktx2decoder": "9.16.1",
     "@eslint/js": "^9.31.0",
+    "@fontsource/inter": "5.2.8",
+    "@fontsource/space-grotesk": "5.2.10",
     "esbuild": "^0.28.1",
     "eslint": "^9.31.0",
     "globals": "^16.3.0",
