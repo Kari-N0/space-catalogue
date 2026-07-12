@@ -1,6 +1,8 @@
 {
   "id": "lunar-base",
   "title": "Artemis Lunar Base",
+  "ref": null,
+  "ref_note": "Concept 001 — Ref-code prefix pending Kari (BRAND.md §8 Q1)",
   "status": "in-development",
   "era": "Post-Artemis IV buildout, ~2030–2035",
   "stats": {},
@@ -8,10 +10,22 @@
   "physics_notes": [],
   "sources": [],
   "assets": {
-    "poster": null,
-    "hero_sog": { "mobile": null, "desktop": null },
+    "poster": "assets/placeholders/moon_site_image_placeholder.webp",
+    "hero_video": "assets/placeholders/loop_video_placeholder.mp4",
+    "hero_sog": {
+      "mobile": null,
+      "desktop": "assets/placeholders/hero_moon_site_placeholder.sog"
+    },
     "inspect_glb": null,
     "env": null
   },
+  "camera_envelope": {
+    "target_m": [0, 1, 0],
+    "radius_m": { "min": 3, "max": 16, "default": 8 },
+    "alpha_deg": { "min": null, "max": null },
+    "beta_deg": { "min": 25, "max": 80 },
+    "fov_deg": 60
+  },
+  "camera_envelope_note": "placeholder values for the stand-in SOG only — Kari authors the real envelope; the same block later drives the trainer rig (PLAN §10)",
   "hotspots": []
 }

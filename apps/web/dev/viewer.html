@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>M1 viewer dev harness</title>
+    <style>
+      /* utility styling only — brand tokens land after Kari's BRAND.md approval */
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: #000;
+        color: #eee;
+        font: 14px/1.4 system-ui, sans-serif;
+      }
+      #stage {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+      #view {
+        width: 100%;
+        height: 100%;
+        display: block;
+        touch-action: none;
+        outline: none;
+      }
+      #overlay {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+      #overlay .viewer-hotspot {
+        pointer-events: auto;
+      }
+      #enter,
+      #status {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      #enter {
+        top: 50%;
+        transform: translate(-50%, -50%);
+        padding: 0.8em 1.6em;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: #fff;
+        color: #000;
+        font-weight: 500;
+        cursor: pointer;
+      }
+      #status {
+        bottom: 16px;
+        color: #888;
+        font-variant-numeric: tabular-nums;
+      }
+      .viewer-hotspot {
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        color: #fff;
+        font-size: 10px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        padding: 4px 8px;
+        backdrop-filter: blur(8px);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="stage">
+      <canvas id="view" aria-label="3D viewer"></canvas>
+      <div id="overlay"></div>
+      <button id="enter" type="button">Enter 3D</button>
+      <p id="status" role="status"></p>
+    </div>
+    <script type="module" src="/src/dev/harness.ts"></script>
+  </body>
+</html>

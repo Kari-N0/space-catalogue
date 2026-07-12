@@ -48,6 +48,7 @@ Stack (per PLAN.md): Vite + TypeScript + Babylon.js (v9, WebGPU→WebGL2 fallbac
 - Integration points only: `content/concepts/lunar-base.json`, Kari's drops into `assets/placeholders/`, and later final assets in `apps/web/public/assets/`. Never touch `assets_src/` or any `.blend` in this workstream.
 - Commit often; push to `main` = continuous deploy to the dev URL (GitHub Pages) for Kari's phone review.
 - Any placeholder file >20 MB: flag and STOP for Kari's compress-vs-LFS call before committing (pending: `hero_moon_site_placeholder.sog` 25.8 MiB, `loop_video_placeholder.mp4` 25.3 MiB).
+- **Viewer lazy boundary:** `apps/web/src/viewer/loadViewer.ts` is reached ONLY via dynamic `import()`; nothing under `src/viewer/` or `@babylonjs/*` may be statically imported from landing-route code. Engine chunks must keep "babylon" in their file names (budget-checker contract); Babylon deps stay exact-pinned; fflate is bundle-injected into the SOG loader (never let it fetch from unpkg).
 
 ## Splat pipeline learnings (from the validated rehearsal, 2026-07-10)
 
