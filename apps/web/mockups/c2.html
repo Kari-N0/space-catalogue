@@ -135,7 +135,12 @@
       padding: 12px 28px;
       transition: opacity var(--dur-base) var(--ease-brand);
     }
-    .pill-primary:hover { opacity: 0.85; }
+    .pill-primary:hover {
+      /* keep the black ink: the generic a:hover (white) would otherwise win
+         on pill LINKS and make the label vanish on the white pill */
+      color: var(--color-on-emphasis);
+      opacity: 0.85;
+    }
 
     /* -- fixed glass nav ------------------------------------------------ */
 
