@@ -61,6 +61,8 @@ if (stage.requestFullscreen) {
   });
   document.addEventListener("fullscreenchange", () => {
     fsBtn.textContent = document.fullscreenElement ? "Exit Fullscreen" : "Fullscreen";
+    // the highlight pulse has done its job once fullscreen has been used
+    if (document.fullscreenElement) fsBtn.setAttribute("data-used", "");
   });
 }
 
