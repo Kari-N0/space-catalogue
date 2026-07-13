@@ -29,19 +29,19 @@
   "camera_envelope_note": "placeholder values for the stand-in SOG only — Kari authors the real envelope; the same block later drives the trainer rig (PLAN §10)",
   "hotspots": [
     {
-      "position_m": [0.9, 1.0, 0.2],
+      "position_m": [0.94, 1.0, 1.23],
       "title": "Crew EVA",
       "body": "[sample] Two crew on surface operations near the habitat approach path. Final hotspot copy lands with the scene bible.",
       "image": "assets/placeholders/moon_site_image_placeholder.webp"
     },
     {
-      "position_m": [-0.1, 0.55, 0.35],
+      "position_m": [-0.14, 0.45, 0.48],
       "title": "Surface rover",
       "body": "[sample] Unpressurized utility rover staged for a logistics run. Placeholder position — authored per scene.",
       "image": "assets/placeholders/rover_image_placeholder.webp"
     },
     {
-      "position_m": [-3.0, 2.0, 7.0],
+      "position_m": [-4.87, 1.6, 3.75],
       "title": "Boulder field",
       "body": "[sample] Ejecta boulders shield the northern perimeter. Placeholder position — authored per scene.",
       "image": "assets/placeholders/satellite_orbit_image_placeholder.webp"

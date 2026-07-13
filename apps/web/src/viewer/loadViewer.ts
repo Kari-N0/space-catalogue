@@ -3,6 +3,7 @@
 // engine lifetime, optimizer, HUD, feature views, and disposal.
 
 import type { Scene } from "@babylonjs/core/scene";
+import type { Observer } from "@babylonjs/core/Misc/observable";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 // multi-canvas views: registerView/unRegisterView on AbstractEngine
@@ -128,8 +129,40 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
     swapScene(hero.scene, "hero", false);
     // buildHeroScene attached hero controls; it is the current input owner
     currentInput = { canvas, camera: hero.camera };
+
+    // clicking a pin glides the camera target onto it (clamped to the pan
+    // envelope so the click can never escape the trained region), then lets
+    // the page open its popup
+    let retargetObs: Observer<Scene> | null = null;
+    const retargetHero = (to: Vector3) => {
+      let dest = to.clone();
+      const env = concept.camera_envelope;
+      if (env?.pan_m) {
+        const center = new Vector3(env.target_m[0], env.target_m[1], env.target_m[2]);
+        const d = dest.subtract(center);
+        if (d.length() > env.pan_m.max_from_center) {
+          dest = center.add(d.scale(env.pan_m.max_from_center / d.length()));
+        }
+      }
+      if (retargetObs) hero.scene.onBeforeRenderObservable.remove(retargetObs);
+      const from = hero.camera.target.clone();
+      let t = 0;
+      retargetObs = hero.scene.onBeforeRenderObservable.add(() => {
+        t += hero.scene.getEngine().getDeltaTime() / 600;
+        const k = t >= 1 ? 1 : 1 - Math.pow(1 - t, 3); // ease-out cubic
+        hero.camera.setTarget(Vector3.Lerp(from, dest, k));
+        if (t >= 1 && retargetObs) {
+          hero.scene.onBeforeRenderObservable.remove(retargetObs);
+          retargetObs = null;
+        }
+      });
+    };
+
     if (hotspotLayer && concept.hotspots.length > 0) {
-      hotspots = mountHotspots(hero.scene, hero.camera, hotspotLayer, concept.hotspots, opts.onHotspotSelect);
+      hotspots = mountHotspots(hero.scene, hero.camera, hotspotLayer, concept.hotspots, (h) => {
+        retargetHero(new Vector3(h.position_m[0], h.position_m[1], h.position_m[2]));
+        opts.onHotspotSelect?.(h);
+      });
     }
   };
 

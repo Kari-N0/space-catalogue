@@ -540,11 +540,11 @@
     /* -- specifications: blog-style article -------------------------------- */
 
     .article {
-      /* centered reading column — no dead space right (Kari 2026-07-13) */
+      /* centered reading column — no dead space right (Kari 2026-07-13);
+         the section kicker stays left-aligned like every other section */
       max-width: 68ch;
       margin-inline: auto;
     }
-    .section-centered .section-head { text-align: center; }
     .article h3 {
       font-family: var(--font-display);
       font-size: var(--text-h2);
@@ -848,7 +848,7 @@
     </section>
 
     <!-- ============ specifications: blog-style text area ============ -->
-    <section class="section section-centered" aria-labelledby="kicker-specs">
+    <section class="section" aria-labelledby="kicker-specs">
       <div class="container">
         <div class="section-head">
           <span class="kicker" id="kicker-specs">Specifications</span>
