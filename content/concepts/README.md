@@ -41,6 +41,13 @@ from the JSON, that's a template gap: ask for it.
 | `camera.angle_around_deg` | horizontal orbit limits (`null` = free spin) |
 | `camera.zoom_fov_deg` | lens field of view |
 | `camera.move_limit_m` | how far right-drag panning may move from `look_at_m` |
+| `camera.controls.rotate_speed` | orbit drag speed — `1` = normal, `2` = twice as fast, `0.5` = half |
+| `camera.controls.move_speed` | right-drag pan speed, same scale |
+| `camera.controls.zoom_speed` | scroll/pinch zoom speed, same scale |
+| `camera.controls.glide_after_release` | how long the camera keeps gliding after you let go: `0` = stops instantly, `0.9` = normal, `0.95` = long glide (max) |
+
+The `controls` apply to the main 3D view **and** every Overview window —
+they all share the same feel.
 
 `pins` — clickable points in the 3D scene. Each pin:
 ```json

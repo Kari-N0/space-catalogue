@@ -13,6 +13,15 @@ export interface Range3 {
   default?: number;
 }
 
+export interface CameraControls {
+  /** Multipliers, 1 = default feel. Clamped to 0.1–10. */
+  rotate_speed: number;
+  move_speed: number;
+  zoom_speed: number;
+  /** Inertia after release: 0 = stops instantly … 0.95 = long glide. */
+  glide_after_release: number;
+}
+
 export interface CameraEnvelope {
   target_m: [number, number, number];
   radius_m: Range3;
@@ -21,6 +30,7 @@ export interface CameraEnvelope {
   fov_deg: number;
   /** Ground panning (right-drag): max distance from target_m; null/absent = panning off. */
   pan_m?: { max_from_center: number } | null;
+  controls: CameraControls;
 }
 
 export interface Hotspot {
@@ -118,6 +128,18 @@ function limit(v: unknown): number | null {
   return typeof v === "number" && Number.isFinite(v) ? v : null;
 }
 
+const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
+
+function parseControls(v: unknown): CameraControls {
+  const c = obj(v);
+  return {
+    rotate_speed: clamp(num(c.rotate_speed, 1), 0.1, 10),
+    move_speed: clamp(num(c.move_speed, 1), 0.1, 10),
+    zoom_speed: clamp(num(c.zoom_speed, 1), 0.1, 10),
+    glide_after_release: clamp(num(c.glide_after_release, 0.9), 0, 0.95),
+  };
+}
+
 /** Friendly camera block → viewer envelope. */
 function parseCamera(id: string, v: unknown): CameraEnvelope | null {
   if (v == null) return null;
@@ -130,6 +152,7 @@ function parseCamera(id: string, v: unknown): CameraEnvelope | null {
   if (fov < 1 || fov > 179) throw new ConceptValidationError(id, "camera.zoom_fov_deg must be between 1 and 179");
   const move = limit(c.move_limit_m);
   return {
+    controls: parseControls(c.controls),
     target_m: c.look_at_m,
     radius_m: { min: limit(distance.min), max: limit(distance.max), default: limit(distance.start) ?? undefined },
     beta_deg: { min: limit(upDown.min), max: limit(upDown.max) },

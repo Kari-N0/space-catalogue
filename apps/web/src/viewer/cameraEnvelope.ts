@@ -21,11 +21,19 @@ export function applyEnvelope(camera: ArcRotateCamera, e: CameraEnvelope): void 
   camera.lowerBetaLimit = e.beta_deg.min == null ? 0.01 : rad(e.beta_deg.min);
   camera.upperBetaLimit = e.beta_deg.max == null ? Math.PI - 0.01 : rad(e.beta_deg.max);
 
+  // Author-tunable camera feel (JSON camera.controls; 1/1/1/0.9 = baseline).
+  // Babylon sensibilities are inverse (“higher = slower”), hence the divisions.
+  const c = e.controls;
+  camera.angularSensibilityX = 1000 / c.rotate_speed;
+  camera.angularSensibilityY = 1000 / c.rotate_speed;
+  camera.inertia = c.glide_after_release;
+  camera.panningInertia = c.glide_after_release;
+
   // Panning moves the target and can walk the camera out of the trained
   // envelope. When the envelope allows it (pan_m), constrain it to the ground
   // plane and clamp the target's distance from the scene center; otherwise off.
   if (e.pan_m && e.pan_m.max_from_center > 0) {
-    camera.panningSensibility = 350; // right-drag / two-finger pan
+    camera.panningSensibility = 350 / c.move_speed; // right-drag / two-finger pan
     camera.panningAxis = new Vector3(1, 0, 1); // ground plane only
     camera.panningOriginTarget = new Vector3(e.target_m[0], e.target_m[1], e.target_m[2]);
     camera.panningDistanceLimit = e.pan_m.max_from_center;
@@ -33,8 +41,8 @@ export function applyEnvelope(camera: ArcRotateCamera, e: CameraEnvelope): void 
     camera.panningSensibility = 0;
   }
   camera.useNaturalPinchZoom = true;
-  camera.wheelDeltaPercentage = 0.01;
-  camera.pinchDeltaPercentage = 0.01;
+  camera.wheelDeltaPercentage = 0.01 * c.zoom_speed;
+  camera.pinchDeltaPercentage = 0.01 * c.zoom_speed;
   camera.minZ = 0.05;
 }
 

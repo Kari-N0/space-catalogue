@@ -27,7 +27,13 @@
       "angle_up_down_deg": { "min": 25, "max": 80 },
       "angle_around_deg": { "min": null, "max": null },
       "zoom_fov_deg": 60,
-      "move_limit_m": 5
+      "move_limit_m": 5,
+      "controls": {
+        "rotate_speed": 1.0,
+        "move_speed": 1.0,
+        "zoom_speed": 1.0,
+        "glide_after_release": 0.9
+      }
     },
     "pins": [
       {
