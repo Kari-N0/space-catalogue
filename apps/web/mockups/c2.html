@@ -300,11 +300,16 @@
       z-index: 3;
     }
     .stage-status:empty { display: none; }
+    /* status-chip twin in the neutral palette (Kari 2026-07-13): pulsing dot
+       when idle, brighten + steady dot on hover; same in both fs states */
     .stage-fs {
       position: absolute;
       top: 12px;
       right: 12px;
       z-index: 4;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       font-family: var(--font-mono);
       font-size: var(--text-ref);
       text-transform: uppercase;
@@ -314,27 +319,22 @@
       backdrop-filter: blur(var(--scrim-chip-blur));
       border: 1px solid var(--hairline);
       border-radius: var(--radius-chip);
-      padding: 4px 10px;
-      transition: border-color var(--dur-base) var(--ease-brand);
+      padding: 2px 8px;
+      transition: border-color var(--dur-base) var(--ease-brand),
+                  color var(--dur-base) var(--ease-brand);
     }
-    .stage-fs:hover { border-color: var(--hairline-strong); }
-    .stage-fs::after {
-      /* pulsing ring highlighting the fullscreen option (Kari 2026-07-13);
-         stops after first use (data-used) and under reduced motion */
-      content: "";
-      position: absolute;
-      inset: -1px;
-      border-radius: var(--radius-chip);
-      border: 1px solid var(--color-text-emphasis);
-      pointer-events: none;
-      animation: fs-ping calc(var(--dur-base) * 8) var(--ease-brand) infinite;
+    .stage-fs .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: var(--radius-pill);
+      background: var(--color-text-emphasis);
+      animation: pulse-dot calc(var(--dur-base) * 6) var(--ease-brand) infinite;
     }
-    @keyframes fs-ping {
-      0%   { transform: scale(1); opacity: 0.7; }
-      60%, 100% { transform: scale(1.45); opacity: 0; }
+    .stage-fs:hover {
+      border-color: var(--hairline-strong);
+      color: var(--color-text-emphasis);
     }
-    .stage-fs:hover::after,
-    .stage-fs[data-used]::after { animation: none; opacity: 0; }
+    .stage-fs:hover .dot { animation: none; }
     .stage-note {
       margin-top: 14px;
       font-family: var(--font-mono);
@@ -704,7 +704,7 @@
       .hero-poster { display: block; }
       .status-chip .dot { animation: none; }
       .viewer-hotspot__pin::before { animation: none; opacity: 0; }
-      .stage-fs::after { animation: none; opacity: 0; }
+      .stage-fs .dot { animation: none; }
       * { transition: none !important; }
     }
     /* keyboard focus on a near-black page needs an explicit ring */
@@ -767,7 +767,7 @@
                src="../assets/placeholders/moon_site_image_placeholder.webp"
                alt="" aria-hidden="true">
           <div class="overlay" id="overlay"></div>
-          <button type="button" class="stage-fs" id="stage-fs" hidden>Fullscreen</button>
+          <button type="button" class="stage-fs" id="stage-fs" hidden><span class="dot" aria-hidden="true"></span><span id="stage-fs-label">Fullscreen</span></button>
           <p class="stage-status" id="stage-status" role="status">loading 3D…</p>
           <aside class="hotspot-popup" id="hotspot-popup" role="dialog" aria-labelledby="popup-title">
             <button type="button" class="popup-close" id="popup-close">Close</button>

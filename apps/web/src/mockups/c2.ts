@@ -54,15 +54,15 @@ document.addEventListener("keydown", (e) => {
 /* -- fullscreen toggle ----------------------------------------------------- */
 
 if (stage.requestFullscreen) {
+  const fsLabel = document.getElementById("stage-fs-label") as HTMLElement;
   fsBtn.hidden = false;
   fsBtn.addEventListener("click", () => {
     if (document.fullscreenElement) void document.exitFullscreen();
     else void stage.requestFullscreen();
   });
   document.addEventListener("fullscreenchange", () => {
-    fsBtn.textContent = document.fullscreenElement ? "Exit Fullscreen" : "Fullscreen";
-    // the highlight pulse has done its job once fullscreen has been used
-    if (document.fullscreenElement) fsBtn.setAttribute("data-used", "");
+    // swap only the label span — the pulsing dot must survive the state change
+    fsLabel.textContent = document.fullscreenElement ? "Exit Fullscreen" : "Fullscreen";
   });
 }
 
