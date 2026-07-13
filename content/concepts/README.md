@@ -1,7 +1,92 @@
-# content/concepts
+# Concept pages — how to edit and create them (no coding needed)
 
-One JSON file per concept drives the catalogue — card, page, asset manifest,
-camera limits, hotspots (schema: PLAN.md §7; hotspots and `hero_camera` are
-written by the pipeline/add-on, see ADDON.md §3–4).
+One JSON file in this folder = one concept page. The page template reads the
+file and builds everything: hero, 3D view, pins, overview, article, sources,
+signup, footer. **You never touch HTML/CSS/TS** — if something can't be done
+from the JSON, that's a template gap: ask for it.
 
-First real entry lands with M3 (lunar base vertical slice).
+- **View a page:** `/concept/?id=<filename>` — e.g. `/concept/?id=lunar-base`
+  → https://kari-n0.github.io/space-catalogue/concept/?id=lunar-base
+- **Edit a page:** change the JSON, commit, push → live in ~1 min.
+- **New page:** copy `lunar-base.json` → `my-concept.json`, change `"id"`
+  to `"my-concept"` (must match the filename), edit content, push.
+  It's immediately available at `/concept/?id=my-concept`.
+- **Images/videos/3D files:** put files in `apps/web/public/assets/…` and
+  reference them by that path, e.g. `"assets/lunar-base/photo.webp"`.
+  (During the placeholder phase everything lives in `assets/placeholders/`.)
+
+## Field guide (top to bottom = page order)
+
+### `hero` — the full-screen opening
+| field | what it does |
+|---|---|
+| `label` | small mono label, e.g. `"Concept 001"` |
+| `status` | text in the blue chip, e.g. `"In Development"` |
+| `title_line_1` / `title_line_2` | the big two-tone headline (line 1 white, line 2 gray) |
+| `era_line` | the mono line under the title |
+| `button_text` | the white pill (scrolls to the 3D view) |
+| `video` | looping background video (muted, autoplays) |
+| `poster_image` | still image shown while the video loads / for reduced-motion visitors |
+
+### `live_view` — the 3D gaussian-splat section
+| field | what it does |
+|---|---|
+| `heading` | section kicker |
+| `note` | mono line under the 3D stage |
+| `scene_file` | the `.sog` splat file |
+| `scene_file_mobile` | optional lighter `.sog` for phones (`null` = use the main one) |
+| `camera.look_at_m` | point the camera orbits around, in meters `[x, y, z]` |
+| `camera.distance_m` | zoom limits: `min`/`max`, and `start` = distance on load |
+| `camera.angle_up_down_deg` | how low/high the camera may tilt (degrees; 90 = horizon) |
+| `camera.angle_around_deg` | horizontal orbit limits (`null` = free spin) |
+| `camera.zoom_fov_deg` | lens field of view |
+| `camera.move_limit_m` | how far right-drag panning may move from `look_at_m` |
+
+`pins` — clickable points in the 3D scene. Each pin:
+```json
+{
+  "position_m": [0.9, 1.0, 1.2],
+  "title": "Crew EVA",
+  "text": "Shown in the popup when clicked.",
+  "image": "assets/…/photo.webp"
+}
+```
+`position_m` is a real 3D point in scene meters (take it from Blender — the
+same coordinates as the scene). Clicking a pin also glides the camera to it.
+`image` is optional (`null` for text-only popups).
+
+### `overview` — intro text + the live 3D windows
+- `intro` — the lead paragraph.
+- `features` — one entry per row (any count works; they alternate sides).
+  Each has `label` (mono index line), `title`, `text`, and
+  `view_angle_deg` — how many degrees that window's camera is rotated
+  around the scene compared to the main view.
+
+### `article` — the free-form "Specifications" section
+A list of blocks, rendered in order. Three kinds:
+```json
+{ "type": "chapter",   "text": "A heading" }
+{ "type": "paragraph", "text": "Running text…" }
+{ "type": "image",     "file": "assets/…/fig.webp", "caption": "FIG_01 — caption" }
+```
+Write as many chapters/paragraphs/images as you like, in any order.
+
+### `sources`
+`items`: list of `{ "label": "SRC_01", "text": "citation…" }` rows.
+
+### `signup` — the email band
+`kicker`, `heading_line_1`/`heading_line_2` (two-tone headline), `label`,
+`placeholder`, `button`, `note`. The form is inert until the email service
+account is activated.
+
+### Top-level
+`page_title` = browser-tab title. `footer_label` = mono text bottom-right.
+
+## Tips
+- Keys starting with `_` (like `_readme`) are ignored — use them for notes.
+- JSON gotchas: every `"string"` in double quotes, no comma after the last
+  item in a list, `null` (not empty) to switch something off.
+- If the page shows "could not load", the JSON has a syntax error — paste the
+  file into https://jsonlint.com to find the line.
+- Mark unfinished copy with `[sample …]` brackets so nothing drafty ships
+  unnoticed.

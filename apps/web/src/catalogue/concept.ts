@@ -1,7 +1,11 @@
-// ConceptDoc: typed view of content/concepts/<id>.json — the single source of
-// truth for a concept page (launch acceptance criterion: new concept = new
-// JSON + assets, zero new code). Pure types + a small structural validator;
-// no engine imports (this module loads on the landing route).
+// Concept content contract: content/concepts/<id>.json is the single source
+// of truth for a concept page (launch acceptance criterion: new concept =
+// new JSON + assets, zero new code). The JSON uses friendly author-facing
+// names (see content/concepts/README.md); this module validates it and maps
+// it to the internal viewer types. No engine imports — this loads on the
+// landing route.
+
+/* ---------------- viewer-facing types (consumed by src/viewer/) ---------- */
 
 export interface Range3 {
   min: number | null;
@@ -38,17 +42,60 @@ export interface ConceptAssets {
 export interface ConceptDoc {
   id: string;
   title: string;
-  ref: string | null;
-  status: string;
-  era: string;
-  stats: Record<string, unknown>;
-  summary: string;
-  physics_notes: string[];
-  sources: { label: string; url: string }[];
   assets: ConceptAssets;
   camera_envelope: CameraEnvelope | null;
   hotspots: Hotspot[];
 }
+
+/* ---------------- page-facing types (consumed by catalogue/page.ts) ------ */
+
+export interface PageHero {
+  label: string;
+  status: string;
+  title_line_1: string;
+  title_line_2: string;
+  era_line: string;
+  button_text: string;
+}
+
+export interface PageFeature {
+  label: string;
+  title: string;
+  text: string;
+  view_angle_deg: number;
+}
+
+export type ArticleBlock =
+  | { type: "chapter"; text: string }
+  | { type: "paragraph"; text: string }
+  | { type: "image"; file: string; caption: string };
+
+export interface PageDoc {
+  id: string;
+  page_title: string;
+  hero: PageHero;
+  live_view: { heading: string; note: string };
+  overview: { heading: string; intro: string; features: PageFeature[] };
+  article: { heading: string; blocks: ArticleBlock[] };
+  sources: { heading: string; items: { label: string; text: string }[] };
+  signup: {
+    kicker: string;
+    heading_line_1: string;
+    heading_line_2: string;
+    label: string;
+    placeholder: string;
+    button: string;
+    note: string;
+  };
+  footer_label: string;
+}
+
+export interface ConceptPage {
+  page: PageDoc;
+  viewer: ConceptDoc;
+}
+
+/* ---------------- validation ------------------------------------------- */
 
 class ConceptValidationError extends Error {
   constructor(id: string, problem: string) {
@@ -57,79 +104,148 @@ class ConceptValidationError extends Error {
   }
 }
 
+const str = (v: unknown, fallback = ""): string => (typeof v === "string" ? v : fallback);
+const num = (v: unknown, fallback: number): number =>
+  typeof v === "number" && Number.isFinite(v) ? v : fallback;
+const obj = (v: unknown): Record<string, unknown> =>
+  typeof v === "object" && v !== null ? (v as Record<string, unknown>) : {};
+
 function isVec3(v: unknown): v is [number, number, number] {
   return Array.isArray(v) && v.length === 3 && v.every((n) => typeof n === "number" && Number.isFinite(n));
 }
 
-function isRange(v: unknown): v is Range3 {
-  if (typeof v !== "object" || v === null) return false;
-  const r = v as Record<string, unknown>;
-  const ok = (x: unknown) => x === null || (typeof x === "number" && Number.isFinite(x));
-  return ok(r.min) && ok(r.max) && (r.default == null || (typeof r.default === "number" && Number.isFinite(r.default)));
+function limit(v: unknown): number | null {
+  return typeof v === "number" && Number.isFinite(v) ? v : null;
 }
 
-function validateEnvelope(id: string, v: unknown): CameraEnvelope {
-  const e = v as Record<string, unknown>;
-  if (typeof e !== "object" || e === null) throw new ConceptValidationError(id, "camera_envelope must be an object");
-  if (!isVec3(e.target_m)) throw new ConceptValidationError(id, "camera_envelope.target_m must be [x,y,z]");
-  for (const k of ["radius_m", "alpha_deg", "beta_deg"] as const) {
-    if (!isRange(e[k])) throw new ConceptValidationError(id, `camera_envelope.${k} must be {min,max} numbers or null`);
-  }
-  if (typeof e.fov_deg !== "number" || !Number.isFinite(e.fov_deg) || e.fov_deg < 1 || e.fov_deg > 179) {
-    throw new ConceptValidationError(id, "camera_envelope.fov_deg must be a finite number in 1–179");
-  }
-  if (e.pan_m != null) {
-    const pan = e.pan_m as Record<string, unknown>;
-    if (typeof pan.max_from_center !== "number" || !Number.isFinite(pan.max_from_center) || pan.max_from_center <= 0) {
-      throw new ConceptValidationError(id, "camera_envelope.pan_m.max_from_center must be a positive number");
-    }
-  }
-  return e as unknown as CameraEnvelope;
-}
-
-/** Structural validation — throws ConceptValidationError with a pointed message. */
-export function validateConcept(raw: unknown): ConceptDoc {
-  const c = raw as Record<string, unknown>;
-  if (typeof c !== "object" || c === null) throw new ConceptValidationError("?", "document is not an object");
-  const id = typeof c.id === "string" ? c.id : "?";
-  if (typeof c.id !== "string" || !c.id) throw new ConceptValidationError(id, "missing id");
-  if (typeof c.title !== "string" || !c.title) throw new ConceptValidationError(id, "missing title");
-  const assets = c.assets as Record<string, unknown> | undefined;
-  if (typeof assets !== "object" || assets === null) throw new ConceptValidationError(id, "missing assets");
-  const sog = assets.hero_sog as Record<string, unknown> | undefined;
-  if (typeof sog !== "object" || sog === null) throw new ConceptValidationError(id, "missing assets.hero_sog");
-
-  const doc: ConceptDoc = {
-    id: c.id,
-    title: c.title,
-    ref: typeof c.ref === "string" ? c.ref : null,
-    status: typeof c.status === "string" ? c.status : "",
-    era: typeof c.era === "string" ? c.era : "",
-    stats: (c.stats as Record<string, unknown>) ?? {},
-    summary: typeof c.summary === "string" ? c.summary : "",
-    physics_notes: Array.isArray(c.physics_notes) ? (c.physics_notes as string[]) : [],
-    sources: Array.isArray(c.sources) ? (c.sources as ConceptDoc["sources"]) : [],
-    assets: {
-      poster: (assets.poster as string) ?? null,
-      hero_video: (assets.hero_video as string) ?? null,
-      hero_sog: { mobile: (sog.mobile as string) ?? null, desktop: (sog.desktop as string) ?? null },
-      inspect_glb: (assets.inspect_glb as string) ?? null,
-      env: (assets.env as string) ?? null,
-    },
-    camera_envelope: c.camera_envelope == null ? null : validateEnvelope(id, c.camera_envelope),
-    hotspots: Array.isArray(c.hotspots)
-      ? (c.hotspots as Record<string, unknown>[])
-          .filter((h) => isVec3(h.position_m) && typeof h.title === "string")
-          .map((h) => ({
-            position_m: h.position_m as [number, number, number],
-            title: h.title as string,
-            // normalize so the emitted objects actually satisfy the type
-            body: typeof h.body === "string" ? h.body : "",
-            image: typeof h.image === "string" ? h.image : null,
-          }))
-      : [],
+/** Friendly camera block → viewer envelope. */
+function parseCamera(id: string, v: unknown): CameraEnvelope | null {
+  if (v == null) return null;
+  const c = obj(v);
+  if (!isVec3(c.look_at_m)) throw new ConceptValidationError(id, "camera.look_at_m must be [x, y, z] numbers");
+  const distance = obj(c.distance_m);
+  const upDown = obj(c.angle_up_down_deg);
+  const around = obj(c.angle_around_deg);
+  const fov = num(c.zoom_fov_deg, 60);
+  if (fov < 1 || fov > 179) throw new ConceptValidationError(id, "camera.zoom_fov_deg must be between 1 and 179");
+  const move = limit(c.move_limit_m);
+  return {
+    target_m: c.look_at_m,
+    radius_m: { min: limit(distance.min), max: limit(distance.max), default: limit(distance.start) ?? undefined },
+    beta_deg: { min: limit(upDown.min), max: limit(upDown.max) },
+    alpha_deg: { min: limit(around.min), max: limit(around.max) },
+    fov_deg: fov,
+    pan_m: move && move > 0 ? { max_from_center: move } : null,
   };
-  return doc;
+}
+
+function parsePins(v: unknown): Hotspot[] {
+  if (!Array.isArray(v)) return [];
+  return v
+    .filter((p) => isVec3(obj(p).position_m) && typeof obj(p).title === "string")
+    .map((p) => {
+      const pin = obj(p);
+      return {
+        position_m: pin.position_m as [number, number, number],
+        title: pin.title as string,
+        body: str(pin.text),
+        image: typeof pin.image === "string" ? pin.image : null,
+      };
+    });
+}
+
+function parseArticleBlocks(v: unknown): ArticleBlock[] {
+  if (!Array.isArray(v)) return [];
+  const blocks: ArticleBlock[] = [];
+  for (const raw of v) {
+    const b = obj(raw);
+    if (b.type === "chapter" || b.type === "paragraph") {
+      blocks.push({ type: b.type, text: str(b.text) });
+    } else if (b.type === "image" && typeof b.file === "string") {
+      blocks.push({ type: "image", file: b.file, caption: str(b.caption) });
+    }
+    // unknown block types are skipped, never fatal
+  }
+  return blocks;
+}
+
+/** Parse + validate a concept JSON (friendly authoring format). */
+export function parseConceptPage(raw: unknown): ConceptPage {
+  const c = obj(raw);
+  const id = str(c.id);
+  if (!id) throw new ConceptValidationError("?", 'missing "id"');
+
+  const hero = obj(c.hero);
+  const live = obj(c.live_view);
+  const overview = obj(c.overview);
+  const article = obj(c.article);
+  const sources = obj(c.sources);
+  const signup = obj(c.signup);
+
+  const sceneFile = str(live.scene_file) || null;
+  const sceneFileMobile = str(live.scene_file_mobile) || null;
+
+  const page: PageDoc = {
+    id,
+    page_title: str(c.page_title, id),
+    hero: {
+      label: str(hero.label),
+      status: str(hero.status),
+      title_line_1: str(hero.title_line_1),
+      title_line_2: str(hero.title_line_2),
+      era_line: str(hero.era_line),
+      button_text: str(hero.button_text, "Enter 3D"),
+    },
+    live_view: { heading: str(live.heading, "Live View"), note: str(live.note) },
+    overview: {
+      heading: str(overview.heading, "Overview"),
+      intro: str(overview.intro),
+      features: Array.isArray(overview.features)
+        ? overview.features.map((f) => {
+            const feat = obj(f);
+            return {
+              label: str(feat.label),
+              title: str(feat.title),
+              text: str(feat.text),
+              view_angle_deg: num(feat.view_angle_deg, 0),
+            };
+          })
+        : [],
+    },
+    article: { heading: str(article.heading, "Specifications"), blocks: parseArticleBlocks(article.blocks) },
+    sources: {
+      heading: str(sources.heading, "Sources"),
+      items: Array.isArray(sources.items)
+        ? sources.items.map((s) => ({ label: str(obj(s).label), text: str(obj(s).text) }))
+        : [],
+    },
+    signup: {
+      kicker: str(signup.kicker, "Notify"),
+      heading_line_1: str(signup.heading_line_1),
+      heading_line_2: str(signup.heading_line_2),
+      label: str(signup.label, "Email Address"),
+      placeholder: str(signup.placeholder, "you@example.com"),
+      button: str(signup.button, "Notify Me"),
+      note: str(signup.note),
+    },
+    footer_label: str(c.footer_label),
+  };
+
+  const viewer: ConceptDoc = {
+    id,
+    title: `${page.hero.title_line_1} ${page.hero.title_line_2}`.trim(),
+    assets: {
+      poster: str(hero.poster_image) || null,
+      hero_video: str(hero.video) || null,
+      hero_sog: { mobile: sceneFileMobile, desktop: sceneFile },
+      inspect_glb: null,
+      env: null,
+    },
+    camera_envelope: parseCamera(id, live.camera),
+    hotspots: parsePins(live.pins),
+  };
+
+  return { page, viewer };
 }
 
 /** Resolve a concept-JSON asset path against the deploy base (Pages sub-path safe). */
@@ -137,8 +253,13 @@ export function assetUrl(path: string): string {
   return new URL(path, new URL(import.meta.env.BASE_URL, document.baseURI)).href;
 }
 
-export async function loadConcept(url: string): Promise<ConceptDoc> {
+export async function loadConceptPage(url: string): Promise<ConceptPage> {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`failed to load concept ${url}: HTTP ${res.status}`);
-  return validateConcept(await res.json());
+  return parseConceptPage(await res.json());
+}
+
+/** Viewer-only view of a concept (used by the dev harness). */
+export async function loadConcept(url: string): Promise<ConceptDoc> {
+  return (await loadConceptPage(url)).viewer;
 }

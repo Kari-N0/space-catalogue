@@ -47,6 +47,8 @@ export default defineConfig({
         mockupB: resolve(__dirname, "mockups/b.html"),
         mockupC: resolve(__dirname, "mockups/c.html"),
         mockupC2: resolve(__dirname, "mockups/c2.html"),
+        // the production concept-page template (JSON-driven; /concept/?id=<x>)
+        conceptPage: resolve(__dirname, "concept/index.html"),
       },
       output: {
         // Babylon v9 materials pull shaders via per-file dynamic import();

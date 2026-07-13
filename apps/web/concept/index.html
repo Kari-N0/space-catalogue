@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>Concept — Space Engineering Catalogue</title>
+  <link rel="stylesheet" href="../src/styles/fonts.css">
+  <link rel="stylesheet" href="../src/styles/tokens.css">
+  <link rel="stylesheet" href="../src/styles/concept.css">
+</head>
+<body>
+
+  <!-- site chrome (constant across concepts; content sections render from JSON) -->
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="#" class="nav-lockup">Space Engineering <span>Catalogue</span></a>
+      <a href="#" class="vidro-credit">
+        <img src="../assets/placeholders/logo_vidro_placeholder.png" alt="Vidro logo">
+        Visuals by Vidro
+      </a>
+    </div>
+  </header>
+
+  <main id="app">
+    <p class="stage-note container" id="page-status" role="status" style="padding-block: 120px">loading…</p>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <a href="#" class="vidro-credit">
+        <img src="../assets/placeholders/logo_vidro_placeholder.png" alt="Vidro logo">
+        Visuals by Vidro
+      </a>
+      <nav class="footer-links" aria-label="Footer">
+        <a href="#">Privacy</a>
+        <a href="#">Sources &amp; Methods</a>
+      </nav>
+      <span class="footer-meta" id="footer-label"></span>
+    </div>
+  </footer>
+
+  <script type="module" src="../src/catalogue/page.ts"></script>
+</body>
+</html>
