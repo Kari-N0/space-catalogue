@@ -9,6 +9,7 @@
 //   span.viewer-hotspot__desc        — visually-hidden sibling, aria-describedby
 
 import type { Scene } from "@babylonjs/core/scene";
+import type { Camera } from "@babylonjs/core/Cameras/camera";
 import { Vector3, Matrix } from "@babylonjs/core/Maths/math.vector";
 import type { Observer } from "@babylonjs/core/Misc/observable";
 import type { Hotspot } from "../catalogue/concept";
@@ -21,6 +22,9 @@ let hotspotDescSeq = 0; // unique aria-describedby ids across remounts
 
 export function mountHotspots(
   scene: Scene,
+  // explicit camera: with multi-view rendering, scene.getTransformMatrix()
+  // reflects whichever view rendered last — pins must track the MAIN camera
+  camera: Camera,
   layer: HTMLElement,
   hotspots: Hotspot[],
   onSelect?: (h: Hotspot) => void,
@@ -64,22 +68,21 @@ export function mountHotspots(
   let observer: Observer<Scene> | null = null;
   if (items.length > 0) {
     observer = scene.onAfterRenderObservable.add(() => {
-      const engine = scene.getEngine();
-      const camera = scene.activeCamera;
-      if (!camera) return;
-      const w = engine.getRenderWidth();
-      const h = engine.getRenderHeight();
-      const viewport = camera.viewport.toGlobal(w, h);
-      // engine pixels → CSS pixels (hardware scaling level ≠ 1 under DPR caps)
-      const cssScaleX = layer.clientWidth / w;
-      const cssScaleY = layer.clientHeight / h;
+      // project straight into CSS pixel space (layer size) — engine render
+      // size varies per view when multi-canvas views are active, and hardware
+      // scaling diverges from CSS pixels under DPR caps
+      const cw = layer.clientWidth;
+      const ch = layer.clientHeight;
+      if (cw === 0 || ch === 0) return;
+      const viewport = camera.viewport.toGlobal(cw, ch);
+      const transform = camera.getViewMatrix().multiply(camera.getProjectionMatrix());
       for (const item of items) {
-        const p = Vector3.Project(item.pos, Matrix.IdentityReadOnly, scene.getTransformMatrix(), viewport);
-        const visible = p.z > 0 && p.z < 1 && p.x >= 0 && p.x <= w && p.y >= 0 && p.y <= h;
+        const p = Vector3.Project(item.pos, Matrix.IdentityReadOnly, transform, viewport);
+        const visible = p.z > 0 && p.z < 1 && p.x >= 0 && p.x <= cw && p.y >= 0 && p.y <= ch;
         item.el.style.display = visible ? "" : "none";
         if (visible) {
-          item.el.style.left = `${p.x * cssScaleX}px`;
-          item.el.style.top = `${p.y * cssScaleY}px`;
+          item.el.style.left = `${p.x}px`;
+          item.el.style.top = `${p.y}px`;
         }
       }
     });

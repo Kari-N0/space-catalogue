@@ -35,12 +35,24 @@ export interface ViewerOptions {
   onHotspotSelect?: (h: Hotspot) => void;
 }
 
+export interface FeatureViewHandle {
+  /** Pause/resume rendering of this view (wire to an IntersectionObserver). */
+  setEnabled(enabled: boolean): void;
+  dispose(): void;
+}
+
 export interface ViewerHandle {
   engineKind: EngineKind;
   mode(): ViewerMode;
   /** Rejects when the concept has no inspect_glb (button should not exist). */
   enterInspect(): Promise<void>;
   enterHero(): Promise<void>;
+  /**
+   * Render the live hero scene into an additional canvas with its own
+   * envelope-constrained camera (one engine, one scene, N views). Hero mode
+   * only; views are torn down on scene swap and dispose().
+   */
+  attachFeatureView(canvas: HTMLCanvasElement, opts?: { alphaOffsetDeg?: number }): FeatureViewHandle;
   fps(): number;
   dispose(): void;
 }

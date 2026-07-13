@@ -1,6 +1,12 @@
 // Engine bootstrap: WebGPU when supported, WebGL2 otherwise. One engine per
 // page visit, reused across scene switches; recreated only after WebGPU device
 // loss (heroScene/loadViewer drop back to the poster in that case).
+//
+// Multi-canvas model (Babylon views): the engine renders into a HIDDEN working
+// canvas and every on-page canvas — the main display canvas and any feature
+// views — is a registered view the frame is blitted into. This is Babylon's
+// documented multi-canvas architecture; with views active the engine skips the
+// main-frame render entirely, so the display canvas MUST be a view too.
 
 import { Engine } from "@babylonjs/core/Engines/engine";
 import { WebGPUEngine } from "@babylonjs/core/Engines/webgpuEngine";
@@ -8,6 +14,10 @@ import type { AbstractEngine } from "@babylonjs/core/Engines/abstractEngine";
 // WebGPU's dynamic-texture support arrives via side-effect module; the SOG
 // texture path needs it (see plan Part B / Babylon forum #63761).
 import "@babylonjs/core/Engines/AbstractEngine/abstractEngine.texture";
+// installs registerView/unRegisterView/_renderViews on AbstractEngine — the
+// pure module exports the installer WITHOUT calling it (tree-shaken builds
+// never run the engine-registration side effects that would)
+import { RegisterAbstractEngineViews } from "@babylonjs/core/Engines/AbstractEngine/abstractEngine.views.pure";
 import type { EngineKind, TierProfile } from "./types";
 
 export interface EngineBundle {
@@ -19,20 +29,32 @@ export interface EngineBundle {
 }
 
 export async function createEngine(canvas: HTMLCanvasElement, profile: TierProfile): Promise<EngineBundle> {
+  RegisterAbstractEngineViews();
+
   const wantWebGPU =
     profile.engineForce !== "webgl2" && (profile.engineForce === "webgpu" || (await WebGPUEngine.IsSupportedAsync));
+
+  // hidden working canvas — never in the DOM; views size it per frame
+  const workingCanvas = document.createElement("canvas");
 
   let engine: AbstractEngine;
   let kind: EngineKind;
   if (wantWebGPU) {
-    const gpu = new WebGPUEngine(canvas, { antialias: true, adaptToDeviceRatio: false });
+    const gpu = new WebGPUEngine(workingCanvas, { antialias: true, adaptToDeviceRatio: false });
     await gpu.initAsync();
     engine = gpu;
     kind = "webgpu";
   } else {
-    engine = new Engine(canvas, true, { adaptToDeviceRatio: false });
+    engine = new Engine(workingCanvas, true, { adaptToDeviceRatio: false });
     kind = "webgl2";
   }
+
+  // camera inputs bind to inputElement; leaving it on the display canvas makes
+  // every default attachControl() target the right element
+  engine.inputElement = canvas;
+  // the display canvas is view #0 (no explicit camera: renders the scene's
+  // active camera, which survives hero⇄inspect swaps)
+  engine.registerView(canvas);
 
   const applyScaling = () => engine.setHardwareScalingLevel(1 / Math.min(devicePixelRatio, profile.dprCap));
   applyScaling();
@@ -44,7 +66,7 @@ export async function createEngine(canvas: HTMLCanvasElement, profile: TierProfi
   let mql: MediaQueryList | null = null;
   const onDprChange = () => {
     if (dprWatchStopped) return;
-    applyScaling(); // also triggers engine.resize()
+    applyScaling(); // view sizing picks the new level up next frame
     watchDpr();
   };
   const watchDpr = () => {
@@ -53,10 +75,11 @@ export async function createEngine(canvas: HTMLCanvasElement, profile: TierProfi
   };
   watchDpr();
 
+  // view sizing is per-frame (clientWidth-driven), so no explicit resize()
+  // call is needed for views — but a resize kick keeps anything cached fresh
   const container = canvas.parentElement ?? canvas;
   let resizeQueued = false;
   const ro = new ResizeObserver(() => {
-    // coalesce to one resize per frame; mobile URL-bar changes fire in bursts
     if (resizeQueued) return;
     resizeQueued = true;
     requestAnimationFrame(() => {
@@ -74,6 +97,7 @@ export async function createEngine(canvas: HTMLCanvasElement, profile: TierProfi
       dprWatchStopped = true;
       mql?.removeEventListener("change", onDprChange);
       ro.disconnect();
+      engine.unRegisterView(canvas);
       engine.dispose();
     },
   };

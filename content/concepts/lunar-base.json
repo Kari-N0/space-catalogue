@@ -23,24 +23,28 @@
     "radius_m": { "min": 3, "max": 16, "default": 8 },
     "alpha_deg": { "min": null, "max": null },
     "beta_deg": { "min": 25, "max": 80 },
-    "fov_deg": 60
+    "fov_deg": 60,
+    "pan_m": { "max_from_center": 5 }
   },
   "camera_envelope_note": "placeholder values for the stand-in SOG only — Kari authors the real envelope; the same block later drives the trainer rig (PLAN §10)",
   "hotspots": [
     {
       "position_m": [0.9, 1.0, 0.2],
       "title": "Crew EVA",
-      "body": "[sample] Two crew on surface operations near the habitat approach path. Final hotspot copy lands with the scene bible."
+      "body": "[sample] Two crew on surface operations near the habitat approach path. Final hotspot copy lands with the scene bible.",
+      "image": "assets/placeholders/moon_site_image_placeholder.webp"
     },
     {
       "position_m": [-0.1, 0.55, 0.35],
       "title": "Surface rover",
-      "body": "[sample] Unpressurized utility rover staged for a logistics run. Placeholder position — authored per scene."
+      "body": "[sample] Unpressurized utility rover staged for a logistics run. Placeholder position — authored per scene.",
+      "image": "assets/placeholders/rover_image_placeholder.webp"
     },
     {
       "position_m": [-3.0, 2.0, 7.0],
       "title": "Boulder field",
-      "body": "[sample] Ejecta boulders shield the northern perimeter. Placeholder position — authored per scene."
+      "body": "[sample] Ejecta boulders shield the northern perimeter. Placeholder position — authored per scene.",
+      "image": "assets/placeholders/satellite_orbit_image_placeholder.webp"
     }
   ]
 }

@@ -1,16 +1,24 @@
 // Sole public entry of the viewer (the lazy boundary — landing code reaches
 // this module ONLY via dynamic import()). Owns the hero⇄inspect state machine,
-// engine lifetime, optimizer, HUD, and disposal.
+// engine lifetime, optimizer, HUD, feature views, and disposal.
 
 import type { Scene } from "@babylonjs/core/scene";
+import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
+import { Vector3 } from "@babylonjs/core/Maths/math.vector";
+// multi-canvas views: registerView/unRegisterView on AbstractEngine
+import "@babylonjs/core/Engines/Extensions/engine.views";
 import { createEngine, type EngineBundle } from "./engine";
 import { buildHeroScene } from "./heroScene";
 import { mountHotspots, type HotspotLayer } from "./hotspots";
 import { startOptimizer, type OptimizerHandle } from "./optimizer";
 import { mountHud, type Hud } from "./hud";
 import { pickSogUrl } from "./tiering";
+import { applyEnvelope } from "./cameraEnvelope";
 import { assetUrl } from "../catalogue/concept";
-import type { ViewerHandle, ViewerMode, ViewerOptions } from "./types";
+import type { FeatureViewHandle, ViewerHandle, ViewerMode, ViewerOptions } from "./types";
+
+const rad = (deg: number) => (deg * Math.PI) / 180;
+const preventDefault = (e: Event) => e.preventDefault();
 
 export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
   const { canvas, concept, profile, hotspotLayer } = opts;
@@ -19,6 +27,16 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
   progress({ phase: "engine" });
   const bundle: EngineBundle = await createEngine(canvas, profile);
   const { engine, kind } = bundle;
+  // right-drag pans (when the envelope allows it) — the browser menu must not
+  canvas.addEventListener("contextmenu", preventDefault);
+  // hovering the main canvas reclaims input from any feature view
+  const onMainEnter = () => {
+    if (currentInput && currentInput.canvas !== canvas && activeScene && mode === "hero") {
+      const heroCam = activeScene.activeCamera;
+      if (heroCam) activateInput({ canvas, camera: heroCam });
+    }
+  };
+  canvas.addEventListener("pointerenter", onMainEnter);
 
   let mode: ViewerMode = "hero";
   let activeScene: Scene | null = null;
@@ -28,10 +46,36 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
   let hud: Hud | null = null;
   let disposed = false;
   let generation = 0; // stale async scene builds (rapid mode switches) get discarded
+  const featureViews: (FeatureViewHandle & { _teardown(): void })[] = [];
+
+  // Multi-view input model: exactly ONE camera has controls attached at a
+  // time, switched on pointerenter — otherwise every camera consumes the same
+  // pointer stream (all views move together, and an off-screen view's input
+  // can steal focus and smooth-scroll the page to it).
+  interface InputEntry {
+    canvas: HTMLCanvasElement;
+    camera: { attachControl(noPreventDefault?: boolean): void; detachControl(): void };
+  }
+  let currentInput: InputEntry | null = null;
+  const activateInput = (entry: InputEntry) => {
+    if (disposed || currentInput === entry || !activeScene) return;
+    currentInput?.camera.detachControl();
+    // the scene's inputManager owns the DOM listeners — it must rebind to the
+    // new canvas too, or events from that canvas never reach camera inputs
+    activeScene.detachControl();
+    engine.inputElement = entry.canvas;
+    activeScene.attachControl();
+    entry.camera.attachControl();
+    currentInput = entry;
+  };
 
   const flushPendingOld = () => {
     pendingOld?.dispose();
     pendingOld = null;
+  };
+
+  const disposeFeatureViews = () => {
+    for (const fv of featureViews.splice(0)) fv._teardown();
   };
 
   const stopSceneExtras = () => {
@@ -39,6 +83,7 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
     optimizer = null;
     hotspots?.dispose();
     hotspots = null;
+    disposeFeatureViews();
   };
 
   const swapScene = (next: Scene, nextMode: ViewerMode, inspect: boolean) => {
@@ -81,8 +126,10 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
       return;
     }
     swapScene(hero.scene, "hero", false);
+    // buildHeroScene attached hero controls; it is the current input owner
+    currentInput = { canvas, camera: hero.camera };
     if (hotspotLayer && concept.hotspots.length > 0) {
-      hotspots = mountHotspots(hero.scene, hotspotLayer, concept.hotspots, opts.onHotspotSelect);
+      hotspots = mountHotspots(hero.scene, hero.camera, hotspotLayer, concept.hotspots, opts.onHotspotSelect);
     }
   };
 
@@ -99,6 +146,52 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
     }
     swapScene(inspect.scene, "inspect", true);
     hotspots = inspect.hotspots;
+  };
+
+  const attachFeatureView: ViewerHandle["attachFeatureView"] = (viewCanvas, viewOpts) => {
+    if (disposed) throw new Error("viewer disposed");
+    if (mode !== "hero" || !activeScene) throw new Error("feature views attach to the live hero scene");
+    const scene = activeScene;
+
+    const camera = new ArcRotateCamera(
+      `feature-${featureViews.length}`,
+      -Math.PI / 2,
+      1.1,
+      9,
+      Vector3.Zero(),
+      scene,
+    );
+    if (concept.camera_envelope) applyEnvelope(camera, concept.camera_envelope);
+    camera.alpha += rad(viewOpts?.alphaOffsetDeg ?? 0);
+
+    // controls attach on pointerenter (single-owner input model above)
+    const entry = { canvas: viewCanvas, camera };
+    const onEnter = () => activateInput(entry);
+    viewCanvas.addEventListener("pointerenter", onEnter);
+    viewCanvas.addEventListener("contextmenu", preventDefault);
+
+    const view = engine.registerView(viewCanvas, camera);
+
+    const fv = {
+      setEnabled(enabled: boolean) {
+        view.enabled = enabled;
+      },
+      dispose() {
+        const i = featureViews.indexOf(fv);
+        if (i >= 0) featureViews.splice(i, 1);
+        fv._teardown();
+      },
+      _teardown() {
+        viewCanvas.removeEventListener("pointerenter", onEnter);
+        viewCanvas.removeEventListener("contextmenu", preventDefault);
+        engine.unRegisterView(viewCanvas);
+        if (currentInput?.canvas === viewCanvas) currentInput = null;
+        camera.detachControl();
+        camera.dispose();
+      },
+    };
+    featureViews.push(fv);
+    return fv;
   };
 
   const onPageHide = (e: PageTransitionEvent) => {
@@ -125,6 +218,7 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
     mode: () => mode,
     enterInspect,
     enterHero,
+    attachFeatureView,
     fps: () => engine.getFps(),
     dispose() {
       if (disposed) return;
@@ -132,6 +226,8 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
       generation++;
       removeEventListener("pagehide", onPageHide);
       document.removeEventListener("visibilitychange", onVisibility);
+      canvas.removeEventListener("contextmenu", preventDefault);
+      canvas.removeEventListener("pointerenter", onMainEnter);
       stopSceneExtras();
       hud?.dispose();
       engine.stopRenderLoop();

@@ -21,9 +21,17 @@ export function applyEnvelope(camera: ArcRotateCamera, e: CameraEnvelope): void 
   camera.lowerBetaLimit = e.beta_deg.min == null ? 0.01 : rad(e.beta_deg.min);
   camera.upperBetaLimit = e.beta_deg.max == null ? Math.PI - 0.01 : rad(e.beta_deg.max);
 
-  // Panning moves the target and would walk the camera out of the trained
-  // envelope — the alpha/beta/radius limits alone cannot prevent that.
-  camera.panningSensibility = 0;
+  // Panning moves the target and can walk the camera out of the trained
+  // envelope. When the envelope allows it (pan_m), constrain it to the ground
+  // plane and clamp the target's distance from the scene center; otherwise off.
+  if (e.pan_m && e.pan_m.max_from_center > 0) {
+    camera.panningSensibility = 350; // right-drag / two-finger pan
+    camera.panningAxis = new Vector3(1, 0, 1); // ground plane only
+    camera.panningOriginTarget = new Vector3(e.target_m[0], e.target_m[1], e.target_m[2]);
+    camera.panningDistanceLimit = e.pan_m.max_from_center;
+  } else {
+    camera.panningSensibility = 0;
+  }
   camera.useNaturalPinchZoom = true;
   camera.wheelDeltaPercentage = 0.01;
   camera.pinchDeltaPercentage = 0.01;

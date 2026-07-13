@@ -15,12 +15,16 @@ export interface CameraEnvelope {
   alpha_deg: Range3;
   beta_deg: Range3;
   fov_deg: number;
+  /** Ground panning (right-drag): max distance from target_m; null/absent = panning off. */
+  pan_m?: { max_from_center: number } | null;
 }
 
 export interface Hotspot {
   position_m: [number, number, number];
   title: string;
   body: string;
+  /** Optional image shown in the hotspot info box. */
+  image?: string | null;
 }
 
 export interface ConceptAssets {
@@ -74,6 +78,12 @@ function validateEnvelope(id: string, v: unknown): CameraEnvelope {
   if (typeof e.fov_deg !== "number" || !Number.isFinite(e.fov_deg) || e.fov_deg < 1 || e.fov_deg > 179) {
     throw new ConceptValidationError(id, "camera_envelope.fov_deg must be a finite number in 1–179");
   }
+  if (e.pan_m != null) {
+    const pan = e.pan_m as Record<string, unknown>;
+    if (typeof pan.max_from_center !== "number" || !Number.isFinite(pan.max_from_center) || pan.max_from_center <= 0) {
+      throw new ConceptValidationError(id, "camera_envelope.pan_m.max_from_center must be a positive number");
+    }
+  }
   return e as unknown as CameraEnvelope;
 }
 
@@ -115,6 +125,7 @@ export function validateConcept(raw: unknown): ConceptDoc {
             title: h.title as string,
             // normalize so the emitted objects actually satisfy the type
             body: typeof h.body === "string" ? h.body : "",
+            image: typeof h.image === "string" ? h.image : null,
           }))
       : [],
   };

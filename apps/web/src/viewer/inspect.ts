@@ -100,7 +100,7 @@ async function fillInspectScene(
 
   const hotspots =
     hotspotLayer && concept.hotspots.length > 0
-      ? mountHotspots(scene, hotspotLayer, concept.hotspots as Hotspot[], onHotspotSelect)
+      ? mountHotspots(scene, camera, hotspotLayer, concept.hotspots as Hotspot[], onHotspotSelect)
       : null;
 
   return { scene, camera, hotspots };
