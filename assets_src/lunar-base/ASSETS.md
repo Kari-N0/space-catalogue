@@ -28,6 +28,13 @@ before any row reads `approved`.
 Statuses: `brief` → `draft` (Claude, validator-clean) → `art-pass` (Kari) → `approved` (validator re-run + janitor + this table updated).
 D7 (Earth phase/azimuth) is scheduled for **look-dev**, after the structure assets exist.
 
+## Tooling deliverables
+
+| # | Deliverable | Spec | Status | Files | Notes |
+|---|---|---|---|---|---|
+| T01 | Splat capture system (vantages, presets, preview/execute, envelope contract) | CAPTURE.md | **built 2026-07-13 — rehearsal preview pending Kari** | `pipeline/blender/capture/`, `pipeline/splats/run_capture.py`, `pipeline/pack/envelope_to_concept.py`, `pipeline/checks/check_capture.py` | Rehearsal: draft vantage + proxy child rig on bare site11 terrain, merged path → SuperSplat → .sog, then STOP (CAPTURE.md §7) |
+| T02 | Catalogue Tools add-on — module 1: capture panel (N-panel UI over T01) | ADDON.md + CAPTURE.md §8 | gated on T01 rehearsal | planned: `pipeline/blender/addons/catalogue_tools/` (path pending Kari — ADDON.md §2 said `addon/`) | Thin UI only, no ML imports, Execute = headless job + status-file polling; developed & click-tested live with Kari over MCP |
+
 ## ASSET-SPEC (applies to every row)
 
 - **Scale:** 1:1 real meters, dimensions from the bible §3 element table (with

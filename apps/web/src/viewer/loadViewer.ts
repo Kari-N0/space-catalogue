@@ -15,7 +15,7 @@ import { startOptimizer, type OptimizerHandle } from "./optimizer";
 import { mountHud, type Hud } from "./hud";
 import { pickSogUrl } from "./tiering";
 import { applyControls, applyEnvelope } from "./cameraEnvelope";
-import { assetUrl } from "../catalogue/concept";
+import { assetUrl, type CameraEnvelope } from "../catalogue/concept";
 import type { FeatureViewHandle, ViewerHandle, ViewerMode, ViewerOptions } from "./types";
 
 const rad = (deg: number) => (deg * Math.PI) / 180;
@@ -48,6 +48,9 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
   let disposed = false;
   let generation = 0; // stale async scene builds (rapid mode switches) get discarded
   const featureViews: (FeatureViewHandle & { _teardown(): void })[] = [];
+  // per-object zoom state (capture child-rig envelopes) — hero mode only
+  let objectFocus: string | null = null;
+  let focusEnvelope: ((env: CameraEnvelope) => void) | null = null;
 
   // Multi-view input model: exactly ONE camera has controls attached at a
   // time, switched on pointerenter — otherwise every camera consumes the same
@@ -84,6 +87,8 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
     optimizer = null;
     hotspots?.dispose();
     hotspots = null;
+    objectFocus = null;
+    focusEnvelope = null;
     disposeFeatureViews();
   };
 
@@ -130,13 +135,46 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
     // buildHeroScene attached hero controls; it is the current input owner
     currentInput = { canvas, camera: hero.camera };
 
+    // one camera animation at a time: glides the target (and optionally the
+    // radius) with ease-out cubic over ~600 ms, then runs onDone. A replaced
+    // in-flight animation runs its pending onDone IMMEDIATELY — envelope swaps
+    // park their destination limits there, and dropping it would strand the
+    // camera on the widened transition limits forever.
+    let animObs: Observer<Scene> | null = null;
+    let animPending: (() => void) | null = null;
+    const animateCamera = (dest: Vector3, radiusTo?: number, onDone?: () => void) => {
+      if (animObs) {
+        hero.scene.onBeforeRenderObservable.remove(animObs);
+        animObs = null;
+        animPending?.();
+      }
+      animPending = onDone ?? null;
+      const from = hero.camera.target.clone();
+      const radiusFrom = hero.camera.radius;
+      let t = 0;
+      animObs = hero.scene.onBeforeRenderObservable.add(() => {
+        t += hero.scene.getEngine().getDeltaTime() / 600;
+        const k = t >= 1 ? 1 : 1 - Math.pow(1 - t, 3); // ease-out cubic
+        hero.camera.setTarget(Vector3.Lerp(from, dest, k));
+        if (radiusTo != null) hero.camera.radius = radiusFrom + (radiusTo - radiusFrom) * k;
+        if (t >= 1 && animObs) {
+          hero.scene.onBeforeRenderObservable.remove(animObs);
+          animObs = null;
+          animPending = null;
+          onDone?.();
+        }
+      });
+    };
+
     // clicking a pin glides the camera target onto it (clamped to the pan
     // envelope so the click can never escape the trained region), then lets
-    // the page open its popup
-    let retargetObs: Observer<Scene> | null = null;
+    // the page open its popup. While an object envelope is focused, ITS pan
+    // rules apply — object envelopes carry no pan, so the pin click only
+    // opens the popup without moving the camera off the trained close-up.
     const retargetHero = (to: Vector3) => {
+      const env = objectFocus ? concept.object_envelopes[objectFocus] : concept.camera_envelope;
+      if (objectFocus && !env?.pan_m) return;
       let dest = to.clone();
-      const env = concept.camera_envelope;
       if (env?.pan_m) {
         const center = new Vector3(env.target_m[0], env.target_m[1], env.target_m[2]);
         const d = dest.subtract(center);
@@ -144,18 +182,28 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
           dest = center.add(d.scale(env.pan_m.max_from_center / d.length()));
         }
       }
-      if (retargetObs) hero.scene.onBeforeRenderObservable.remove(retargetObs);
-      const from = hero.camera.target.clone();
-      let t = 0;
-      retargetObs = hero.scene.onBeforeRenderObservable.add(() => {
-        t += hero.scene.getEngine().getDeltaTime() / 600;
-        const k = t >= 1 ? 1 : 1 - Math.pow(1 - t, 3); // ease-out cubic
-        hero.camera.setTarget(Vector3.Lerp(from, dest, k));
-        if (t >= 1 && retargetObs) {
-          hero.scene.onBeforeRenderObservable.remove(retargetObs);
-          retargetObs = null;
-        }
-      });
+      animateCamera(dest);
+    };
+
+    // envelope swap (per-object zoom): widen the limits to the union for the
+    // flight — applying the tight destination limits mid-air would hard-snap
+    // radius/beta — then land exactly on the destination envelope.
+    // null limits mean UNBOUNDED: any null side of the union stays null.
+    const union = (a: number | null, b: number | null, pick: (x: number, y: number) => number) =>
+      a == null || b == null ? null : pick(a, b);
+    focusEnvelope = (env: CameraEnvelope) => {
+      const cam = hero.camera;
+      cam.lowerRadiusLimit = union(cam.lowerRadiusLimit, env.radius_m.min, Math.min);
+      cam.upperRadiusLimit = union(cam.upperRadiusLimit, env.radius_m.max, Math.max);
+      cam.lowerBetaLimit = Math.min(cam.lowerBetaLimit ?? 0.01, rad(env.beta_deg.min ?? 1));
+      cam.upperBetaLimit = Math.max(cam.upperBetaLimit ?? Math.PI - 0.01, rad(env.beta_deg.max ?? 179));
+      cam.lowerAlphaLimit = null;
+      cam.upperAlphaLimit = null;
+      const dest = new Vector3(env.target_m[0], env.target_m[1], env.target_m[2]);
+      const rMin = env.radius_m.min ?? 0.05;
+      const rMax = env.radius_m.max ?? cam.radius;
+      const radiusTo = env.radius_m.default ?? Math.min(Math.max(cam.radius, rMin), rMax);
+      animateCamera(dest, radiusTo, () => applyEnvelope(cam, env));
     };
 
     if (hotspotLayer && concept.hotspots.length > 0) {
@@ -258,6 +306,20 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
     enterInspect,
     enterHero,
     attachFeatureView,
+    objectFocus: () => objectFocus,
+    focusObject(name) {
+      const env = concept.object_envelopes[name];
+      if (!env) throw new Error(`concept "${concept.id}" has no object envelope "${name}"`);
+      if (mode !== "hero" || !focusEnvelope) throw new Error("object zoom is hero-mode only");
+      focusEnvelope(env);
+      objectFocus = name;
+    },
+    clearObjectFocus() {
+      if (!objectFocus) return;
+      if (mode !== "hero" || !focusEnvelope || !concept.camera_envelope) return;
+      focusEnvelope(concept.camera_envelope);
+      objectFocus = null;
+    },
     fps: () => engine.getFps(),
     dispose() {
       if (disposed) return;

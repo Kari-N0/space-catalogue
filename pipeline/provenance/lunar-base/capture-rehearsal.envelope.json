@@ -1,0 +1,56 @@
+{
+  "schema": "capture-envelope v1",
+  "concept": "lunar-base",
+  "vantage": "rehearsal",
+  "generated": "2026-07-13T23:09:08",
+  "blend_file": "\\\\wsl.localhost\\Ubuntu-24.04\\home\\karin\\dev\\space-catalogue\\assets_src\\lunar-base\\terrain\\terrain_site11_v005.blend",
+  "rig_hash": "acb776ae19f9",
+  "focus_blender": [
+    5842.5,
+    -4882.5,
+    1662.0403
+  ],
+  "envelope": {
+    "look_at_m": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "distance_m": {
+      "min": 30.0,
+      "max": 65.0
+    },
+    "angle_up_down_deg": {
+      "min": 3.7,
+      "max": 85.7
+    },
+    "angle_around_deg": {
+      "min": null,
+      "max": null
+    },
+    "zoom_fov_deg": 48.5
+  },
+  "object_envelopes": {
+    "proxy-boulder": {
+      "look_at_m": [
+        17.931,
+        -0.641,
+        -6.03
+      ],
+      "distance_m": {
+        "min": 5.42,
+        "max": 13.01
+      },
+      "angle_up_down_deg": {
+        "min": 4.6,
+        "max": 83.8
+      },
+      "angle_around_deg": {
+        "min": null,
+        "max": null
+      },
+      "zoom_fov_deg": 48.5
+    }
+  },
+  "warnings": []
+}

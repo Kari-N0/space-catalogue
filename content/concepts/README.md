@@ -51,6 +51,18 @@ every Overview window. Each Overview feature ALSO carries its own `controls`
 block — edit it to give one window a different feel (any field you leave out
 falls back to the main view's value).
 
+**Generated camera fields (capture pipeline — see CAPTURE.md):** once a scene
+is trained from a capture vantage, `look_at_m`, `distance_m.min/max`,
+`angle_up_down_deg` and `angle_around_deg` are exported from the SAME envelope
+the training rig used (the `_camera_generated` note records where they came
+from). Don't hand-edit those — move/scale the `ENV_`/`FOCUS_` objects in
+Blender and re-export. Everything else in the camera block (`start`, `controls`,
+`move_limit_m`, `zoom_fov_deg`) stays yours. `camera.object_envelopes` is a
+generated map of per-object zoom envelopes (from child capture rigs): the
+viewer can glide into one for a close-up of that object while enforcing its
+own trained limits. Nothing on the page triggers them yet — how they're
+triggered (pin click, button, …) is a separate design decision.
+
 **Seeing your edits:** the live site updates only after you commit + push
 (deploy takes ~1 min — check the Actions tab turns green). Editing the file
 on disk and refreshing the browser does nothing until then. After the deploy,

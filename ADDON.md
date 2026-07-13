@@ -61,6 +61,21 @@ pipeline by hand first, then this add-on packages it.
 
 ## 3. Module: Camera-envelope designer
 
+> **SUPERSEDED (2026-07-13) by the capture system — see CAPTURE.md.** Kari's
+> capture spec replaced the single parameterized `ENV_<concept-id>` empty below
+> with multi-vantage `CAPTURE_<name>` collections (envelope volume **mesh** +
+> FOCUS empty + nested per-object child rigs), implemented in
+> `pipeline/blender/capture/`. This module is now "capture panel, module 1"
+> wrapping those functions (CAPTURE.md §8); the envelope-JSON path below is
+> replaced by `capture-meta.json` / `capture-<vantage>.envelope.json` under
+> `pipeline/provenance/`, merged into the concept page by
+> `pipeline/pack/envelope_to_concept.py`. The trainer-margin concept and the
+> single-source rule stand, and are implemented. §2's source path
+> `pipeline/blender/addon/` vs the capture spec's `addons/` is pending Kari's
+> call. §6's runner: `pipeline/splats/run_capture.py` already implements the §6
+> job-directory contract for capture jobs and is the seed of the generic
+> `run_job.py`.
+
 The envelope is the contract between training and playback. It is authored visually,
 stored in the .blend, and exported to a single JSON consumed by both sides.
 

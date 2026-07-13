@@ -54,6 +54,12 @@ export interface ConceptDoc {
   title: string;
   assets: ConceptAssets;
   camera_envelope: CameraEnvelope | null;
+  /**
+   * Per-object zoom envelopes (camera.object_envelopes in the JSON) — generated
+   * by the capture pipeline from child rigs (CAPTURE_<vantage>__<object>), same
+   * source as the training rig. Keys are the capture child-rig names.
+   */
+  object_envelopes: Record<string, CameraEnvelope>;
   hotspots: Hotspot[];
 }
 
@@ -151,7 +157,7 @@ function parseControls(v: unknown, base: CameraControls = DEFAULT_CONTROLS): Cam
 }
 
 /** Friendly camera block → viewer envelope. */
-function parseCamera(id: string, v: unknown): CameraEnvelope | null {
+function parseCamera(id: string, v: unknown, baseControls?: CameraControls): CameraEnvelope | null {
   if (v == null) return null;
   const c = obj(v);
   if (!isVec3(c.look_at_m)) throw new ConceptValidationError(id, "camera.look_at_m must be [x, y, z] numbers");
@@ -162,7 +168,7 @@ function parseCamera(id: string, v: unknown): CameraEnvelope | null {
   if (fov < 1 || fov > 179) throw new ConceptValidationError(id, "camera.zoom_fov_deg must be between 1 and 179");
   const move = limit(c.move_limit_m);
   return {
-    controls: parseControls(c.controls),
+    controls: parseControls(c.controls, baseControls),
     target_m: c.look_at_m,
     radius_m: { min: limit(distance.min), max: limit(distance.max), default: limit(distance.start) ?? undefined },
     beta_deg: { min: limit(upDown.min), max: limit(upDown.max) },
@@ -170,6 +176,28 @@ function parseCamera(id: string, v: unknown): CameraEnvelope | null {
     fov_deg: fov,
     pan_m: move && move > 0 ? { max_from_center: move } : null,
   };
+}
+
+/**
+ * camera.object_envelopes → per-object zoom envelopes. Generated blocks (the
+ * capture exporter writes them from child rigs); controls inherit the main
+ * camera. Invalid entries are skipped, never fatal — same philosophy as pins.
+ */
+function parseObjectEnvelopes(id: string, v: unknown, base: CameraEnvelope | null): Record<string, CameraEnvelope> {
+  const out: Record<string, CameraEnvelope> = {};
+  const map = obj(v);
+  for (const key of Object.keys(map)) {
+    if (key.startsWith("_")) continue; // notes convention
+    try {
+      const env = parseCamera(id, map[key], base?.controls);
+      if (env) out[key] = env;
+    } catch (err) {
+      // a malformed generated block must not kill the page — but stay loud,
+      // it means the capture exporter (or a hand edit) produced garbage
+      console.warn(`concept "${id}": skipping object envelope "${key}":`, err);
+    }
+  }
+  return out;
 }
 
 function parsePins(v: unknown): Hotspot[] {
@@ -278,6 +306,7 @@ export function parseConceptPage(raw: unknown): ConceptPage {
       env: null,
     },
     camera_envelope: camera,
+    object_envelopes: parseObjectEnvelopes(id, obj(live.camera).object_envelopes, camera),
     hotspots: parsePins(live.pins),
   };
 

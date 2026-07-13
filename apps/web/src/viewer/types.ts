@@ -56,6 +56,16 @@ export interface ViewerHandle {
     canvas: HTMLCanvasElement,
     opts?: { alphaOffsetDeg?: number; controls?: CameraControls },
   ): FeatureViewHandle;
+  /**
+   * Per-object zoom (capture child-rig envelopes, ConceptDoc.object_envelopes):
+   * glides the camera into the named object's envelope and enforces its limits.
+   * Hero mode only. No page UI calls these yet — the interaction wiring (e.g.
+   * pin click) is a separate, Kari-approved decision.
+   */
+  focusObject(name: string): void;
+  clearObjectFocus(): void;
+  /** Currently focused object envelope name, or null when on the main envelope. */
+  objectFocus(): string | null;
   fps(): number;
   dispose(): void;
 }

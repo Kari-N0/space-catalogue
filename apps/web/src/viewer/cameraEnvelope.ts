@@ -16,8 +16,22 @@ export function applyEnvelope(camera: ArcRotateCamera, e: CameraEnvelope): void 
   camera.upperRadiusLimit = e.radius_m.max;
   if (e.radius_m.default != null) camera.radius = e.radius_m.default;
 
-  camera.lowerAlphaLimit = e.alpha_deg.min == null ? null : rad(e.alpha_deg.min);
-  camera.upperAlphaLimit = e.alpha_deg.max == null ? null : rad(e.alpha_deg.max);
+  if (e.alpha_deg.min == null || e.alpha_deg.max == null) {
+    camera.lowerAlphaLimit = e.alpha_deg.min == null ? null : rad(e.alpha_deg.min);
+    camera.upperAlphaLimit = e.alpha_deg.max == null ? null : rad(e.alpha_deg.max);
+  } else {
+    // Babylon's alpha is a continuous angle (free orbiting accumulates turns) and
+    // its limit clamp doesn't wrap: re-express the arc in the 2π-branch nearest
+    // the camera's current alpha so applying limits never hard-snaps the azimuth.
+    let lo = rad(e.alpha_deg.min);
+    let hi = rad(e.alpha_deg.max);
+    const turn = 2 * Math.PI;
+    const shift = Math.round((camera.alpha - (lo + hi) / 2) / turn) * turn;
+    lo += shift;
+    hi += shift;
+    camera.lowerAlphaLimit = lo;
+    camera.upperAlphaLimit = hi;
+  }
   camera.lowerBetaLimit = e.beta_deg.min == null ? 0.01 : rad(e.beta_deg.min);
   camera.upperBetaLimit = e.beta_deg.max == null ? Math.PI - 0.01 : rad(e.beta_deg.max);
 
