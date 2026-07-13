@@ -46,8 +46,15 @@ from the JSON, that's a template gap: ask for it.
 | `camera.controls.zoom_speed` | scroll/pinch zoom speed, same scale |
 | `camera.controls.glide_after_release` | how long the camera keeps gliding after you let go: `0` = stops instantly, `0.9` = normal, `0.95` = long glide (max) |
 
-The `controls` apply to the main 3D view **and** every Overview window —
-they all share the same feel.
+The main `camera.controls` are the default feel for the main 3D view **and**
+every Overview window. Each Overview feature ALSO carries its own `controls`
+block — edit it to give one window a different feel (any field you leave out
+falls back to the main view's value).
+
+**Seeing your edits:** the live site updates only after you commit + push
+(deploy takes ~1 min — check the Actions tab turns green). Editing the file
+on disk and refreshing the browser does nothing until then. After the deploy,
+a normal refresh is enough — the page always fetches the latest JSON.
 
 `pins` — clickable points in the 3D scene. Each pin:
 ```json

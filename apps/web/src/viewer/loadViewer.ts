@@ -14,7 +14,7 @@ import { mountHotspots, type HotspotLayer } from "./hotspots";
 import { startOptimizer, type OptimizerHandle } from "./optimizer";
 import { mountHud, type Hud } from "./hud";
 import { pickSogUrl } from "./tiering";
-import { applyEnvelope } from "./cameraEnvelope";
+import { applyControls, applyEnvelope } from "./cameraEnvelope";
 import { assetUrl } from "../catalogue/concept";
 import type { FeatureViewHandle, ViewerHandle, ViewerMode, ViewerOptions } from "./types";
 
@@ -194,7 +194,13 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
       Vector3.Zero(),
       scene,
     );
-    if (concept.camera_envelope) applyEnvelope(camera, concept.camera_envelope);
+    if (concept.camera_envelope) {
+      applyEnvelope(camera, concept.camera_envelope);
+      if (viewOpts?.controls) {
+        // per-window feel override (defaults to the main view's controls)
+        applyControls(camera, viewOpts.controls, !!concept.camera_envelope.pan_m?.max_from_center);
+      }
+    }
     camera.alpha += rad(viewOpts?.alphaOffsetDeg ?? 0);
 
     // controls attach on pointerenter (single-owner input model above)

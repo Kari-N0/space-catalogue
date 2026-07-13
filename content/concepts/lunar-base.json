@@ -1,10 +1,8 @@
 {
   "_readme": "This file drives the whole concept page — edit text/images here, no code needed. Field guide with examples: content/concepts/README.md. View at /concept/?id=lunar-base",
-
   "id": "lunar-base",
   "page_title": "Concept 001: Artemis Lunar Base",
   "footer_label": "Concept 001",
-
   "hero": {
     "label": "Concept 001",
     "status": "In Development",
@@ -15,17 +13,30 @@
     "video": "assets/placeholders/rerender.mp4",
     "poster_image": "assets/placeholders/moon_site_image_placeholder.webp"
   },
-
   "live_view": {
     "heading": "Live View",
     "note": "[Live placeholder scene — drag to orbit, right-drag to move, scroll to zoom; pins, framing and copy are samples]",
     "scene_file": "assets/placeholders/hero_moon_site_placeholder-d.sog",
     "scene_file_mobile": null,
     "camera": {
-      "look_at_m": [0, 1, 0],
-      "distance_m": { "min": 3, "max": 16, "start": 8 },
-      "angle_up_down_deg": { "min": 25, "max": 80 },
-      "angle_around_deg": { "min": null, "max": null },
+      "look_at_m": [
+        0,
+        1,
+        0
+      ],
+      "distance_m": {
+        "min": 3,
+        "max": 16,
+        "start": 8
+      },
+      "angle_up_down_deg": {
+        "min": 25,
+        "max": 80
+      },
+      "angle_around_deg": {
+        "min": null,
+        "max": null
+      },
       "zoom_fov_deg": 60,
       "move_limit_m": 5,
       "controls": {
@@ -37,26 +48,37 @@
     },
     "pins": [
       {
-        "position_m": [0.94, 1.0, 1.23],
+        "position_m": [
+          0.94,
+          1.0,
+          1.23
+        ],
         "title": "Crew EVA",
         "text": "[sample] Two crew on surface operations near the habitat approach path. Final hotspot copy lands with the scene bible.",
         "image": "assets/placeholders/moon_site_image_placeholder.webp"
       },
       {
-        "position_m": [-0.14, 0.45, 0.48],
+        "position_m": [
+          -0.14,
+          0.45,
+          0.48
+        ],
         "title": "Surface rover",
         "text": "[sample] Unpressurized utility rover staged for a logistics run. Placeholder position — authored per scene.",
         "image": "assets/placeholders/rover_image_placeholder.webp"
       },
       {
-        "position_m": [-4.87, 1.6, 3.75],
+        "position_m": [
+          -4.87,
+          1.6,
+          3.75
+        ],
         "title": "Boulder field",
         "text": "[sample] Ejecta boulders shield the northern perimeter. Placeholder position — authored per scene.",
         "image": "assets/placeholders/satellite_orbit_image_placeholder.webp"
       }
     ]
   },
-
   "overview": {
     "heading": "Overview",
     "intro": "[sample copy — content in production] A crewed surface habitat cluster near the lunar south pole, built out in the years following Artemis IV. [sample copy — the final summary will follow the scene bible and cover habitat modules, power, and surface logistics.]",
@@ -65,53 +87,112 @@
         "label": "F_01 — Site",
         "title": "South-polar ridge",
         "text": "[sample — an elevated ridge site trades the 29.5-day lunar day-night cycle for near-continuous low-angle sunlight, with permanently shadowed craters in rover range]",
-        "view_angle_deg": 35
+        "view_angle_deg": 35,
+        "controls": {
+          "rotate_speed": 1.0,
+          "move_speed": 1.0,
+          "zoom_speed": 1.0,
+          "glide_after_release": 0.9
+        }
       },
       {
         "label": "F_02 — Surface Ops",
         "title": "Mobility & logistics",
         "text": "[sample — regolith dust is electrostatically charged and abrasive; airlock and radiator placement in the scene reflects dust-mitigation spacing]",
-        "view_angle_deg": -50
+        "view_angle_deg": -50,
+        "controls": {
+          "rotate_speed": 1.0,
+          "move_speed": 1.0,
+          "zoom_speed": 1.0,
+          "glide_after_release": 0.9
+        }
       },
       {
         "label": "F_03 — Comms",
         "title": "Orbital relay",
         "text": "[sample — one-way light time to Earth is ~1.3 s; a relay covers far-side and shadowed-region operations in near-real time]",
-        "view_angle_deg": 150
+        "view_angle_deg": 150,
+        "controls": {
+          "rotate_speed": 1.0,
+          "move_speed": 1.0,
+          "zoom_speed": 1.0,
+          "glide_after_release": 0.9
+        }
       },
       {
         "label": "F_04 — Shielding",
         "title": "Regolith overburden",
         "text": "[sample — a few meters of regolith over the habitat modules attenuates galactic cosmic radiation for long-duration stays]",
-        "view_angle_deg": -120
+        "view_angle_deg": -120,
+        "controls": {
+          "rotate_speed": 1.0,
+          "move_speed": 1.0,
+          "zoom_speed": 1.0,
+          "glide_after_release": 0.9
+        }
       }
     ]
   },
-
   "article": {
     "heading": "Specifications",
     "blocks": [
-      { "type": "chapter", "text": "[sample chapter] Habitat architecture" },
-      { "type": "paragraph", "text": "[sample copy — this section is a free-form editorial area: write blog-style chapters of any length here, with headings, paragraphs and images between chapters as needed. The template renders whatever this file provides.]" },
-      { "type": "paragraph", "text": "[sample copy — a second paragraph demonstrating running text rhythm. The pressurized modules arrive as integrated lander payloads and are connected by short tunnels; the regolith-shielded core hosts crew quarters and the radiation shelter.]" },
-      { "type": "image", "file": "assets/placeholders/moon_site_image_placeholder.webp", "caption": "FIG_01 — [sample caption: site plan render]" },
-      { "type": "chapter", "text": "[sample chapter] Power & thermal" },
-      { "type": "paragraph", "text": "[sample copy — solar arrays track the low polar sun on short masts; a fission surface power unit a kilometre up-slope provides night and contingency power. Radiators run cool on the permanently shaded side of the berm.]" },
-      { "type": "image", "file": "assets/placeholders/rover_image_placeholder.webp", "caption": "FIG_02 — [sample caption: logistics rover]" },
-      { "type": "chapter", "text": "[sample chapter] Surface logistics" },
-      { "type": "paragraph", "text": "[sample copy — cargo landers arrive at ~6-month intervals; unpressurized rovers move payloads from the landing zone along a dust-managed route. The scene shows the route markers and the berm crossing.]" }
+      {
+        "type": "chapter",
+        "text": "[sample chapter] Habitat architecture"
+      },
+      {
+        "type": "paragraph",
+        "text": "[sample copy — this section is a free-form editorial area: write blog-style chapters of any length here, with headings, paragraphs and images between chapters as needed. The template renders whatever this file provides.]"
+      },
+      {
+        "type": "paragraph",
+        "text": "[sample copy — a second paragraph demonstrating running text rhythm. The pressurized modules arrive as integrated lander payloads and are connected by short tunnels; the regolith-shielded core hosts crew quarters and the radiation shelter.]"
+      },
+      {
+        "type": "image",
+        "file": "assets/placeholders/moon_site_image_placeholder.webp",
+        "caption": "FIG_01 — [sample caption: site plan render]"
+      },
+      {
+        "type": "chapter",
+        "text": "[sample chapter] Power & thermal"
+      },
+      {
+        "type": "paragraph",
+        "text": "[sample copy — solar arrays track the low polar sun on short masts; a fission surface power unit a kilometre up-slope provides night and contingency power. Radiators run cool on the permanently shaded side of the berm.]"
+      },
+      {
+        "type": "image",
+        "file": "assets/placeholders/rover_image_placeholder.webp",
+        "caption": "FIG_02 — [sample caption: logistics rover]"
+      },
+      {
+        "type": "chapter",
+        "text": "[sample chapter] Surface logistics"
+      },
+      {
+        "type": "paragraph",
+        "text": "[sample copy — cargo landers arrive at ~6-month intervals; unpressurized rovers move payloads from the landing zone along a dust-managed route. The scene shows the route markers and the berm crossing.]"
+      }
     ]
   },
-
   "sources": {
     "heading": "Sources",
     "items": [
-      { "label": "SRC_01", "text": "[sample: agency reference architecture document — citation in production]" },
-      { "label": "SRC_02", "text": "[sample: peer-reviewed habitat shielding study — citation in production]" },
-      { "label": "SRC_03", "text": "[sample: polar volatiles survey data — citation in production]" }
+      {
+        "label": "SRC_01",
+        "text": "[sample: agency reference architecture document — citation in production]"
+      },
+      {
+        "label": "SRC_02",
+        "text": "[sample: peer-reviewed habitat shielding study — citation in production]"
+      },
+      {
+        "label": "SRC_03",
+        "text": "[sample: polar volatiles survey data — citation in production]"
+      }
     ]
   },
-
   "signup": {
     "kicker": "Notify",
     "heading_line_1": "Follow the",

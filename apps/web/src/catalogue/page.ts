@@ -301,7 +301,11 @@ function wireViewer(data: ConceptPage, refs: StageRefs, featureCanvases: HTMLCan
     const views = new Map<HTMLCanvasElement, FeatureViewHandle>();
     for (const [i, c] of featureCanvases.entries()) {
       try {
-        views.set(c, h.attachFeatureView(c, { alphaOffsetDeg: data.page.overview.features[i]?.view_angle_deg ?? 0 }));
+        const feature = data.page.overview.features[i];
+        views.set(
+          c,
+          h.attachFeatureView(c, { alphaOffsetDeg: feature?.view_angle_deg ?? 0, controls: feature?.controls }),
+        );
       } catch (err) {
         console.error("feature view failed", err);
       }

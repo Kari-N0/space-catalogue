@@ -73,6 +73,8 @@ export interface PageFeature {
   title: string;
   text: string;
   view_angle_deg: number;
+  /** Camera feel for this window — defaults to the main view's controls. */
+  controls: CameraControls;
 }
 
 export type ArticleBlock =
@@ -130,13 +132,21 @@ function limit(v: unknown): number | null {
 
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
 
-function parseControls(v: unknown): CameraControls {
+const DEFAULT_CONTROLS: CameraControls = {
+  rotate_speed: 1,
+  move_speed: 1,
+  zoom_speed: 1,
+  glide_after_release: 0.9,
+};
+
+/** Missing fields fall back to `base` (main-view controls, or the defaults). */
+function parseControls(v: unknown, base: CameraControls = DEFAULT_CONTROLS): CameraControls {
   const c = obj(v);
   return {
-    rotate_speed: clamp(num(c.rotate_speed, 1), 0.1, 10),
-    move_speed: clamp(num(c.move_speed, 1), 0.1, 10),
-    zoom_speed: clamp(num(c.zoom_speed, 1), 0.1, 10),
-    glide_after_release: clamp(num(c.glide_after_release, 0.9), 0, 0.95),
+    rotate_speed: clamp(num(c.rotate_speed, base.rotate_speed), 0.1, 10),
+    move_speed: clamp(num(c.move_speed, base.move_speed), 0.1, 10),
+    zoom_speed: clamp(num(c.zoom_speed, base.zoom_speed), 0.1, 10),
+    glide_after_release: clamp(num(c.glide_after_release, base.glide_after_release), 0, 0.95),
   };
 }
 
@@ -207,6 +217,8 @@ export function parseConceptPage(raw: unknown): ConceptPage {
 
   const sceneFile = str(live.scene_file) || null;
   const sceneFileMobile = str(live.scene_file_mobile) || null;
+  const camera = parseCamera(id, live.camera);
+  const mainControls = camera?.controls ?? DEFAULT_CONTROLS;
 
   const page: PageDoc = {
     id,
@@ -231,6 +243,7 @@ export function parseConceptPage(raw: unknown): ConceptPage {
               title: str(feat.title),
               text: str(feat.text),
               view_angle_deg: num(feat.view_angle_deg, 0),
+              controls: parseControls(feat.controls, mainControls),
             };
           })
         : [],
@@ -264,7 +277,7 @@ export function parseConceptPage(raw: unknown): ConceptPage {
       inspect_glb: null,
       env: null,
     },
-    camera_envelope: parseCamera(id, live.camera),
+    camera_envelope: camera,
     hotspots: parsePins(live.pins),
   };
 
@@ -277,7 +290,9 @@ export function assetUrl(path: string): string {
 }
 
 export async function loadConceptPage(url: string): Promise<ConceptPage> {
-  const res = await fetch(url);
+  // always revalidate: GitHub Pages caches JSON for up to 10 min, which would
+  // make freshly-pushed content edits invisible on a plain refresh
+  const res = await fetch(url, { cache: "no-cache" });
   if (!res.ok) throw new Error(`failed to load concept ${url}: HTTP ${res.status}`);
   return parseConceptPage(await res.json());
 }

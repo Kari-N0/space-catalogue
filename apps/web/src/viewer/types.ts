@@ -1,7 +1,7 @@
 // Viewer public types — deliberately free of Babylon imports so landing-route
 // code can import them at zero bundle cost.
 
-import type { ConceptDoc, Hotspot } from "../catalogue/concept";
+import type { CameraControls, ConceptDoc, Hotspot } from "../catalogue/concept";
 
 export type EngineKind = "webgpu" | "webgl2";
 export type Tier = "mobile" | "desktop";
@@ -52,7 +52,10 @@ export interface ViewerHandle {
    * envelope-constrained camera (one engine, one scene, N views). Hero mode
    * only; views are torn down on scene swap and dispose().
    */
-  attachFeatureView(canvas: HTMLCanvasElement, opts?: { alphaOffsetDeg?: number }): FeatureViewHandle;
+  attachFeatureView(
+    canvas: HTMLCanvasElement,
+    opts?: { alphaOffsetDeg?: number; controls?: CameraControls },
+  ): FeatureViewHandle;
   fps(): number;
   dispose(): void;
 }
