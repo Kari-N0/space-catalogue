@@ -9,13 +9,12 @@ class CatalogueToolsPreferences(bpy.types.AddonPreferences):
     bl_idname = __package__
 
     repo_windows: bpy.props.StringProperty(
-        name="Repo (Windows path)",
-        description="space-catalogue repo as Windows Blender sees it",
+        name="Dev repo (optional)",
+        description="space-catalogue repo checkout — ONLY relevant on the dev "
+                    "machine: prefers the repo's pipeline modules over the copy "
+                    "bundled in this add-on and shows CLI-launched job status. "
+                    "Ignored when the path doesn't exist; leave as-is elsewhere",
         default=DEFAULT_REPO_WIN,
-    )
-    wsl_distro: bpy.props.StringProperty(
-        name="WSL distro",
-        default="Ubuntu-24.04",
     )
     poll_seconds: bpy.props.FloatProperty(
         name="Job poll interval (s)",
@@ -30,10 +29,11 @@ class CatalogueToolsPreferences(bpy.types.AddonPreferences):
 
     def draw(self, _context):
         col = self.layout.column()
-        col.prop(self, "repo_windows")
-        col.prop(self, "wsl_distro")
         col.prop(self, "poll_seconds")
         col.prop(self, "block_c_drive")
+        col.separator()
+        col.label(text="Everything below is optional (space-catalogue dev machine only):")
+        col.prop(self, "repo_windows")
 
 
 class _DefaultPrefs:
@@ -41,8 +41,8 @@ class _DefaultPrefs:
     entry in preferences.addons until it's enabled through the extension
     system. Same defaults as the real preferences."""
     repo_windows = DEFAULT_REPO_WIN
-    wsl_distro = "Ubuntu-24.04"
     poll_seconds = 3.0
+    block_c_drive = True
 
 
 def get_prefs():

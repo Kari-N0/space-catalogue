@@ -69,7 +69,7 @@ class CatalogueToolsState(bpy.types.PropertyGroup):
             ("OFF", "Off", "hide markers"),
         ])
     marker_scale: bpy.props.FloatProperty(
-        name="Marker Size", default=1.0, min=0.05, max=20.0,
+        name="Marker Size", default=1.0, min=0.05, max=100.0,
         update=_marker_update, description="marker size multiplier (scene sizes vary)")
     job_id: bpy.props.StringProperty()
     job_state: bpy.props.StringProperty()
@@ -85,6 +85,8 @@ class CATALOGUE_PT_capture(bpy.types.Panel):
     bl_label = "Capture"
 
     def draw(self, context):
+        from . import jobs as _jobs
+        _jobs.ensure_timer()
         layout = self.layout
         st = context.window_manager.catalogue_tools
 

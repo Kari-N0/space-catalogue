@@ -96,6 +96,12 @@ def start():
         bpy.app.timers.register(_tick, first_interval=2.0)
 
 
+def ensure_timer():
+    """Self-heal: extension upgrades can drop the timer — the panel calls this
+    on every draw, so polling is guaranteed whenever the panel is visible."""
+    start()
+
+
 def stop():
     if bpy.app.timers.is_registered(_tick):
         bpy.app.timers.unregister(_tick)
