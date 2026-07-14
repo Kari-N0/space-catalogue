@@ -47,8 +47,8 @@ VANTAGE_DEFAULTS = {
     "clip_start_m": 0.1,        # camera clip range — check per capture with the
     "clip_end_m": 100_000.0,    # panel's camera preview; distances vary a lot
     "assembly": "merged",       # merged | separate (parent vantages only)
-    "ground_object": "",        # explicit ground mesh for min-height ("" = any
-                                # terrain* mesh); overlapping grounds: pick one
+    "ground_objects": "",       # semicolon-separated ground meshes for min-height
+                                # ("" = any terrain* mesh) — tiled grounds welcome
     "seed": 0,                  # rotates the fibonacci spiral phase
 }
 

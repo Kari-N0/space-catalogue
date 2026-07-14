@@ -336,6 +336,49 @@ class CATALOGUE_OT_test_render(bpy.types.Operator):
         return {"FINISHED"}
 
 
+class CATALOGUE_OT_set_ground(bpy.types.Operator):
+    """Use the currently selected mesh objects as this capture's ground
+    (min-height reference) — select all your terrain tiles, then click"""
+    bl_idname = "catalogue.set_ground"
+    bl_label = "Set Selected as Ground"
+    bl_options = {"REGISTER", "UNDO"}
+
+    @classmethod
+    def poll(cls, context):
+        return any(o.type == "MESH" for o in context.selected_objects)
+
+    def execute(self, context):
+        vantage = active_vantage(context)
+        if vantage is None:
+            self.report({"ERROR"}, "no active capture")
+            return {"CANCELLED"}
+        names = [o.name for o in context.selected_objects
+                 if o.type == "MESH" and not o.name.startswith(
+                     ("ENV_", "FOCUS_", "PRV_", "CAPCAM_"))]
+        if not names:
+            self.report({"ERROR"}, "selection has no usable meshes (capture helpers don't count)")
+            return {"CANCELLED"}
+        vantage["ground_objects"] = ";".join(sorted(names))
+        self.report({"INFO"}, f"ground = {len(names)} object(s): " + ", ".join(sorted(names)[:4])
+                    + ("…" if len(names) > 4 else "") + " — re-run Preview")
+        return {"FINISHED"}
+
+
+class CATALOGUE_OT_clear_ground(bpy.types.Operator):
+    """Back to automatic ground (any mesh named terrain*)"""
+    bl_idname = "catalogue.clear_ground"
+    bl_label = "Clear Ground Selection"
+
+    def execute(self, context):
+        vantage = active_vantage(context)
+        if vantage is None:
+            return {"CANCELLED"}
+        vantage["ground_objects"] = ""
+        vantage["ground_object"] = ""
+        self.report({"INFO"}, "ground = automatic (terrain*) — re-run Preview")
+        return {"FINISHED"}
+
+
 class CATALOGUE_OT_fit_shells(bpy.types.Operator):
     """Fit camera distance shells to each ENV's current size — the parent AND
     every child rig, each against its own envelope"""
@@ -381,6 +424,8 @@ CLASSES = (
     CATALOGUE_OT_execute_capture,
     CATALOGUE_OT_cancel_job,
     CATALOGUE_OT_export_envelope,
+    CATALOGUE_OT_set_ground,
+    CATALOGUE_OT_clear_ground,
     CATALOGUE_OT_fit_shells,
     CATALOGUE_OT_camera_look,
     CATALOGUE_OT_camera_apply,

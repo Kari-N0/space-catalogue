@@ -90,6 +90,17 @@ def focus_object(coll):
     return coll.objects.get("FOCUS_" + vantage_name(coll))
 
 
+def no_render_footprint(ob):
+    """Make a helper object completely invisible to render engines — including
+    the RENDERED VIEWPORT shading, where hide_render alone doesn't apply and a
+    'hidden' ENV sphere would still block light and cast shadows."""
+    ob.hide_render = True
+    for attr in ("visible_camera", "visible_diffuse", "visible_glossy",
+                 "visible_transmission", "visible_volume_scatter", "visible_shadow"):
+        if hasattr(ob, attr):
+            setattr(ob, attr, False)
+
+
 def _new_env_sphere(name, center, radius):
     mesh = bpy.data.meshes.new(name)
     bm = bmesh.new()
@@ -99,7 +110,7 @@ def _new_env_sphere(name, center, radius):
     ob = bpy.data.objects.new(name, mesh)
     ob.location = Vector(center)
     ob.display_type = "WIRE"
-    ob.hide_render = True
+    no_render_footprint(ob)
     ob.color = (0.2, 0.55, 1.0, 1.0)
     return ob
 
@@ -131,6 +142,8 @@ _PROP_UI = {
     "clip_end_m": "camera clip end (m) — must exceed the farthest visible terrain",
     "assembly": "merged | separate (how child rigs combine at training time)",
     "ground_object": "explicit ground mesh for min-height ('' = any terrain* mesh)",
+    "ground_objects": "semicolon-separated ground mesh names for min-height "
+                      "('' = any terrain* mesh); set via the panel from selection",
     "seed": "rotates the sampling spiral; same seed = identical rig",
     "target_object": "object this child rig orbits (read-only by convention)",
     "standoff_min_m": "min camera distance from the target object's surface (m)",

@@ -230,6 +230,13 @@ def run_preview(vantage_name):
     result = rig.generate_rig(vantage, render_fidelity=False)
     _LAST[vantage_name] = result
 
+    # self-heal: ENV volumes must never affect the Rendered viewport's light
+    # (covers ENVs created before this rule and Kari-duplicated ones)
+    for coll_ in [vantage] + list(convention.find_children(vantage).values()):
+        env_ob = convention.env_object(coll_)
+        if env_ob is not None:
+            convention.no_render_footprint(env_ob)
+
     clear_preview(vantage_name)
     coll = bpy.data.collections.new(f"PREVIEW_{vantage_name}")
     vantage.children.link(coll)
@@ -259,7 +266,7 @@ def run_preview(vantage_name):
         size = min(6.0, max(0.5, 0.05 * s["shell_m"]))
         ob["prv_base"] = size  # marker display scaling works off this base
         ob.scale = (size, size, size)
-        ob.hide_render = True
+        convention.no_render_footprint(ob)  # invisible to Rendered viewport too
         ob.hide_select = True
         coll.objects.link(ob)
 
