@@ -176,10 +176,14 @@ class CATALOGUE_PT_capture(bpy.types.Panel):
         box.prop(st, "output_dir", text="Output")
         if st.total_images > 0 and st.last_hash:
             box.label(text=f"total number of images: {st.total_images}", icon="RENDERLAYERS")
-        if bpy.data.is_dirty:
-            box.label(text="save the file first (hash = saved file)", icon="ERROR")
-        elif not st.last_hash:
-            box.label(text="run Preview first — its hash is the approval", icon="INFO")
+        has_hash = bool(st.last_hash)
+        saved = not bpy.data.is_dirty
+        box.label(text="1. Preview Rig run (= approval)" if has_hash
+                  else "1. press 'Preview Rig' — its hash is the approval",
+                  icon="CHECKMARK" if has_hash else "RADIOBUT_OFF")
+        box.label(text="2. file saved" if saved
+                  else "2. save the file (Ctrl+S) — the hash describes the saved file",
+                  icon="CHECKMARK" if saved else "RADIOBUT_OFF")
         box.operator("catalogue.execute_capture",
                      text="Render + Build LichtFeld Dataset", icon="PLAY")
 
