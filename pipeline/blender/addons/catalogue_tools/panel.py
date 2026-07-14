@@ -20,14 +20,14 @@ def vantage_items(_self, _context):
             if c.name.startswith("CAPTURE_") and "__" not in c.name)
     except Exception:
         names = []
-    _ITEMS_CACHE = ([(n, n, "capture vantage") for n in names]
-                    or [("NONE", "— no vantages —", "create one below")])
+    _ITEMS_CACHE = ([(n, n, "capture") for n in names]
+                    or [("NONE", "— no captures —", "create one below")])
     return _ITEMS_CACHE
 
 
 class CatalogueToolsState(bpy.types.PropertyGroup):
-    vantage: bpy.props.EnumProperty(name="Vantage", items=vantage_items)
-    new_name: bpy.props.StringProperty(name="Name", default="vantage-01",
+    vantage: bpy.props.EnumProperty(name="Capture", items=vantage_items)
+    new_name: bpy.props.StringProperty(name="Name", default="capture-01",
                                        description="lowercase letters/digits/hyphens")
     last_hash: bpy.props.StringProperty()
     last_vantage: bpy.props.StringProperty()
@@ -50,11 +50,11 @@ class CATALOGUE_PT_capture(bpy.types.Panel):
         st = context.window_manager.catalogue_tools
 
         box = layout.box()
-        box.label(text="Vantage", icon="OUTLINER_COLLECTION")
+        box.label(text="Captures", icon="OUTLINER_COLLECTION")
         box.prop(st, "vantage", text="")
         row = box.row(align=True)
         row.prop(st, "new_name", text="")
-        row.operator("catalogue.create_vantage", text="Create at Cursor", icon="ADD")
+        box.operator("catalogue.create_vantage", text="Create New Capture at Cursor", icon="ADD")
         sel = context.active_object.name if context.active_object else "—"
         box.operator("catalogue.add_child_rig", text=f"Add Child Rig ({sel})", icon="MESH_ICOSPHERE")
 

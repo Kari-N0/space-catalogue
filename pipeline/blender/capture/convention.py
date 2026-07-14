@@ -36,6 +36,13 @@ def _link_once(parent, coll):
         parent.children.link(coll)
 
 
+def _in_subtree(coll, root):
+    """True when coll is root or any descendant collection of root."""
+    if coll == root:
+        return True
+    return any(_in_subtree(coll, child) for child in root.children)
+
+
 def ensure_capture_root(scene=None):
     scene = scene or bpy.context.scene
     root = bpy.data.collections.get(CAPTURE_ROOT)
@@ -215,6 +222,22 @@ def create_child_rig(vantage, object_name, preset=None):
     target = bpy.data.objects.get(object_name)
     if target is None or target.type != "MESH":
         raise ValueError(f"target object {object_name!r} not found or not a mesh")
+    # child rigs orbit RENDERABLE SCENE CONTENT — never capture infrastructure
+    # (ENV_/FOCUS_/markers) or render-hidden helpers; those don't exist in the
+    # dataset, so a rig around them is meaningless (and auto-fit goes wild:
+    # an ENV sphere target once produced 25-60 km shells)
+    root = bpy.data.collections.get(CAPTURE_ROOT)
+    if (object_name.startswith(("ENV_", "FOCUS_", "PRV_"))
+            or (root is not None and any(_in_subtree(c, root) for c in target.users_collection))):
+        raise ValueError(f"{object_name!r} is capture infrastructure — select a scene object")
+    if target.hide_render:
+        raise ValueError(f"{object_name!r} is render-hidden — it won't appear in the "
+                         "dataset; unhide it or pick another object")
+    deps_check = bpy.context.evaluated_depsgraph_get()
+    _c, radius_check = _world_bounds(target, deps_check)
+    if radius_check > 500.0:
+        raise ValueError(f"{object_name!r} bounds radius is {radius_check:.0f} m — child "
+                         "rigs are close-up orbits; select a smaller object")
 
     key = re.sub(r"[^a-z0-9]+", "-", object_name.lower()).strip("-")
     if not NAME_RE.match(key):

@@ -71,7 +71,7 @@ class CATALOGUE_OT_add_child_rig(bpy.types.Operator):
         convention = capture_modules()[0]
         vantage = active_vantage(context)
         if vantage is None:
-            self.report({"ERROR"}, "no active vantage")
+            self.report({"ERROR"}, "no active capture")
             return {"CANCELLED"}
         try:
             coll = convention.create_child_rig(convention.vantage_name(vantage),
@@ -92,7 +92,7 @@ class CATALOGUE_OT_preview(bpy.types.Operator):
         convention, preview_mod = capture_modules()[:2]
         vantage = active_vantage(context)
         if vantage is None:
-            self.report({"ERROR"}, "no active vantage")
+            self.report({"ERROR"}, "no active capture")
             return {"CANCELLED"}
         st = state(context)
         context.window.cursor_set("WAIT")
@@ -200,7 +200,7 @@ class CATALOGUE_OT_export_envelope(bpy.types.Operator):
         convention, _pv, export_envelope = capture_modules()[:3]
         vantage = active_vantage(context)
         if vantage is None:
-            self.report({"ERROR"}, "no active vantage")
+            self.report({"ERROR"}, "no active capture")
             return {"CANCELLED"}
         name = convention.vantage_name(vantage)
         out = os.path.join(prefs.get_prefs().repo_windows, "pipeline", "provenance",
