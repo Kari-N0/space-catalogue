@@ -29,11 +29,6 @@ class CatalogueToolsState(bpy.types.PropertyGroup):
     vantage: bpy.props.EnumProperty(name="Vantage", items=vantage_items)
     new_name: bpy.props.StringProperty(name="Name", default="vantage-01",
                                        description="lowercase letters/digits/hyphens")
-    preset: bpy.props.EnumProperty(name="Preset", items=[
-        ("draft", "draft", "~100 views / 1080px / short train"),
-        ("standard", "standard", "~200 views / 1440px"),
-        ("hero", "hero", "320+ views / 1920px / full train"),
-    ])
     last_hash: bpy.props.StringProperty()
     last_vantage: bpy.props.StringProperty()
     last_summary: bpy.props.StringProperty()
@@ -59,8 +54,7 @@ class CATALOGUE_PT_capture(bpy.types.Panel):
         box.prop(st, "vantage", text="")
         row = box.row(align=True)
         row.prop(st, "new_name", text="")
-        row.prop(st, "preset", text="")
-        box.operator("catalogue.create_vantage", icon="ADD")
+        row.operator("catalogue.create_vantage", text="Create at Cursor", icon="ADD")
         sel = context.active_object.name if context.active_object else "—"
         box.operator("catalogue.add_child_rig", text=f"Add Child Rig ({sel})", icon="MESH_ICOSPHERE")
 
@@ -68,7 +62,7 @@ class CATALOGUE_PT_capture(bpy.types.Panel):
         if coll is not None:
             props = layout.box()
             props.label(text=f"CAPTURE_{st.vantage}", icon="PROPERTIES")
-            for key in ("preset", "views", "resolution", "min_height_m",
+            for key in ("views", "resolution", "samples", "min_height_m",
                         "clearance_m", "seed", "assembly"):
                 if key in coll.keys():
                     props.prop(coll, f'["{key}"]', text=key)

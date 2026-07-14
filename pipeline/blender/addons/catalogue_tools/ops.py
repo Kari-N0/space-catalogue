@@ -43,14 +43,17 @@ class CATALOGUE_OT_create_vantage(bpy.types.Operator):
         convention = capture_modules()[0]
         st = state(context)
         try:
-            convention.create_vantage(st.new_name.strip(),
-                                      tuple(context.scene.cursor.location),
-                                      preset=st.preset)
+            coll = convention.create_vantage(st.new_name.strip(),
+                                             tuple(context.scene.cursor.location),
+                                             snap_to_terrain_surface=True)
         except ValueError as err:
             self.report({"ERROR"}, str(err))
             return {"CANCELLED"}
         st.vantage = st.new_name.strip()
-        self.report({"INFO"}, f"CAPTURE_{st.new_name.strip()} created — move/scale ENV + FOCUS freely")
+        foc = convention.focus_object(coll)
+        z = foc.location.z if foc else 0.0
+        self.report({"INFO"}, f"CAPTURE_{st.new_name.strip()} created, FOCUS snapped to "
+                              f"terrain surface (z={z:.1f}) — move/scale ENV + FOCUS freely")
         return {"FINISHED"}
 
 

@@ -138,9 +138,35 @@ def _write_props(coll, values):
                 pass  # non-rna-idprop types (strings/bools pre-5.x quirks)
 
 
-def create_vantage(name, focus, preset="draft"):
+def snap_to_terrain(point, clearance=1.5):
+    """(x, y, terrain_surface_z + clearance) at the point's x,y — raycast from
+    high above against render-visible terrain-named objects. Returns the input
+    unchanged when no terrain is hit (off-tile). Guards the classic trap: the
+    3D cursor sits at z=0 while the surface is hundreds of meters up."""
+    deps = bpy.context.evaluated_depsgraph_get()
+    best = None
+    for ob in bpy.context.scene.objects:
+        if ob.type != "MESH" or ob.hide_render:
+            continue
+        if not ob.name.lower().startswith("terrain"):
+            continue
+        inv = ob.matrix_world.inverted()
+        hit, loc, _n, _i = ob.ray_cast(
+            inv @ Vector((point[0], point[1], 1.0e5)),
+            (inv.to_3x3() @ Vector((0.0, 0.0, -1.0))).normalized(), depsgraph=deps)
+        if hit:
+            z = (ob.matrix_world @ loc).z
+            best = z if best is None else max(best, z)
+    if best is None:
+        return tuple(point)
+    return (point[0], point[1], best + clearance)
+
+
+def create_vantage(name, focus, preset="draft", snap_to_terrain_surface=False):
     """Create CAPTURE_<name> with default ENV sphere + FOCUS empty. Returns the
-    collection. Kari then moves/scales ENV and FOCUS freely."""
+    collection. Kari then moves/scales ENV and FOCUS freely. views/resolution/
+    samples are written as explicit resolved numbers (directly editable — no
+    0-means-preset sentinels on freshly created vantages)."""
     if not NAME_RE.match(name):
         raise ValueError(f"vantage name must match [a-z0-9-]+: {name!r}")
     if preset not in presets.PRESETS:
@@ -149,11 +175,17 @@ def create_vantage(name, focus, preset="draft"):
     coll_name = "CAPTURE_" + name
     if bpy.data.collections.get(coll_name):
         raise ValueError(f"{coll_name} already exists")
+    if snap_to_terrain_surface:
+        focus = snap_to_terrain(focus)
     coll = bpy.data.collections.new(coll_name)
     _link_once(root, coll)
 
     props = dict(presets.VANTAGE_DEFAULTS)
     props["preset"] = preset
+    resolved = presets.resolve_config({"preset": preset})
+    props["views"] = resolved["views"]
+    props["resolution"] = resolved["resolution"]
+    props["samples"] = resolved["samples"]
     _write_props(coll, props)
 
     shells = props["distance_shells_m"]

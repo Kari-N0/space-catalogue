@@ -244,7 +244,12 @@ def generate_rig(vantage_coll, render_fidelity=False):
     with ctx:
         scene_bvh = validity.SceneGeo(exclude_root=bpy.data.collections.get(convention.CAPTURE_ROOT))
         h = scene_bvh.height_above_terrain(focus)
-        if h is not None and h < -0.5:
+        if h is None:
+            warnings.append(
+                f"FOCUS_{name} has NO terrain below it — it is under the surface or "
+                "off the tile; expect every candidate to be rejected. Snap the FOCUS "
+                "to the surface (the panel's Create does this automatically).")
+        elif h < -0.5:
             warnings.append(f"FOCUS_{name} sits {-h:.1f} m below the terrain surface")
 
         samples, shell_stats, w = _sample_rig(
