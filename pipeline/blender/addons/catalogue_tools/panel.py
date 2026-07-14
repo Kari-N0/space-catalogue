@@ -63,11 +63,14 @@ class CATALOGUE_PT_capture(bpy.types.Panel):
         if coll is not None:
             props = layout.box()
             props.label(text=f"CAPTURE_{st.vantage}", icon="PROPERTIES")
+            if "distance_shells_m" in coll.keys():
+                props.prop(coll, '["distance_shells_m"]', text="camera distances (m)")
+                props.operator("catalogue.fit_shells", icon="FULLSCREEN_ENTER")
             for key in ("views", "resolution", "samples", "min_height_m",
                         "clearance_m", "seed", "assembly"):
                 if key in coll.keys():
                     props.prop(coll, f'["{key}"]', text=key)
-            props.label(text="shells + all knobs: Properties ▸ Collection", icon="INFO")
+            props.label(text="all knobs: Properties ▸ Collection", icon="INFO")
 
         box = layout.box()
         box.label(text="Preview (no rendering)", icon="HIDE_OFF")

@@ -276,6 +276,28 @@ def create_child_rig(vantage, object_name, preset=None):
     return coll
 
 
+def fit_shells_to_env(coll, fractions=(0.5, 0.72, 0.92)):
+    """Set distance_shells_m from the ENV volume's actual size: fractions of the
+    nearest FOCUS->ENV-surface distance (so every shell fits inside the envelope
+    in all directions). The scale-the-ENV-then-fit authoring flow: cameras stay
+    on shells; the ENV alone never moves them outward."""
+    from . import validity
+
+    env, foc = env_object(coll), focus_object(coll)
+    if env is None or foc is None:
+        raise ValueError(f"{coll.name}: missing ENV or FOCUS")
+    vol = validity.EnvVolume(env)
+    focus = foc.matrix_world.translation
+    if not vol.contains(tuple(focus)):
+        raise ValueError(f"FOCUS_{vantage_name(coll)} is outside its ENV volume — "
+                         "move one of them first")
+    co, _n, _i, _d = vol.bvh.find_nearest(focus)
+    reach = (co - focus).length
+    shells = [round(reach * f, 1) for f in fractions]
+    coll["distance_shells_m"] = shells
+    return shells
+
+
 def read_config(coll, child=False):
     """Collection custom properties -> plain dict -> presets.resolve_config()."""
     props = {}

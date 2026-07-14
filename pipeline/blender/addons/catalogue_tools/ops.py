@@ -214,6 +214,27 @@ class CATALOGUE_OT_export_envelope(bpy.types.Operator):
         return {"FINISHED"}
 
 
+class CATALOGUE_OT_fit_shells(bpy.types.Operator):
+    """Set the camera distance shells to fit the ENV volume's current size"""
+    bl_idname = "catalogue.fit_shells"
+    bl_label = "Fit Shells to ENV"
+    bl_options = {"REGISTER", "UNDO"}
+
+    def execute(self, context):
+        convention = capture_modules()[0]
+        vantage = active_vantage(context)
+        if vantage is None:
+            self.report({"ERROR"}, "no active capture")
+            return {"CANCELLED"}
+        try:
+            shells = convention.fit_shells_to_env(vantage)
+        except ValueError as err:
+            self.report({"ERROR"}, str(err))
+            return {"CANCELLED"}
+        self.report({"INFO"}, f"distance_shells_m = {shells} — re-run Preview")
+        return {"FINISHED"}
+
+
 class CATALOGUE_OT_reload_pipeline(bpy.types.Operator):
     """Dev: reload the pipeline capture modules after edits on the WSL side"""
     bl_idname = "catalogue.reload_pipeline"
@@ -234,5 +255,6 @@ CLASSES = (
     CATALOGUE_OT_execute_capture,
     CATALOGUE_OT_cancel_job,
     CATALOGUE_OT_export_envelope,
+    CATALOGUE_OT_fit_shells,
     CATALOGUE_OT_reload_pipeline,
 )
