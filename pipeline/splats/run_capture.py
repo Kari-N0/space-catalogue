@@ -2,20 +2,28 @@
 imports, training runs as a subprocess in the splat conda env).
 
     python3 pipeline/splats/run_capture.py --blend <path.blend> --vantage <name> \\
-        --approved-rig <hash-from-preview> [--concept lunar-base] \\
+        --approved-rig <hash-from-preview> [--concept lunar-base] [--train-gsplat] \\
         [--skip-render] [--skip-sync] [--skip-train] [--dry-run]
 
-Chain (each stage gated on the previous, status.json updated throughout):
+Default flow (LichtFeld Studio, Kari 2026-07-14):
     render-dataset  blender-win.sh -b <blend> --python capture/export_dataset.py
-                    -> D:\\renders\\<concept>\\capture\\<vantage>\\
-    sync-dataset    pipeline/blender/sync-dataset.sh <concept>/capture/<vantage>
+                    -> D:\\renders\\<concept>\\capture\\<vantage>\\lichtFeld\\
+                    (COLMAP text at the folder root + images/ + output/ — a
+                    drag-and-drop LFS dataset; sparse/0/ twin keeps the same
+                    folder valid for gsplat)
+    report          provenance + envelope sidecar finalized; Kari drops the
+                    lichtFeld folder into LichtFeld Studio, trains, cleans
+                    (crop/clean ONLY), exports .sog. LFS runs natively on
+                    Windows against D:\\ — the ext4 rule only governs WSL-side
+                    training I/O.
+
+--train-gsplat (validation/automation path):
+    + sync-dataset  pipeline/blender/sync-dataset.sh <concept>/capture/<vantage>
                     (training I/O on ext4, never /mnt/*)
-    train-splat     gsplat simple_trainer.py mcmc, preset params from capture-meta,
+    + train-splat   gsplat simple_trainer.py mcmc, preset params from capture-meta,
                     ALWAYS with --no-normalize-world-space (frame contract:
                     normalization would bake a recenter+rescale+PCA rotation into
-                    the PLY and break the meter-true envelope)
-    report          PLY copied next to the dataset on D:\\ for the SuperSplat pass,
-                    provenance finalized under pipeline/provenance/<concept>/
+                    the PLY and break the meter-true envelope); PLY copied to D:\\
 
 GATE: --approved-rig is required (the hash preview printed after Kari's go);
 export_dataset.py re-derives the rig and refuses on any mismatch.
@@ -39,30 +47,30 @@ import sys
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SPLAT_PY = os.path.expanduser("~/miniconda3/envs/splat/bin/python")
 GSPLAT_EXAMPLES = os.path.expanduser("~/apps/gsplat/examples")
-STAGES = ["render-dataset", "sync-dataset", "train-splat", "report"]
 
 
 class Job:
     """ADDON.md §6 job directory: atomic status.json + params + control + log."""
 
-    def __init__(self, kind, params):
+    def __init__(self, kind, params, stages):
         stamp = _dt.datetime.now().strftime("%Y%m%d-%H%M%S")
         self.job_id = f"{stamp}-{kind}"
         self.dir = os.path.join(REPO, "jobs", self.job_id)
         os.makedirs(self.dir, exist_ok=True)
         self.kind = kind
+        self.stages = stages
         self.started = _dt.datetime.now().astimezone().isoformat(timespec="seconds")
         self.log_path = os.path.join(self.dir, "log.txt")
         with open(os.path.join(self.dir, "params.json"), "w") as fh:
             json.dump(params, fh, indent=2)
         with open(os.path.join(self.dir, "control"), "w") as fh:
             fh.write("continue")
-        self.status(state="queued", stage=STAGES[0], message="starting")
+        self.status(state="queued", stage=stages[0], message="starting")
 
     def status(self, state, stage, message, progress=-1, metrics=None):
         doc = {
             "job_id": self.job_id, "kind": self.kind, "state": state,
-            "stage": stage, "stages": STAGES, "progress": progress,
+            "stage": stage, "stages": self.stages, "progress": progress,
             "message": message, "metrics": metrics or {}, "gate": None,
             "pid": os.getpid(), "started_at": self.started,
             "updated_at": _dt.datetime.now().astimezone().isoformat(timespec="seconds"),
@@ -165,7 +173,7 @@ def _val_psnr(result_dir):
 
 def run_capture(blend, vantage, approved_rig, concept="lunar-base",
                 skip_render=False, skip_sync=False, skip_train=False,
-                dry_run=False):
+                train_gsplat=False, dry_run=False):
     if not approved_rig:
         raise SystemExit(
             "refusing to start: --approved-rig <hash> is required (run preview in "
@@ -176,20 +184,30 @@ def run_capture(blend, vantage, approved_rig, concept="lunar-base",
 
     scene_id = f"{concept}/capture/{vantage}"
     stage_dir = f"/mnt/d/renders/{scene_id}"          # Windows staging (never C:)
-    data_dir = os.path.expanduser(f"~/datasets/{scene_id}")   # ext4 training copy
-    result_dir = os.path.join(data_dir, "results")
+    lfs_dir = os.path.join(stage_dir, "lichtFeld")    # drop-in for LichtFeld Studio
+    # optional gsplat path: the synced lichtFeld/ folder doubles as a standard
+    # COLMAP root (it carries a sparse/0/ twin of the root text files)
+    data_dir = os.path.expanduser(f"~/datasets/{scene_id}/lichtFeld")
+    result_dir = os.path.expanduser(f"~/datasets/{scene_id}/results")
 
+    if train_gsplat:
+        train_plan = (f"  sync:    -> {data_dir}\n  train:   gsplat mcmc (splat env, "
+                      f"--no-normalize-world-space pinned)\n"
+                      f"  ply:     -> {stage_dir}/<vantage>_<preset>.ply")
+    else:
+        train_plan = (f"  train:   LichtFeld Studio (Kari): drop "
+                      f"D:\\renders\\{scene_id.replace('/', chr(92))}\\lichtFeld into LFS")
     plan = (f"capture execute plan\n  blend:   {blend}\n  vantage: {vantage}\n"
-            f"  render:  {stage_dir} (via blender-win.sh, Windows Cycles/OptiX)\n"
-            f"  sync:    -> {data_dir}\n  train:   gsplat mcmc (splat env, "
-            f"--no-normalize-world-space pinned)\n  ply:     -> {stage_dir}/<vantage>_<preset>.ply "
-            f"for the SuperSplat pass")
+            f"  render:  {lfs_dir} (via blender-win.sh, Windows Cycles/OptiX)\n{train_plan}")
     print(plan)
     if dry_run:
         return {"plan": plan}
 
+    stages = (["render-dataset", "sync-dataset", "train-splat", "report"]
+              if train_gsplat else ["render-dataset", "report"])
     job = Job("capture", {"blend": blend, "vantage": vantage, "concept": concept,
-                          "approved_rig": approved_rig})
+                          "approved_rig": approved_rig, "train_gsplat": train_gsplat},
+              stages)
     print(f"job: {job.job_id} (status: jobs/{job.job_id}/status.json)")
 
     # ---- render-dataset ---------------------------------------------------
@@ -224,14 +242,57 @@ def run_capture(blend, vantage, approved_rig, concept="lunar-base",
             f"capture-meta.json carries rig hash {meta.get('rig_hash')}, not the approved "
             f"{approved_rig} — stale dataset from an earlier run? Re-render without --skip-render.")
     try:
-        n_img = len([f for f in os.listdir(os.path.join(stage_dir, "images"))
+        n_img = len([f for f in os.listdir(os.path.join(lfs_dir, "images"))
                      if f.endswith(".png")])
     except FileNotFoundError:
-        job.status("failed", "render-dataset", "images/ directory missing")
-        raise SystemExit(f"no images/ under {stage_dir} (did --skip-render skip a fresh dir?)")
+        job.status("failed", "render-dataset", "lichtFeld/images/ directory missing")
+        raise SystemExit(f"no images under {lfs_dir} (did --skip-render skip a fresh dir?)")
     if n_img != meta["images"]:
         job.status("failed", "render-dataset", f"{n_img}/{meta['images']} images")
         raise SystemExit(f"image count mismatch: {n_img} on disk vs {meta['images']} in meta")
+
+    prov_dir = os.path.join(REPO, "pipeline/provenance", concept)
+    os.makedirs(prov_dir, exist_ok=True)
+    win_lfs = "D:\\" + lfs_dir[len("/mnt/d/"):].replace("/", "\\")
+
+    if not train_gsplat:
+        # ---- LichtFeld Studio handoff (default flow, Kari 2026-07-14) --------
+        job.status("running", "report", "finalizing LFS handoff")
+        with open(os.path.join(stage_dir, "capture-provenance.json")) as fh:
+            prov = json.load(fh)
+        prov_path = os.path.join(prov_dir, f"capture-{vantage}.json")
+        if os.path.isfile(prov_path):
+            with open(prov_path) as fh:
+                old = json.load(fh)
+            prov["stages"].extend(
+                s for s in old.get("stages", [])
+                if s.get("stage") not in ("render-dataset", "train-splat"))
+        prov["pending_stages"] = [
+            "lichtfeld-train+clean (Kari, LichtFeld Studio GPLv3 — license checked "
+            "2026-07-14: gsplat/Apache-2.0 rasterizer lineage, Inria listed as research "
+            "citation only in THIRD_PARTY_LICENSES.md; no non-commercial deps found. "
+            "Editing rule: clean/crop ONLY — never rotate/translate/set-pivot)",
+            "sog-export (LichtFeld Studio; record LFS version + export settings here; "
+            "VERIFY first export: meter-true scale + orientation in the web viewer — "
+            "no world normalization may be baked in)",
+        ]
+        with open(prov_path, "w") as fh:
+            json.dump(prov, fh, indent=2)
+        with open(os.path.join(prov_dir, f"capture-{vantage}.envelope.json"), "w") as fh:
+            json.dump({k: meta[k] for k in
+                       ("concept", "vantage", "generated", "blend_file", "rig_hash",
+                        "envelope", "object_envelopes")}, fh, indent=2)
+        report = {"job": job.job_id, "lichtfeld_folder": win_lfs, "images": n_img,
+                  "provenance": prov_path}
+        job.status("done", "report", f"dataset ready for LichtFeld Studio: {win_lfs}",
+                   progress=1.0, metrics={"images": n_img})
+        print("\nCAPTURE DATASET READY (LichtFeld Studio flow)")
+        print(f"  drop this folder into LFS:  {win_lfs}")
+        print(f"  images: {n_img}   provenance: {prov_path}")
+        print("  LFS rules: train, then clean/crop ONLY — never rotate/translate/"
+              "set-pivot; export .sog (the frame IS the contract)")
+        return report
+
     if job.cancelled():
         job.status("cancelled", "sync-dataset", "cancelled via control file")
         return {"cancelled": True}
@@ -293,8 +354,6 @@ def run_capture(blend, vantage, approved_rig, concept="lunar-base",
             metrics[f"splats_near_{key}"] = near
 
     # provenance finalize (hard rule: every generated asset)
-    prov_dir = os.path.join(REPO, "pipeline/provenance", concept)
-    os.makedirs(prov_dir, exist_ok=True)
     with open(os.path.join(stage_dir, "capture-provenance.json")) as fh:
         prov = json.load(fh)
     # re-running execute must not destroy stages appended after earlier runs
@@ -354,6 +413,9 @@ def main():
     ap.add_argument("--vantage", required=True)
     ap.add_argument("--approved-rig", default=None)
     ap.add_argument("--concept", default="lunar-base")
+    ap.add_argument("--train-gsplat", action="store_true",
+                    help="also sync + train with gsplat (validation path); "
+                         "default is the LichtFeld Studio handoff")
     ap.add_argument("--skip-render", action="store_true")
     ap.add_argument("--skip-sync", action="store_true")
     ap.add_argument("--skip-train", action="store_true")
@@ -361,7 +423,8 @@ def main():
     args = ap.parse_args()
     run_capture(args.blend, args.vantage, args.approved_rig, concept=args.concept,
                 skip_render=args.skip_render, skip_sync=args.skip_sync,
-                skip_train=args.skip_train, dry_run=args.dry_run)
+                skip_train=args.skip_train, train_gsplat=args.train_gsplat,
+                dry_run=args.dry_run)
 
 
 if __name__ == "__main__":

@@ -55,8 +55,8 @@ Stack (per PLAN.md): Vite + TypeScript + Babylon.js (v9, WebGPU→WebGL2 fallbac
 
 - **The training envelope and the runtime camera envelope are always generated from the same source object** (a vantage's `ENV_`/`FOCUS_` pair). Never hand-sync limits between the rig and `content/concepts/*.json`; edits go into the .blend, then re-export (`pipeline/pack/envelope_to_concept.py`, dry-run first — it preserves Kari's authored fields).
 - **Nothing renders without Kari's go**: preview prints a rig hash; `export_dataset.py`/`run_capture.py` refuse without `--approved-rig <that hash>` and on any mismatch.
-- Splat training always runs `--no-normalize-world-space` (gsplat's default normalization bakes a recenter+rescale+rotation into the PLY and breaks the meter-true frame contract).
-- SuperSplat pass on capture PLYs: **clean/crop only — never rotate/translate/set-pivot**; the capture frame is pre-oriented for the web viewer.
+- Production splat training/cleaning/SOG export happens in **LichtFeld Studio** (Kari, 2026-07-14; GPLv3, license-checked — gsplat/Apache-2.0 rasterizer lineage, no Inria code per its THIRD_PARTY_LICENSES.md). The execute chain hands over a drag-and-drop `lichtFeld/` dataset folder. The gsplat path (`--train-gsplat`) remains for validation and always runs `--no-normalize-world-space` (gsplat's default normalization bakes a recenter+rescale+rotation into the PLY and breaks the meter-true frame contract).
+- Splat editing (LichtFeld Studio/SuperSplat): **clean/crop only — never rotate/translate/set-pivot**; the capture frame is pre-oriented for the web viewer. The first `.sog` exported from any new tool gets verified meter-true + upright in the viewer before shipping.
 - Everything under the `capture` collection never renders (enforced at export); proxy/stand-in objects live outside it. `CAM_*` names remain Kari's.
 
 ## Splat pipeline learnings (from the validated rehearsal, 2026-07-10)

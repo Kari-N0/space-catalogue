@@ -77,13 +77,16 @@ envelope terms:        beta_deg  = angle from Blender +Z   (90 = horizon)
 
 Consequences:
 - The trained PLY/SOG is **already correctly oriented and meter-true**; the
-  splat needs no manual reorientation anywhere.
-- **Training must run with `--no-normalize-world-space`** (run_capture pins it).
-  gsplat's default world normalization bakes a recenter+rescale+PCA rotation
-  into the PLY and silently breaks everything above.
-- **SuperSplat pass = clean/crop ONLY. Never rotate, translate, or set
-  pivot/orientation** — the frame IS the contract. (The old rehearsal needed a
-  manual orient step; capture datasets don't.)
+  splat needs no manual reorientation anywhere (verified in the 2026-07-14
+  rehearsal: dataset loads upright in LichtFeld Studio, no orient step).
+- **Splat editing (LichtFeld Studio / SuperSplat) = clean/crop ONLY. Never
+  rotate, translate, or set pivot/orientation** — the frame IS the contract.
+- **The optional gsplat path must run with `--no-normalize-world-space`**
+  (run_capture pins it). gsplat's default world normalization bakes a
+  recenter+rescale+PCA rotation into the PLY and silently breaks everything
+  above. The same trap must be ruled out for any new trainer: **the first
+  .sog exported from a new tool gets verified meter-true + upright in the web
+  viewer before anything ships.**
 - `content/concepts/<id>.json` gets the friendly camera block from the SAME rig
   samples (playback set only): `look_at_m` `[0,0,0]`-centered on FOCUS,
   `distance_m` min/max, `angle_up_down_deg` (floored at 2° from zenith),
@@ -124,29 +127,38 @@ authoritative one (it describes the views actually trained).
 
 ```
 python3 pipeline/splats/run_capture.py --blend <path.blend> --vantage <name> \
-        --approved-rig <hash>            # [--dry-run] [--skip-render/-sync/-train]
+        --approved-rig <hash>     # [--train-gsplat] [--dry-run] [--skip-render/-sync/-train]
 ```
 
-render-dataset (blender-win.sh, Windows Cycles/OptiX, capture/ force-hidden,
-scene look untouched) → `D:\renders\<concept>\capture\<vantage>\`
-{images/, sparse/0/ COLMAP text, capture-meta.json, capture-provenance.json}
-→ sync-dataset.sh (ext4; training never reads /mnt/*) → gsplat MCMC (splat env,
-preset params, `--no-normalize-world-space`) → **PLY copied to
-`D:\renders\<concept>\capture\<vantage>\<vantage>_<preset>.ply` for the
-SuperSplat pass** → provenance + envelope sidecar under
-`pipeline/provenance/<concept>/`.
+**Default flow (LichtFeld Studio — Kari's training/cleaning tool, 2026-07-14):**
+render-dataset (blender-win.sh `--factory-startup`, Windows Cycles/OptiX,
+capture/ force-hidden, scene look untouched) →
+`D:\renders\<concept>\capture\<vantage>\lichtFeld\` — a **drag-and-drop LFS
+dataset**: `cameras.txt`/`images.txt`/`points3D.txt` at the folder root +
+`images/` + `output/` (plus a `sparse/0/` twin of the text files so the same
+folder is a standard COLMAP root). Kari drops the folder into LFS, trains,
+cleans (crop/clean ONLY), exports `.sog` directly. LFS is a native Windows app
+reading D:\ — the ext4 rule governs WSL-side training only. LFS license
+checked 2026-07-14: GPLv3 app (fine for producing commercial assets), gsplat/
+Apache-2.0 rasterizer lineage, Inria cited as research only — nothing
+non-commercial in THIRD_PARTY_LICENSES.md.
+
+**`--train-gsplat` (validation/automation path):** + sync-dataset.sh (ext4) →
+gsplat MCMC (splat env, preset params, `--no-normalize-world-space`) → PLY
+copied to `D:\...\<vantage>_<preset>.ply`; report adds splat counts + PSNR.
 
 Job status: `jobs/<yyyymmdd-hhmmss>-capture/status.json` (ADDON.md §6 schema —
 the future add-on panel polls it unchanged; write `cancel` into `control` to
-stop between stages). Report prints total splat count, per-child-region splat
-counts, PSNR, and render timing (feeds the preset table).
+stop between stages).
 
-After Kari's SuperSplat pass: encode locally (`splat-transform -i 50` hero /
-`-H 0` diffuse), name the shipped file `<something>-d.sog` for the desktop
-budget tier (40 MiB raw; anything else is checked as mobile, 15 MiB), respect
-the >20 MB placeholder STOP rule, and append the pack stage (splat-transform
-version+flags, input PLY, "SuperSplat clean by Kari <date>") to
-`pipeline/provenance/<concept>/capture-<vantage>.json`. Then merge the envelope:
+After Kari's LFS pass: name the shipped file `<something>-d.sog` for the
+desktop budget tier (40 MiB raw; anything else is checked as mobile, 15 MiB),
+respect the >20 MB placeholder STOP rule, and record the pack stage (LFS
+version, training/export settings, "clean by Kari <date>") in
+`pipeline/provenance/<concept>/capture-<vantage>.json` — its `pending_stages`
+lists exactly what to fill in. The `splat-transform` re-encode path (`-i 50`
+hero / `-H 0` diffuse) remains available for tuning SOG compression from an
+LFS-exported PLY. Then merge the envelope:
 
 ```
 python3 pipeline/pack/envelope_to_concept.py \
@@ -187,7 +199,17 @@ exposes `focusObject(name)`/`clearObjectFocus()` (animated envelope swap, no
 snap). **No page UI triggers them yet** — wiring (pin click? button?) is
 Kari's interaction decision.
 
-## 7. Rehearsal (current status: BUILT, awaiting preview sign-off)
+## 7. Rehearsal (status 2026-07-14: dataset rendered + approved, LFS pass running)
+
+Progress log: rig approved (`8b70305046fb`, 227 views), rendered in 17 min
+(4.4 s/frame @ 1080²/64 smp — preset table to be recalibrated), orientation
+verified upright in LichtFeld Studio with zero manual orient steps. gsplat
+validation train: 253,809 splats, 58,962 inside the boulder zoom envelope,
+val PSNR 26.0 (draft). Kari trains/cleans/exports in LFS; remaining checks:
+meter-true scale of the first LFS .sog in the web viewer, scale-gap
+inspection at 30 m / 19 m / 5.4 m, merged-vs-separate call, placeholder swap.
+
+Original plan:
 
 Plan (Kari 2026-07-13): one vantage on the bare site11 terrain, draft preset,
 one placeholder proxy object with a child rig, **merged** path end-to-end

@@ -172,9 +172,15 @@ def export_dataset(vantage, out_dir, approved_rig=None, concept="lunar-base",
     names = [s["name"] for s in samples]
     if len(set(names)) != len(names):
         raise RuntimeError("duplicate image names in rig — refusing to write a corrupt dataset")
-    img_dir = os.path.join(out_dir, "images")
-    sparse_dir = os.path.join(out_dir, "sparse", "0")
+    # LichtFeld-Studio drop-in layout (Kari's convention, 2026-07-14):
+    #   <out>/lichtFeld/{cameras,images,points3D}.txt + images/ + output/
+    # plus sparse/0/ copies of the same three text files, so the very same
+    # folder is also a standard COLMAP root for the optional gsplat path.
+    lfs_dir = os.path.join(out_dir, "lichtFeld")
+    img_dir = os.path.join(lfs_dir, "images")
+    sparse_dir = os.path.join(lfs_dir, "sparse", "0")
     os.makedirs(img_dir, exist_ok=True)
+    os.makedirs(os.path.join(lfs_dir, "output"), exist_ok=True)
     if not dry_run:
         # stale frames from a previous run (different preset/rig) would pollute
         # the image-count check and, worse, the training set
@@ -223,7 +229,8 @@ def export_dataset(vantage, out_dir, approved_rig=None, concept="lunar-base",
         cid = groups[(s["resolution"], s["focal_mm"], s["sensor_mm"])]
         images.append((i, q, t, cid, s["name"]))
     points = _init_points(result)
-    frames.write_colmap_text(sparse_dir, cameras, images, points)
+    frames.write_colmap_text(lfs_dir, cameras, images, points)   # LFS reads from the root
+    frames.write_colmap_text(sparse_dir, cameras, images, points)  # COLMAP-standard twin
 
     # ---- metadata + provenance -------------------------------------------
     meta = {
