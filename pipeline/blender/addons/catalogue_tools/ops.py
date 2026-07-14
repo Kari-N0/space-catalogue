@@ -176,13 +176,30 @@ class CATALOGUE_OT_execute_capture(bpy.types.Operator):
         vantage = active_vantage(context)
         if vantage is not None:
             vantage["output_dir"] = out_win  # remembered per capture
-        cmd = (f"cd {repo_wsl} && nohup python3 pipeline/splats/run_capture.py "
+        # early refusals (bad paths, C: staging, hash problems) must be
+        # observable: they land in jobs/launch.log, not /dev/null
+        cmd = (f"mkdir -p {repo_wsl}/jobs && cd {repo_wsl} && "
+               f"nohup python3 pipeline/splats/run_capture.py "
                f"--blend '{blend_wsl}' --vantage '{st.vantage}' "
-               f"--approved-rig {st.last_hash} --out '{out_wsl}' >/dev/null 2>&1 &")
-        subprocess.Popen(["wsl.exe", "-d", p.wsl_distro, "--", "bash", "-lc", cmd],
-                         creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
+               f"--approved-rig {st.last_hash} --out '{out_wsl}' "
+               f">> jobs/launch.log 2>&1 &")
+        # wsl.exe dies silently without valid std handles when launched
+        # window-less — give it explicit ones (the original v0.1.0 bug)
+        proc = subprocess.Popen(
+            ["wsl.exe", "-d", p.wsl_distro, "--", "bash", "-lc", cmd],
+            stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
+        try:
+            rc = proc.wait(timeout=10)
+        except subprocess.TimeoutExpired:
+            rc = 0  # still running = bash held by the job; fine
+        if rc != 0:
+            self.report({"ERROR"}, f"launch failed (wsl.exe exit {rc}) — see jobs/launch.log")
+            return {"CANCELLED"}
         st.job_note = f"launched: {st.vantage} @ {st.last_hash}"
-        self.report({"INFO"}, "capture job launched — status below (survives Blender)")
+        self.report({"INFO"}, "capture job launched — status below (survives Blender); "
+                              "if no job appears in ~15 s, check jobs/launch.log")
         return {"FINISHED"}
 
 
