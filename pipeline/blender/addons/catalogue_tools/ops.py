@@ -318,7 +318,8 @@ class CATALOGUE_OT_test_render(bpy.types.Operator):
 
 
 class CATALOGUE_OT_fit_shells(bpy.types.Operator):
-    """Set the camera distance shells to fit the ENV volume's current size"""
+    """Fit camera distance shells to each ENV's current size — the parent AND
+    every child rig, each against its own envelope"""
     bl_idname = "catalogue.fit_shells"
     bl_label = "Fit Shells to ENV"
     bl_options = {"REGISTER", "UNDO"}
@@ -329,12 +330,15 @@ class CATALOGUE_OT_fit_shells(bpy.types.Operator):
         if vantage is None:
             self.report({"ERROR"}, "no active capture")
             return {"CANCELLED"}
-        try:
-            shells = convention.fit_shells_to_env(vantage)
-        except ValueError as err:
-            self.report({"ERROR"}, str(err))
-            return {"CANCELLED"}
-        self.report({"INFO"}, f"distance_shells_m = {shells} — re-run Preview")
+        changes, errors = convention.fit_all_shells(vantage)
+        for err in errors:
+            self.report({"WARNING"}, err)
+        changed = [(n, o, s) for n, o, s in changes if o != s]
+        if not changed:
+            self.report({"INFO"}, "shells already fit their ENVs — nothing changed")
+            return {"FINISHED"}
+        msg = "; ".join(f"{n}: {o} → {s}" for n, o, s in changed)
+        self.report({"INFO"}, f"{msg} — re-run Preview")
         return {"FINISHED"}
 
 

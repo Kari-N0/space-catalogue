@@ -305,6 +305,22 @@ def fit_shells_to_env(coll, fractions=(0.5, 0.72, 0.92)):
     return shells
 
 
+def fit_all_shells(vantage_coll, fractions=(0.5, 0.72, 0.92)):
+    """fit_shells_to_env for the parent AND every child rig (each against its
+    own ENV). Returns ([(collection_name, old_shells, new_shells), ...],
+    [error strings]). Unchanged geometry -> unchanged shells (idempotent)."""
+    changes, errors = [], []
+    for coll in [vantage_coll] + list(find_children(vantage_coll).values()):
+        old = [round(float(s), 2) for s in coll.get("distance_shells_m", [])]
+        try:
+            new = fit_shells_to_env(coll, fractions)
+        except ValueError as err:
+            errors.append(str(err))
+            continue
+        changes.append((coll.name, old, [round(s, 2) for s in new]))
+    return changes, errors
+
+
 def read_config(coll, child=False):
     """Collection custom properties -> plain dict -> presets.resolve_config()."""
     props = {}
