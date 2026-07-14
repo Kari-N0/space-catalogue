@@ -10,15 +10,8 @@ Production install: packaged as a Blender extension (blender_manifest.toml).
 
 import importlib
 
-bl_info = {
-    "name": "Catalogue Tools",
-    "author": "space-catalogue",
-    "version": (0, 1, 0),
-    "blender": (5, 1, 0),
-    "location": "3D Viewport ▸ Sidebar (N) ▸ Catalogue",
-    "description": "Splat capture vantages: author, preview, execute (CAPTURE.md)",
-    "category": "3D View",
-}
+# extension metadata lives in blender_manifest.toml (no bl_info — this installs
+# as a Blender 5.x extension; the dev loop registers the package directly)
 
 from . import jobs, ops, panel, paths, prefs  # noqa: E402
 

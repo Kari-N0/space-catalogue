@@ -33,7 +33,7 @@ D7 (Earth phase/azimuth) is scheduled for **look-dev**, after the structure asse
 | # | Deliverable | Spec | Status | Files | Notes |
 |---|---|---|---|---|---|
 | T01 | Splat capture system (vantages, presets, preview/execute, envelope contract) | CAPTURE.md | **built 2026-07-13 — rehearsal preview pending Kari** | `pipeline/blender/capture/`, `pipeline/splats/run_capture.py`, `pipeline/pack/envelope_to_concept.py`, `pipeline/checks/check_capture.py` | Rehearsal: draft vantage + proxy child rig on bare site11 terrain, merged path → SuperSplat → .sog, then STOP (CAPTURE.md §7) |
-| T02 | Catalogue Tools add-on — module 1: capture panel (N-panel UI over T01) | ADDON.md + CAPTURE.md §8 | **v0.1 built 2026-07-14 — Kari click-test iterations running** | `pipeline/blender/addons/catalogue_tools/` | Thin UI only, no ML imports, Execute = headless WSL job + status-file polling; dev-registered live over MCP (hot-reload loop), extension packaging when the feature set settles |
+| T02 | Catalogue Tools add-on — module 1: capture panel (N-panel UI over T01) | ADDON.md + CAPTURE.md §8 | **v0.1.0 packaged 2026-07-14** (11 feedback rounds) — installed via Install from Disk; first real dataset test running | `pipeline/blender/addons/catalogue_tools/` (zip: `D:\renders\addons\catalogue_tools-0.1.0.zip`) | Thin UI only, no ML imports, Execute = headless WSL job + status-file polling; rebuild: `blender-win.sh --command extension build --source-dir pipeline/blender/addons/catalogue_tools --output-filepath <zip>` |
 
 ## ASSET-SPEC (applies to every row)
 

@@ -230,15 +230,20 @@ until the scene is dressed and lookdev locks the sun.
 
 ## 8. Catalogue Tools add-on (after the rehearsal survives)
 
-Capture becomes **module 1** of the "Catalogue Tools" Blender 5.1 extension
-(ADDON.md): N-panel tab in the 3D viewport, thin UI over exactly the functions
-above (create/duplicate vantage, add child rig from selection, preset dropdown,
-Preview + stats, Execute with confirm → launches run_capture headless, job
-status from `jobs/*/status.json`, export-envelopes button). No logic forks into
-the add-on; it never imports the ML stack (ADDON.md §1 rules). Location: Kari's
-spec says `pipeline/blender/addons/catalogue_tools/`, ADDON.md §2 said
-`addon/` — **pending Kari's call** (newer spec text favors `addons/`).
-Tracked as a deliverable in `assets_src/lunar-base/ASSETS.md`.
+Capture is **module 1** of the "Catalogue Tools" Blender 5.1 extension, BUILT
+at `pipeline/blender/addons/catalogue_tools/` (v0.1.0 packaged 2026-07-14 after
+11 live feedback rounds with Kari): N-panel "Catalogue" tab — create capture at
+cursor (terrain-snapped), child rigs from selection, per-rig camera
+views/resolution/samples + shells with Fit-Shells-to-ENV, ground-object picker,
+marker display modes/scale, camera preview with lens/clip apply-back, per-camera
+test render (scene look + compositing, no persistent-data pin), Execute with
+confirm + user-specified output folder → headless run_capture → LichtFeld
+folder, job status polling from `jobs/*/status.json` with cancel, envelope
+sidecar export. Thin UI over the pipeline functions, ML-free (ADDON.md §1).
+Install: Preferences ▸ Get Extensions ▸ Install from Disk with the zip built by
+`blender-win.sh --command extension build --source-dir
+pipeline/blender/addons/catalogue_tools --output-filepath <zip>`; the add-on
+preferences hold the repo path + WSL distro + poll interval.
 
 ## 9. Module map
 
