@@ -58,6 +58,7 @@ class CatalogueToolsState(bpy.types.PropertyGroup):
     last_hash: bpy.props.StringProperty()
     last_vantage: bpy.props.StringProperty()
     last_summary: bpy.props.StringProperty()
+    total_images: bpy.props.IntProperty(default=0)
     cam_index: bpy.props.IntProperty(name="Camera", min=0, default=0,
                                      description="rig sample the preview camera shows")
     cam_info: bpy.props.StringProperty()
@@ -145,6 +146,8 @@ class CATALOGUE_PT_capture(bpy.types.Panel):
         box = layout.box()
         box.label(text="Execute", icon="RENDER_ANIMATION")
         box.prop(st, "output_dir", text="Output")
+        if st.total_images > 0 and st.last_hash:
+            box.label(text=f"total number of images: {st.total_images}", icon="RENDERLAYERS")
         if bpy.data.is_dirty:
             box.label(text="save the file first (hash = saved file)", icon="ERROR")
         elif not st.last_hash:

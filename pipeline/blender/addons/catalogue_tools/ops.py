@@ -105,6 +105,7 @@ class CATALOGUE_OT_preview(bpy.types.Operator):
             context.window.cursor_set("DEFAULT")
         st.last_hash = result["hash"]
         st.last_vantage = result["vantage"]
+        st.total_images = sum(result["totals"].values())
         e = result["envelope"] or {}
         dist = e.get("distance_m", {})
         ud = e.get("angle_up_down_deg", {})
@@ -279,6 +280,7 @@ class CATALOGUE_OT_camera_apply(bpy.types.Operator):
             self.report({"ERROR"}, str(err))
             return {"CANCELLED"}
         st.last_hash = ""  # camera config changed — previous approval is void
+        st.total_images = 0
         self.report({"INFO"}, f"{coll_name}: " +
                     ", ".join(f"{k}={v}" for k, v in values.items()) + " — re-run Preview")
         return {"FINISHED"}
