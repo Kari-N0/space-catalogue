@@ -25,6 +25,17 @@ def vantage_items(_self, _context):
     return _ITEMS_CACHE
 
 
+def _vantage_switched(self, _context):
+    """Load the capture's remembered output folder (or suggest the default)."""
+    try:
+        coll = bpy.data.collections.get(f"CAPTURE_{self.vantage}")
+        saved = coll.get("output_dir", "") if coll else ""
+        self.output_dir = saved or (
+            f"D:\\renders\\lunar-base\\capture\\{self.vantage}" if coll else "")
+    except Exception:
+        pass
+
+
 def _marker_update(self, _context):
     try:
         from . import ops as _ops
@@ -35,7 +46,12 @@ def _marker_update(self, _context):
 
 
 class CatalogueToolsState(bpy.types.PropertyGroup):
-    vantage: bpy.props.EnumProperty(name="Capture", items=vantage_items)
+    vantage: bpy.props.EnumProperty(name="Capture", items=vantage_items,
+                                    update=_vantage_switched)
+    output_dir: bpy.props.StringProperty(
+        name="Output Folder", subtype="DIR_PATH",
+        description="dataset destination — always user-specified; the LichtFeld "
+                    "drop-in folder is created inside it (never on C:)")
     new_name: bpy.props.StringProperty(
         name="Name", default="capture_01",
         description="letters, digits, '-' and '_' (no spaces, no double underscore)")
@@ -128,6 +144,7 @@ class CATALOGUE_PT_capture(bpy.types.Panel):
 
         box = layout.box()
         box.label(text="Execute", icon="RENDER_ANIMATION")
+        box.prop(st, "output_dir", text="Output")
         if bpy.data.is_dirty:
             box.label(text="save the file first (hash = saved file)", icon="ERROR")
         elif not st.last_hash:

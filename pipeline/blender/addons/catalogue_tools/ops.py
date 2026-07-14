@@ -157,15 +157,27 @@ class CATALOGUE_OT_execute_capture(bpy.types.Operator):
             self.report({"ERROR"}, f"preview hash belongs to '{st.last_vantage}' — "
                                    "re-run Preview for this vantage")
             return {"CANCELLED"}
+        out_win = st.output_dir.strip().rstrip("\\/")
+        if not out_win:
+            self.report({"ERROR"}, "set the Output folder first (always user-specified)")
+            return {"CANCELLED"}
+        if out_win.lower().startswith("c:"):
+            self.report({"ERROR"}, "never stage on C: — it is nearly full (CLAUDE.md); "
+                                   "pick another drive")
+            return {"CANCELLED"}
         try:
             blend_wsl = paths.win_to_wsl(bpy.data.filepath, p.wsl_distro)
             repo_wsl = paths.win_to_wsl(p.repo_windows, p.wsl_distro)
+            out_wsl = paths.win_to_wsl(out_win, p.wsl_distro)
         except ValueError as err:
             self.report({"ERROR"}, str(err))
             return {"CANCELLED"}
+        vantage = active_vantage(context)
+        if vantage is not None:
+            vantage["output_dir"] = out_win  # remembered per capture
         cmd = (f"cd {repo_wsl} && nohup python3 pipeline/splats/run_capture.py "
                f"--blend '{blend_wsl}' --vantage '{st.vantage}' "
-               f"--approved-rig {st.last_hash} >/dev/null 2>&1 &")
+               f"--approved-rig {st.last_hash} --out '{out_wsl}' >/dev/null 2>&1 &")
         subprocess.Popen(["wsl.exe", "-d", p.wsl_distro, "--", "bash", "-lc", cmd],
                          creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
         st.job_note = f"launched: {st.vantage} @ {st.last_hash}"

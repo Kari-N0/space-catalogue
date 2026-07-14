@@ -171,7 +171,14 @@ def _val_psnr(result_dir):
         return json.load(fh).get("psnr")
 
 
-def run_capture(blend, vantage, approved_rig, concept="lunar-base",
+def _wsl_to_win(path):
+    """Display helper: /mnt/d/x -> D:\\x; ext4 paths shown as \\\\wsl.localhost UNC."""
+    if path.startswith("/mnt/") and len(path) > 6 and path[6] == "/":
+        return f"{path[5].upper()}:\\" + path[7:].replace("/", "\\")
+    return r"\\wsl.localhost\Ubuntu-24.04" + path.replace("/", "\\")
+
+
+def run_capture(blend, vantage, approved_rig, concept="lunar-base", out=None,
                 skip_render=False, skip_sync=False, skip_train=False,
                 train_gsplat=False, dry_run=False):
     if not approved_rig:
@@ -183,7 +190,14 @@ def run_capture(blend, vantage, approved_rig, concept="lunar-base",
         raise SystemExit(f"blend not found: {blend}")
 
     scene_id = f"{concept}/capture/{vantage}"
-    stage_dir = f"/mnt/d/renders/{scene_id}"          # Windows staging (never C:)
+    # dataset root: user-specified --out wins; default = Windows staging (never C:)
+    stage_dir = (out.rstrip("/") if out else f"/mnt/d/renders/{scene_id}")
+    if stage_dir.startswith("/mnt/c/"):
+        raise SystemExit("refusing to stage on C: — it is nearly full (CLAUDE.md rule); "
+                         "pick another drive")
+    if out and train_gsplat:
+        raise SystemExit("--out supports the LichtFeld flow only; the gsplat validation "
+                         "path uses the default staging + ext4 sync layout")
     lfs_dir = os.path.join(stage_dir, "lichtFeld")    # drop-in for LichtFeld Studio
     # optional gsplat path: the synced lichtFeld/ folder doubles as a standard
     # COLMAP root (it carries a sparse/0/ twin of the root text files)
@@ -196,7 +210,7 @@ def run_capture(blend, vantage, approved_rig, concept="lunar-base",
                       f"  ply:     -> {stage_dir}/<vantage>_<preset>.ply")
     else:
         train_plan = (f"  train:   LichtFeld Studio (Kari): drop "
-                      f"D:\\renders\\{scene_id.replace('/', chr(92))}\\lichtFeld into LFS")
+                      f"{_wsl_to_win(lfs_dir)} into LFS")
     plan = (f"capture execute plan\n  blend:   {blend}\n  vantage: {vantage}\n"
             f"  render:  {lfs_dir} (via blender-win.sh, Windows Cycles/OptiX)\n{train_plan}")
     print(plan)
@@ -253,7 +267,7 @@ def run_capture(blend, vantage, approved_rig, concept="lunar-base",
 
     prov_dir = os.path.join(REPO, "pipeline/provenance", concept)
     os.makedirs(prov_dir, exist_ok=True)
-    win_lfs = "D:\\" + lfs_dir[len("/mnt/d/"):].replace("/", "\\")
+    win_lfs = _wsl_to_win(lfs_dir)
 
     if not train_gsplat:
         # ---- LichtFeld Studio handoff (default flow, Kari 2026-07-14) --------
@@ -388,7 +402,7 @@ def run_capture(blend, vantage, approved_rig, concept="lunar-base",
                    ("concept", "vantage", "generated", "blend_file", "rig_hash",
                     "envelope", "object_envelopes")}, fh, indent=2)
 
-    win_ply = "D:\\" + ply_out[len("/mnt/d/"):].replace("/", "\\")
+    win_ply = _wsl_to_win(ply_out)
     report = {
         "job": job.job_id, "ply_for_supersplat": win_ply, "metrics": metrics,
         "provenance": prov_path,
@@ -413,6 +427,9 @@ def main():
     ap.add_argument("--vantage", required=True)
     ap.add_argument("--approved-rig", default=None)
     ap.add_argument("--concept", default="lunar-base")
+    ap.add_argument("--out", default=None,
+                    help="dataset root folder (WSL path) — user-specified output "
+                         "location; default D:\\renders\\<concept>\\capture\\<vantage>")
     ap.add_argument("--train-gsplat", action="store_true",
                     help="also sync + train with gsplat (validation path); "
                          "default is the LichtFeld Studio handoff")
@@ -422,7 +439,7 @@ def main():
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
     run_capture(args.blend, args.vantage, args.approved_rig, concept=args.concept,
-                skip_render=args.skip_render, skip_sync=args.skip_sync,
+                out=args.out, skip_render=args.skip_render, skip_sync=args.skip_sync,
                 skip_train=args.skip_train, train_gsplat=args.train_gsplat,
                 dry_run=args.dry_run)
 
