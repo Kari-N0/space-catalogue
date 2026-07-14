@@ -381,6 +381,21 @@ def validate_vantage(coll):
             warnings.append(f"ENV_{name} normals point inward (handled, but consider Recalculate Outside)")
         elif state == "empty":
             warnings.append(f"ENV_{name} has no faces")
+        if any(s < 0 for s in env.scale):
+            warnings.append(
+                f"ENV_{name} has NEGATIVE object scale {tuple(round(s, 2) for s in env.scale)} "
+                "— usually an accidental mirror-scale; check its size, or reset scale to 1")
+    if is_child_rig(coll):
+        target = bpy.data.objects.get(coll.get("target_object", ""))
+        shells = [float(s) for s in coll.get("distance_shells_m", [])]
+        if target is not None and shells:
+            deps = bpy.context.evaluated_depsgraph_get()
+            _c, radius = _world_bounds(target, deps)
+            if radius > 0 and max(shells) > 12 * radius:
+                warnings.append(
+                    f"{coll.name}: shells reach {max(shells):.0f} m but the target is only "
+                    f"~{radius:.0f} m — close-up rigs usually orbit at 2–6× the target size; "
+                    "check the child ENV scale, then Fit Shells")
     if foc is None:
         warnings.append(f"missing FOCUS_{name}")
     for key, child in find_children(coll).items():
