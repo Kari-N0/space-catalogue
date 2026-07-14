@@ -260,6 +260,11 @@ def create_child_rig(vantage, object_name, preset=None):
     props = dict(presets.VANTAGE_DEFAULTS)
     props.update(presets.CHILD_DEFAULTS)
     props["preset"] = preset or parent.get("preset", "draft")
+    # explicit numbers, same as create_vantage — no 0-means-preset sentinels
+    resolved = presets.resolve_config({"preset": props["preset"]}, child=True)
+    props["views"] = resolved["views"]
+    props["resolution"] = resolved["resolution"]
+    props["samples"] = resolved["samples"]
     props["target_object"] = object_name
     props["standoff_min_m"] = max(0.5, round(0.35 * radius, 2))
     props["distance_shells_m"] = [round(radius * f, 2) for f in presets.CHILD_DEFAULTS["shell_factors"]]
