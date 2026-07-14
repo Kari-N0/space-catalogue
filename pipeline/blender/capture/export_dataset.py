@@ -193,8 +193,6 @@ def export_dataset(vantage, out_dir, approved_rig=None, concept="lunar-base",
     if not dry_run:
         _setup_cycles(scene)
         cam_data = bpy.data.cameras.new("capture_cam")
-        cam_data.clip_start = 0.1
-        cam_data.clip_end = 100_000.0
         cam_ob = bpy.data.objects.new("capture_cam", cam_data)
         scene.collection.objects.link(cam_ob)
         scene.camera = cam_ob
@@ -202,6 +200,8 @@ def export_dataset(vantage, out_dir, approved_rig=None, concept="lunar-base",
         for i, s in enumerate(samples):
             cam_data.lens = s["focal_mm"]
             cam_data.sensor_width = s["sensor_mm"]
+            cam_data.clip_start = s["clip_start_m"]
+            cam_data.clip_end = s["clip_end_m"]
             scene.render.resolution_x = s["resolution"]
             scene.render.resolution_y = s["resolution"]
             scene.cycles.samples = s["samples"]  # per-rig override (child rigs)

@@ -127,6 +127,8 @@ _PROP_UI = {
     "train_margin_beta_deg": "dataset-only extra ring this many deg below lowest playback ring",
     "focal_mm": "rig camera focal length (mm) — becomes the page's zoom FOV",
     "sensor_mm": "rig camera sensor width (mm)",
+    "clip_start_m": "camera clip start (m) — evaluate with the camera preview",
+    "clip_end_m": "camera clip end (m) — must exceed the farthest visible terrain",
     "assembly": "merged | separate (how child rigs combine at training time)",
     "seed": "rotates the sampling spiral; same seed = identical rig",
     "target_object": "object this child rig orbits (read-only by convention)",

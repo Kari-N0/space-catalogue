@@ -44,6 +44,8 @@ VANTAGE_DEFAULTS = {
     "train_margin_beta_deg": 5.0,     # beyond playback envelope, NEVER viewer limits
     "focal_mm": 40.0,           # rehearsal-validated rig camera
     "sensor_mm": 36.0,
+    "clip_start_m": 0.1,        # camera clip range — check per capture with the
+    "clip_end_m": 100_000.0,    # panel's camera preview; distances vary a lot
     "assembly": "merged",       # merged | separate (parent vantages only)
     "seed": 0,                  # rotates the fibonacci spiral phase
 }
@@ -90,6 +92,7 @@ def resolve_config(props, child=False):
     if not cfg["distance_shells_m"] or min(cfg["distance_shells_m"]) <= 0:
         raise ValueError(f"distance_shells_m must be positive: {cfg['distance_shells_m']}")
     for key in ("min_height_m", "clearance_m", "los_slack_m", "focal_mm", "sensor_mm",
+                "clip_start_m", "clip_end_m",
                 "train_margin_radius_pct", "train_margin_beta_deg"):
         cfg[key] = float(cfg[key])
     cfg["require_los"] = bool(cfg["require_los"])

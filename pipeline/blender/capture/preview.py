@@ -54,11 +54,15 @@ def _flat_material(name, rgba):
 
 
 def clear_preview(vantage):
-    """Remove PREVIEW_<vantage> and its meshes/materials."""
+    """Remove PREVIEW_<vantage> markers and materials. The CAPCAM_<vantage>
+    preview camera survives (unlinked; ensure_preview_camera re-links it)."""
     coll = bpy.data.collections.get(f"PREVIEW_{vantage}")
     if coll is None:
         return
     for ob in list(coll.objects):
+        if ob.type == "CAMERA":
+            coll.objects.unlink(ob)
+            continue
         bpy.data.objects.remove(ob, do_unlink=True)
     bpy.data.collections.remove(coll)
     for mesh in [m for m in bpy.data.meshes if m.name.startswith(f"PRV_{vantage}_")]:
@@ -105,6 +109,97 @@ def _format_stats(result):
     return "\n".join(lines)
 
 
+# last rig result per vantage — reused by the camera preview so stepping
+# through samples doesn't resample the rig every click
+_LAST = {}
+
+
+def rig_result(vantage_name, refresh=False):
+    """Cached rig result for a vantage (generates without markers if needed)."""
+    if refresh or vantage_name not in _LAST:
+        vantages = convention.find_vantages()
+        if vantage_name not in vantages:
+            raise ValueError(f"no vantage {vantage_name!r} (have: {sorted(vantages)})")
+        _LAST[vantage_name] = rig.generate_rig(vantages[vantage_name], render_fidelity=False)
+    return _LAST[vantage_name]
+
+
+def ensure_preview_camera(vantage_name, index):
+    """Create/update the real camera CAPCAM_<vantage> posed at rig sample
+    `index` (wrapped), configured with that sample's lens/sensor/clips, and make
+    it the scene camera. Returns (camera_object, sample, sample_count).
+
+    The camera is a normal Blender camera on purpose: look through it, adjust
+    lens/clip with Blender's own tools, then write the values back to the
+    capture with apply_camera_to_capture() (which changes the rig hash —
+    re-preview for a fresh approval)."""
+    from mathutils import Matrix, Vector
+
+    result = rig_result(vantage_name)
+    samples = result["samples"]
+    if not samples:
+        raise ValueError(f"{vantage_name}: rig has no samples")
+    index %= len(samples)
+    s = samples[index]
+
+    name = f"CAPCAM_{vantage_name}"
+    cam_data = bpy.data.cameras.get(name) or bpy.data.cameras.new(name)
+    cam_data.lens = s["focal_mm"]
+    cam_data.sensor_width = s["sensor_mm"]
+    cam_data.clip_start = s["clip_start_m"]
+    cam_data.clip_end = s["clip_end_m"]
+    cam = bpy.data.objects.get(name)
+    if cam is None:
+        cam = bpy.data.objects.new(name, cam_data)
+        cam.hide_render = True
+    if not cam.users_collection:
+        vantage = convention.find_vantages()[vantage_name]
+        coll = bpy.data.collections.get(f"PREVIEW_{vantage_name}")
+        if coll is None:
+            coll = bpy.data.collections.new(f"PREVIEW_{vantage_name}")
+            vantage.children.link(coll)
+            coll.hide_render = True
+        coll.objects.link(cam)
+    m = Matrix([list(r) for r in s["rot"]]).to_4x4()
+    m.translation = Vector(s["pos"])
+    cam.matrix_world = m
+    bpy.context.scene.camera = cam
+    return cam, s, len(samples)
+
+
+def apply_camera_to_capture(vantage_name):
+    """Copy CAPCAM lens + clip values back onto the capture collection the
+    current sample belongs to (parent or child rig). Returns (collection_name,
+    dict_of_written_values). Changing these voids the previous approval hash —
+    re-run the preview."""
+    cam_data = bpy.data.cameras.get(f"CAPCAM_{vantage_name}")
+    if cam_data is None:
+        raise ValueError("no preview camera — use Look Through Camera first")
+    result = _LAST.get(vantage_name)
+    scene_cam = bpy.context.scene.camera
+    # which rig does the currently shown sample belong to?
+    rig_tag = "parent"
+    if result is not None and scene_cam is not None and scene_cam.data == cam_data:
+        # find the sample whose pose matches the camera (last ensure_ call wins)
+        pos = scene_cam.matrix_world.translation
+        best = min(result["samples"],
+                   key=lambda s: sum((a - b) ** 2 for a, b in zip(s["pos"], pos)))
+        rig_tag = best["rig"]
+    vantage = convention.find_vantages()[vantage_name]
+    coll = vantage
+    if rig_tag.startswith("child:"):
+        coll = convention.find_children(vantage).get(rig_tag[len("child:"):], vantage)
+    values = {
+        "focal_mm": round(cam_data.lens, 2),
+        "clip_start_m": round(cam_data.clip_start, 4),
+        "clip_end_m": round(cam_data.clip_end, 1),
+    }
+    for key, val in values.items():
+        coll[key] = val
+    _LAST.pop(vantage_name, None)  # rig config changed — force resample
+    return coll.name, values
+
+
 def run_preview(vantage_name):
     """Sample the rig, rebuild markers + stats. Returns the rig result dict."""
     vantages = convention.find_vantages()
@@ -113,6 +208,7 @@ def run_preview(vantage_name):
     vantage = vantages[vantage_name]
 
     result = rig.generate_rig(vantage, render_fidelity=False)
+    _LAST[vantage_name] = result
 
     clear_preview(vantage_name)
     coll = bpy.data.collections.new(f"PREVIEW_{vantage_name}")

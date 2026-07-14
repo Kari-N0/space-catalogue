@@ -214,6 +214,91 @@ class CATALOGUE_OT_export_envelope(bpy.types.Operator):
         return {"FINISHED"}
 
 
+def _view_through_camera(context):
+    for area in context.window.screen.areas:
+        if area.type == "VIEW_3D":
+            for space in area.spaces:
+                if space.type == "VIEW_3D":
+                    space.region_3d.view_perspective = "CAMERA"
+            return
+
+
+class CATALOGUE_OT_camera_look(bpy.types.Operator):
+    """Pose the preview camera at the rig sample and look through it
+    (step: -1 previous / 0 current / +1 next)"""
+    bl_idname = "catalogue.camera_look"
+    bl_label = "Look Through Camera"
+
+    step: bpy.props.IntProperty(default=0)
+
+    def execute(self, context):
+        _c, preview_mod = capture_modules()[:2]
+        st = state(context)
+        if st.vantage in ("", "NONE"):
+            self.report({"ERROR"}, "no active capture")
+            return {"CANCELLED"}
+        try:
+            st.cam_index += self.step
+            cam, sample, total = preview_mod.ensure_preview_camera(st.vantage, st.cam_index)
+        except ValueError as err:
+            self.report({"ERROR"}, str(err))
+            return {"CANCELLED"}
+        st.cam_index %= total
+        st.cam_info = (f"{st.cam_index + 1}/{total}  {sample['rig']} · {sample['kind']}"
+                       f" · shell {sample['shell_m']} m · {sample['name']}")
+        _view_through_camera(context)
+        return {"FINISHED"}
+
+
+class CATALOGUE_OT_camera_apply(bpy.types.Operator):
+    """Write this camera's lens + clip start/end back into the capture
+    (changes the rig — re-run Preview for a fresh approval hash)"""
+    bl_idname = "catalogue.camera_apply"
+    bl_label = "Apply Lens/Clips to Capture"
+
+    def execute(self, context):
+        _c, preview_mod = capture_modules()[:2]
+        st = state(context)
+        try:
+            coll_name, values = preview_mod.apply_camera_to_capture(st.vantage)
+        except ValueError as err:
+            self.report({"ERROR"}, str(err))
+            return {"CANCELLED"}
+        st.last_hash = ""  # camera config changed — previous approval is void
+        self.report({"INFO"}, f"{coll_name}: " +
+                    ", ".join(f"{k}={v}" for k, v in values.items()) + " — re-run Preview")
+        return {"FINISHED"}
+
+
+class CATALOGUE_OT_test_render(bpy.types.Operator):
+    """Render ONE frame from the preview camera with the dataset's render
+    settings (resolution/samples) and the scene's own look + compositing —
+    for setting up the final look before executing the full capture"""
+    bl_idname = "catalogue.test_render"
+    bl_label = "Test Render This Camera"
+
+    def execute(self, context):
+        _c, preview_mod = capture_modules()[:2]
+        st = state(context)
+        try:
+            cam, sample, _total = preview_mod.ensure_preview_camera(st.vantage, st.cam_index)
+        except ValueError as err:
+            self.report({"ERROR"}, str(err))
+            return {"CANCELLED"}
+        from pipeline.blender.capture.export_dataset import _setup_cycles
+        scene = context.scene
+        _setup_cycles(scene)
+        scene.render.resolution_x = sample["resolution"]
+        scene.render.resolution_y = sample["resolution"]
+        scene.cycles.samples = sample["samples"]
+        scene.camera = cam
+        bpy.ops.render.render("INVOKE_DEFAULT")
+        self.report({"INFO"}, f"test render: {sample['name']} @ {sample['resolution']}px "
+                              f"/{sample['samples']}smp — scene look + compositing apply "
+                              "exactly as in the final dataset")
+        return {"FINISHED"}
+
+
 class CATALOGUE_OT_fit_shells(bpy.types.Operator):
     """Set the camera distance shells to fit the ENV volume's current size"""
     bl_idname = "catalogue.fit_shells"
@@ -256,5 +341,8 @@ CLASSES = (
     CATALOGUE_OT_cancel_job,
     CATALOGUE_OT_export_envelope,
     CATALOGUE_OT_fit_shells,
+    CATALOGUE_OT_camera_look,
+    CATALOGUE_OT_camera_apply,
+    CATALOGUE_OT_test_render,
     CATALOGUE_OT_reload_pipeline,
 )

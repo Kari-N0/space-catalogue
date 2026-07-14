@@ -33,6 +33,9 @@ class CatalogueToolsState(bpy.types.PropertyGroup):
     last_hash: bpy.props.StringProperty()
     last_vantage: bpy.props.StringProperty()
     last_summary: bpy.props.StringProperty()
+    cam_index: bpy.props.IntProperty(name="Camera", min=0, default=0,
+                                     description="rig sample the preview camera shows")
+    cam_info: bpy.props.StringProperty()
     job_id: bpy.props.StringProperty()
     job_state: bpy.props.StringProperty()
     job_stage: bpy.props.StringProperty()
@@ -82,6 +85,25 @@ class CATALOGUE_PT_capture(bpy.types.Panel):
             for line in st.last_summary.split("\n"):
                 if line:
                     box.label(text=line, icon="ERROR" if line.startswith("WARNING") else "NONE")
+
+        box = layout.box()
+        box.label(text="Camera Check", icon="OUTLINER_DATA_CAMERA")
+        row = box.row(align=True)
+        row.operator("catalogue.camera_look", text="", icon="TRIA_LEFT").step = -1
+        row.prop(st, "cam_index", text="")
+        row.operator("catalogue.camera_look", text="", icon="TRIA_RIGHT").step = 1
+        row.operator("catalogue.camera_look", text="", icon="VIEW_CAMERA").step = 0
+        if st.cam_info:
+            box.label(text=st.cam_info)
+        cam_data = bpy.data.cameras.get(f"CAPCAM_{st.vantage}")
+        if cam_data is not None:
+            row = box.row(align=True)
+            row.prop(cam_data, "lens", text="lens mm")
+            row = box.row(align=True)
+            row.prop(cam_data, "clip_start", text="clip start")
+            row.prop(cam_data, "clip_end", text="clip end")
+            box.operator("catalogue.camera_apply", icon="IMPORT")
+        box.operator("catalogue.test_render", icon="RESTRICT_RENDER_OFF")
 
         box = layout.box()
         box.label(text="Execute", icon="RENDER_ANIMATION")

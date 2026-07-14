@@ -223,6 +223,7 @@ def _mk_sample(name, rig_name, kind, shell, pos, focus, cfg):
         "rot": frames.look_at_rotation(pos, tuple(focus)),
         "resolution": cfg["resolution"], "focal_mm": cfg["focal_mm"],
         "sensor_mm": cfg["sensor_mm"], "samples": cfg["samples"],
+        "clip_start_m": cfg["clip_start_m"], "clip_end_m": cfg["clip_end_m"],
     }
 
 
