@@ -93,9 +93,14 @@ class _Entry:
 
 
 class SceneGeo:
-    """Validity queries against everything that will actually render."""
+    """Validity queries against everything that will actually render.
 
-    def __init__(self, exclude_root=None, scene=None):
+    ground_object: explicit ground reference for height_above_terrain (several
+    overlapping ground meshes may exist — the capture picks one). None/"" =
+    the terrain* naming convention. Clearance/LOS always use ALL geometry.
+    """
+
+    def __init__(self, exclude_root=None, scene=None, ground_object=None):
         scene = scene or bpy.context.scene
         self.deps = bpy.context.evaluated_depsgraph_get()
         self.entries = []
@@ -104,8 +109,13 @@ class SceneGeo:
                 continue
             if exclude_root is not None and _under_collection(ob, exclude_root):
                 continue
-            self.entries.append(_Entry(ob))
+            entry = _Entry(ob)
+            if ground_object:
+                entry.is_terrain = ob.name == ground_object
+            self.entries.append(entry)
         self.has_terrain = any(e.is_terrain for e in self.entries)
+        self.ground_found = (not ground_object) or any(
+            e.name == ground_object for e in self.entries)
 
     def height_above_terrain(self, p):
         """Vertical clearance to the terrain below p; None when no terrain below.

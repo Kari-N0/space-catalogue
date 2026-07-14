@@ -251,7 +251,13 @@ def generate_rig(vantage_coll, render_fidelity=False):
     ctx = render_fidelity_subdiv(scene) if render_fidelity else contextlib.nullcontext()
     tol = 0.0 if render_fidelity else validity.TERRAIN_TOL_M
     with ctx:
-        scene_bvh = validity.SceneGeo(exclude_root=bpy.data.collections.get(convention.CAPTURE_ROOT))
+        scene_bvh = validity.SceneGeo(
+            exclude_root=bpy.data.collections.get(convention.CAPTURE_ROOT),
+            ground_object=cfg.get("ground_object") or None)
+        if not scene_bvh.ground_found:
+            warnings.append(
+                f"ground object {cfg['ground_object']!r} not found among render-visible "
+                "meshes — falling back to the terrain* naming convention")
         h = scene_bvh.height_above_terrain(focus)
         if h is None:
             warnings.append(

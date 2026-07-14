@@ -130,6 +130,7 @@ _PROP_UI = {
     "clip_start_m": "camera clip start (m) — evaluate with the camera preview",
     "clip_end_m": "camera clip end (m) — must exceed the farthest visible terrain",
     "assembly": "merged | separate (how child rigs combine at training time)",
+    "ground_object": "explicit ground mesh for min-height ('' = any terrain* mesh)",
     "seed": "rotates the sampling spiral; same seed = identical rig",
     "target_object": "object this child rig orbits (read-only by convention)",
     "standoff_min_m": "min camera distance from the target object's surface (m)",

@@ -26,12 +26,27 @@ def vantage_items(_self, _context):
 
 
 def _vantage_switched(self, _context):
-    """Load the capture's remembered output folder (or suggest the default)."""
+    """Load the capture's remembered output folder + ground object."""
     try:
         coll = bpy.data.collections.get(f"CAPTURE_{self.vantage}")
         saved = coll.get("output_dir", "") if coll else ""
         self.output_dir = saved or (
             f"D:\\renders\\lunar-base\\capture\\{self.vantage}" if coll else "")
+        self.ground_object = bpy.data.objects.get(coll.get("ground_object", "")) if coll else None
+    except Exception:
+        pass
+
+
+def _ground_poll(self, obj):
+    return obj.type == "MESH" and not obj.name.startswith(
+        ("ENV_", "FOCUS_", "PRV_", "CAPCAM_"))
+
+
+def _ground_update(self, _context):
+    try:
+        coll = bpy.data.collections.get(f"CAPTURE_{self.vantage}")
+        if coll is not None:
+            coll["ground_object"] = self.ground_object.name if self.ground_object else ""
     except Exception:
         pass
 
@@ -52,6 +67,11 @@ class CatalogueToolsState(bpy.types.PropertyGroup):
         name="Output Folder", subtype="DIR_PATH",
         description="dataset destination — always user-specified; the LichtFeld "
                     "drop-in folder is created inside it (never on C:)")
+    ground_object: bpy.props.PointerProperty(
+        name="Ground", type=bpy.types.Object, poll=_ground_poll, update=_ground_update,
+        description="explicit ground mesh for 'min height from ground' — pick one "
+                    "when several ground objects overlap (empty = any mesh named "
+                    "terrain*). Clearance still checks ALL objects")
     new_name: bpy.props.StringProperty(
         name="Name", default="capture_01",
         description="letters, digits, '-' and '_' (no spaces, no double underscore)")
@@ -104,6 +124,7 @@ class CATALOGUE_PT_capture(bpy.types.Panel):
             if "distance_shells_m" in coll.keys():
                 props.prop(coll, '["distance_shells_m"]', text="camera distances (m)")
                 props.operator("catalogue.fit_shells", icon="FULLSCREEN_ENTER")
+            props.prop(st, "ground_object", text="ground object")
             for key, label in (
                 ("views", "camera views"),
                 ("resolution", "image resolution (square)"),
