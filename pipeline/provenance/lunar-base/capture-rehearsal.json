@@ -1,0 +1,31 @@
+{
+  "asset": "capture dataset lunar-base/rehearsal",
+  "generated": "2026-07-13T23:55:59",
+  "stages": [
+    {
+      "stage": "render-dataset",
+      "tool": "Blender 5.1.2 / Cycles OptiX",
+      "script": "pipeline/blender/capture/export_dataset.py",
+      "blend_file": "\\\\wsl.localhost\\Ubuntu-24.04\\home\\karin\\dev\\space-catalogue\\assets_src\\lunar-base\\terrain\\terrain_site11_v005.blend",
+      "seed": 0,
+      "views": 227,
+      "resolution": 1080,
+      "license": "original render \u2014 project IP; terrain DEM lineage per pipeline/provenance/lunar-base/terrain-dems.json"
+    },
+    {
+      "stage": "train-splat",
+      "tool": "gsplat 1.5.3 (git main, sm_89) simple_trainer.py mcmc",
+      "flags": "--max_steps 10000 --strategy.cap-max 500000 --data_factor 1 --no-normalize-world-space",
+      "metrics": {
+        "splats_total": 253809,
+        "psnr": 26.04683494567871,
+        "splats_near_proxy-boulder": 58962
+      },
+      "license": "gsplat Apache-2.0; no Inria/graphdeco code (PLAN.md \u00a75)"
+    }
+  ],
+  "pending_stages": [
+    "supersplat-clean (Kari, manual: clean/crop ONLY \u2014 never rotate/translate/set-pivot)",
+    "pack-sog (splat-transform; record flags + input PLY here at SOG-swap time)"
+  ]
+}

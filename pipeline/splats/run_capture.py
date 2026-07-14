@@ -198,7 +198,12 @@ def run_capture(blend, vantage, approved_rig, concept="lunar-base",
         # the out dir MUST exist before the call (contract with export_dataset.py)
         os.makedirs(stage_dir, exist_ok=True)
         job.run("render-dataset", [
-            os.path.join(REPO, "pipeline/blender/blender-win.sh"), "-b", blend,
+            os.path.join(REPO, "pipeline/blender/blender-win.sh"),
+            # factory-startup: user add-ons (MCP server etc.) must not load into
+            # headless render jobs — a lingering add-on thread kept blender.exe
+            # alive after the 2026-07-13 rehearsal render finished, deadlocking
+            # this orchestrator. export_dataset.py sets all its own prefs.
+            "--factory-startup", "-b", blend,
             # without this Blender exits 0 on Python exceptions — the approval
             # gate's refusal (and any mid-render crash) would be invisible here
             "--python-exit-code", "1",
