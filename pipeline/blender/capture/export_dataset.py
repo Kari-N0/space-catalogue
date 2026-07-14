@@ -27,16 +27,26 @@ import os
 import sys
 import time
 
-# --python scripts run as __main__ with no package context: bootstrap the repo
-# root (works from \\wsl.localhost\... UNC paths too) and use absolute imports.
-_REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-if _REPO not in sys.path:
-    sys.path.insert(0, _REPO)
+# --python scripts run as __main__ with no package context. Two homes exist:
+# the repo (pipeline/blender/capture/) and the Catalogue Tools extension's
+# vendored copy (catalogue_tools/capture/) — bootstrap whichever this file
+# lives in, so the dataset export runs on any computer with just the add-on.
+_HERE = os.path.dirname(os.path.abspath(__file__))
+try:
+    _REPO = os.path.dirname(os.path.dirname(os.path.dirname(_HERE)))
+    if _REPO not in sys.path:
+        sys.path.insert(0, _REPO)
+    from pipeline.blender.capture import convention, frames, rig  # noqa: E402
+    _PKG = "pipeline.blender.capture"
+except ImportError:
+    _PARENT = os.path.dirname(_HERE)
+    if _PARENT not in sys.path:
+        sys.path.insert(0, _PARENT)
+    from capture import convention, frames, rig  # noqa: E402
+    _PKG = "capture"
 
 import bpy  # noqa: E402
 from mathutils import Matrix, Vector  # noqa: E402
-
-from pipeline.blender.capture import convention, frames, rig  # noqa: E402
 
 SCHEMA_VERSION = 1
 INIT_POINT_CAP = 120_000
@@ -110,7 +120,10 @@ def _init_points(result):
 
     deps = bpy.context.evaluated_depsgraph_get()
     root = bpy.data.collections.get(convention.CAPTURE_ROOT)
-    from pipeline.blender.capture.validity import _under_collection, render_visible_objects
+    import importlib
+    _validity = importlib.import_module(_PKG + ".validity")
+    _under_collection = _validity._under_collection
+    render_visible_objects = _validity.render_visible_objects
 
     scene_pts, child_pts = [], []
     for ob in render_visible_objects(bpy.context.scene):

@@ -241,9 +241,16 @@ confirm + user-specified output folder → headless run_capture → LichtFeld
 folder, job status polling from `jobs/*/status.json` with cancel, envelope
 sidecar export. Thin UI over the pipeline functions, ML-free (ADDON.md §1).
 Install: Preferences ▸ Get Extensions ▸ Install from Disk with the zip built by
-`blender-win.sh --command extension build --source-dir
-pipeline/blender/addons/catalogue_tools --output-filepath <zip>`; the add-on
-preferences hold the repo path + WSL distro + poll interval.
+`pipeline/blender/addons/build_addon.sh` (it VENDORS a copy of
+`pipeline/blender/capture/` into the zip — single source stays in the repo).
+**Since v0.2.0 the add-on is machine-portable**: Execute renders with the local
+machine's own Blender (`bpy.app.binary_path` + the vendored export script),
+directly on Windows — no WSL, no repo checkout needed. On the dev machine the
+repo copy of the pipeline is preferred when present (hot-reload keeps working),
+and the WSL/CLI path (`run_capture.py`) remains for repo automation + the
+gsplat validation flow. Add-on preferences: repo path, WSL distro (legacy jobs
+polling), poll interval, and a "block C: as output drive" toggle (on for this
+machine, off elsewhere).
 
 ## 9. Module map
 

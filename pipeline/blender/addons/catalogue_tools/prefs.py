@@ -21,12 +21,19 @@ class CatalogueToolsPreferences(bpy.types.AddonPreferences):
         name="Job poll interval (s)",
         default=3.0, min=1.0, max=30.0,
     )
+    block_c_drive: bpy.props.BoolProperty(
+        name="Block C: as output drive",
+        description="refuse dataset output on C: (space-catalogue machine rule; "
+                    "disable on computers where C: is the only drive)",
+        default=True,
+    )
 
     def draw(self, _context):
         col = self.layout.column()
         col.prop(self, "repo_windows")
         col.prop(self, "wsl_distro")
         col.prop(self, "poll_seconds")
+        col.prop(self, "block_c_drive")
 
 
 class _DefaultPrefs:

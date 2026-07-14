@@ -6,21 +6,43 @@ headless and the panel polls its status file (rule 3)."""
 import os
 import subprocess
 import sys
+import time
 
 import bpy
 
-from . import paths, prefs
+from . import jobs, prefs
 
 
 def capture_modules():
-    """Import pipeline.blender.capture lazily, with the repo on sys.path."""
+    """Capture pipeline modules — repo copy when available (dev machine,
+    hot-reloadable), else the copy vendored inside this extension at build
+    time (any other computer: just Blender + the add-on)."""
     repo = prefs.get_prefs().repo_windows
-    if repo not in sys.path:
-        sys.path.insert(0, repo)
-    from pipeline.blender.capture import (  # noqa: PLC0415
+    try:
+        if repo and os.path.isdir(repo):
+            if repo not in sys.path:
+                sys.path.insert(0, repo)
+            from pipeline.blender.capture import (  # noqa: PLC0415
+                _reload, convention, export_envelope, presets, preview,
+            )
+            return convention, preview, export_envelope, presets, _reload
+    except ImportError:
+        pass
+    from .capture import (  # noqa: PLC0415  (vendored by build_addon)
         _reload, convention, export_envelope, presets, preview,
     )
     return convention, preview, export_envelope, presets, _reload
+
+
+def export_script_path():
+    """export_dataset.py for headless rendering — vendored copy if this is an
+    installed extension, else the repo copy."""
+    local = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                         "capture", "export_dataset.py")
+    if os.path.isfile(local):
+        return local
+    return os.path.join(prefs.get_prefs().repo_windows,
+                        "pipeline", "blender", "capture", "export_dataset.py")
 
 
 def state(context):
@@ -162,44 +184,47 @@ class CATALOGUE_OT_execute_capture(bpy.types.Operator):
         if not out_win:
             self.report({"ERROR"}, "set the Output folder first (always user-specified)")
             return {"CANCELLED"}
-        if out_win.lower().startswith("c:"):
-            self.report({"ERROR"}, "never stage on C: — it is nearly full (CLAUDE.md); "
+        if p.block_c_drive and out_win.lower().startswith("c:"):
+            self.report({"ERROR"}, "staging on C: is blocked (add-on preferences) — "
                                    "pick another drive")
-            return {"CANCELLED"}
-        try:
-            blend_wsl = paths.win_to_wsl(bpy.data.filepath, p.wsl_distro)
-            repo_wsl = paths.win_to_wsl(p.repo_windows, p.wsl_distro)
-            out_wsl = paths.win_to_wsl(out_win, p.wsl_distro)
-        except ValueError as err:
-            self.report({"ERROR"}, str(err))
             return {"CANCELLED"}
         vantage = active_vantage(context)
         if vantage is not None:
             vantage["output_dir"] = out_win  # remembered per capture
-        # early refusals (bad paths, C: staging, hash problems) must be
-        # observable: they land in jobs/launch.log, not /dev/null
-        cmd = (f"mkdir -p {repo_wsl}/jobs && cd {repo_wsl} && "
-               f"nohup python3 pipeline/splats/run_capture.py "
-               f"--blend '{blend_wsl}' --vantage '{st.vantage}' "
-               f"--approved-rig {st.last_hash} --out '{out_wsl}' "
-               f">> jobs/launch.log 2>&1 &")
-        # wsl.exe dies silently without valid std handles when launched
-        # window-less — give it explicit ones (the original v0.1.0 bug)
-        proc = subprocess.Popen(
-            ["wsl.exe", "-d", p.wsl_distro, "--", "bash", "-lc", cmd],
-            stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
+
+        # WINDOWS-NATIVE launch (v0.2.0): render with THIS machine's own Blender
+        # (bpy.app.binary_path) running the vendored export script — no WSL, no
+        # repo needed; works on any computer the add-on is installed on. The
+        # child process outlives Blender closing normally (Windows doesn't kill
+        # children on parent exit); render log lives next to the dataset.
+        script = export_script_path()
+        if not os.path.isfile(script):
+            self.report({"ERROR"}, f"export script not found: {script}")
+            return {"CANCELLED"}
         try:
-            rc = proc.wait(timeout=10)
-        except subprocess.TimeoutExpired:
-            rc = 0  # still running = bash held by the job; fine
-        if rc != 0:
-            self.report({"ERROR"}, f"launch failed (wsl.exe exit {rc}) — see jobs/launch.log")
+            os.makedirs(out_win, exist_ok=True)
+            log = open(os.path.join(out_win, "render.log"), "a")
+        except OSError as err:
+            self.report({"ERROR"}, f"cannot create output folder: {err}")
+            return {"CANCELLED"}
+        proc = subprocess.Popen(
+            [bpy.app.binary_path, "--factory-startup", "-b", bpy.data.filepath,
+             "--python-exit-code", "1", "--python", script, "--",
+             "--vantage", st.vantage, "--out", out_win,
+             "--approved-rig", st.last_hash],
+            stdin=subprocess.DEVNULL, stdout=log, stderr=subprocess.STDOUT,
+            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
+        log.close()  # the child holds its own handle
+        jobs.track_local_job(proc, st.vantage, out_win, st.total_images)
+        time.sleep(2)  # instant deaths (bad args, unwritable out) surface here
+        rc = proc.poll()
+        if rc is not None and rc != 0:
+            self.report({"ERROR"}, f"render process died (exit {rc}) — see "
+                                   f"{os.path.join(out_win, 'render.log')}")
             return {"CANCELLED"}
         st.job_note = f"launched: {st.vantage} @ {st.last_hash}"
-        self.report({"INFO"}, "capture job launched — status below (survives Blender); "
-                              "if no job appears in ~15 s, check jobs/launch.log")
+        self.report({"INFO"}, "render running on this machine's Blender — progress below; "
+                              "survives closing this Blender window")
         return {"FINISHED"}
 
 
@@ -210,7 +235,10 @@ class CATALOGUE_OT_cancel_job(bpy.types.Operator):
 
     def execute(self, context):
         st = state(context)
-        if not st.job_id:
+        if jobs.cancel_local_job():
+            self.report({"INFO"}, "local render terminated")
+            return {"FINISHED"}
+        if not st.job_id or st.job_id.startswith("local"):
             return {"CANCELLED"}
         control = os.path.join(prefs.get_prefs().repo_windows, "jobs", st.job_id, "control")
         try:

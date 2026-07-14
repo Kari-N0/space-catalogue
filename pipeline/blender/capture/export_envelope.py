@@ -21,13 +21,21 @@ import os
 import sys
 import time
 
-_REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-if _REPO not in sys.path:
-    sys.path.insert(0, _REPO)
+# dual-home bootstrap: repo (pipeline/blender/capture) or the Catalogue Tools
+# extension's vendored copy (catalogue_tools/capture) — see export_dataset.py
+_HERE = os.path.dirname(os.path.abspath(__file__))
+try:
+    _REPO = os.path.dirname(os.path.dirname(os.path.dirname(_HERE)))
+    if _REPO not in sys.path:
+        sys.path.insert(0, _REPO)
+    from pipeline.blender.capture import convention, rig  # noqa: E402
+except ImportError:
+    _PARENT = os.path.dirname(_HERE)
+    if _PARENT not in sys.path:
+        sys.path.insert(0, _PARENT)
+    from capture import convention, rig  # noqa: E402
 
 import bpy  # noqa: E402
-
-from pipeline.blender.capture import convention, rig  # noqa: E402
 
 
 def export_envelope(vantage, out_path=None, concept="lunar-base"):

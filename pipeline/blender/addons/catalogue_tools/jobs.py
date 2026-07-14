@@ -1,7 +1,12 @@
-"""Job status polling — reads the newest jobs/<id>/status.json (ADDON.md §6)
-on a bpy.app.timers interval and mirrors it into the panel state. All reads go
-over the \\\\wsl.localhost repo path; any hiccup is swallowed (next tick retries).
-"""
+"""Job status polling. Two sources, local first:
+
+1. LOCAL renders (v0.2.0 default): headless Blender children launched by
+   Execute on this machine — progress = png count in the output folder,
+   done = clean exit + capture-meta.json present.
+2. Repo jobs/<id>/status.json (ADDON.md §6) — WSL-side runs launched via the
+   CLI (run_capture.py) on the dev machine.
+
+Any read hiccup is swallowed; the next tick retries."""
 
 import json
 import os
@@ -9,6 +14,43 @@ import os
 import bpy
 
 from . import prefs
+
+# local render jobs: [{proc, vantage, out, total}] — newest last
+_LOCAL = []
+
+
+def track_local_job(proc, vantage, out_dir, total_images):
+    _LOCAL.append({"proc": proc, "vantage": vantage, "out": out_dir,
+                   "total": total_images})
+
+
+def cancel_local_job():
+    """Terminate the newest still-running local render. True if one was killed."""
+    for job in reversed(_LOCAL):
+        if job["proc"].poll() is None:
+            job["proc"].terminate()
+            return True
+    return False
+
+
+def _local_status():
+    if not _LOCAL:
+        return None
+    j = _LOCAL[-1]
+    rc = j["proc"].poll()
+    img_dir = os.path.join(j["out"], "lichtFeld", "images")
+    try:
+        imgs = len([f for f in os.listdir(img_dir) if f.endswith(".png")])
+    except OSError:
+        imgs = 0
+    if rc is None:
+        state, msg = "running", f"rendering {imgs}/{j['total'] or '?'} images"
+    elif rc == 0 and os.path.isfile(os.path.join(j["out"], "capture-meta.json")):
+        state, msg = "done", f"dataset ready: {os.path.join(j['out'], 'lichtFeld')}"
+    else:
+        state, msg = "failed", f"exit {rc} — see {os.path.join(j['out'], 'render.log')}"
+    return {"job_id": f"local · {j['vantage']}", "state": state,
+            "stage": "render-dataset", "message": msg}
 
 
 def _newest_status(repo_win):
@@ -30,7 +72,7 @@ def _tick():
     try:
         p = prefs.get_prefs()
         st = bpy.context.window_manager.catalogue_tools
-        doc = _newest_status(p.repo_windows)
+        doc = _local_status() or _newest_status(p.repo_windows)
         if doc:
             changed = (st.job_id != doc.get("job_id", "")
                        or st.job_state != doc.get("state", "")

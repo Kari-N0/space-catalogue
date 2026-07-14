@@ -1,7 +1,7 @@
 schema_version = "1.0.0"
 
 id = "catalogue_tools"
-version = "0.1.3"
+version = "0.2.0"
 name = "Catalogue Tools"
 tagline = "Splat capture vantages: author, preview, execute"
 maintainer = "space-catalogue"
