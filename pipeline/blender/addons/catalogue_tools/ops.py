@@ -115,6 +115,8 @@ class CATALOGUE_OT_preview(bpy.types.Operator):
             lines.append(f"zoom rig: {key}")
         lines += [f"WARNING: {w}" for w in result["warnings"]]
         st.last_summary = "\n".join(lines)
+        # freshly rebuilt markers must respect the panel's display mode/scale
+        preview_mod.set_marker_display(st.vantage, st.marker_mode, st.marker_scale)
         self.report({"INFO"},
                     f"rig {result['hash']} — full stats in text block "
                     f"CAPTURE_STATS_{result['vantage']}")
@@ -288,6 +290,10 @@ class CATALOGUE_OT_test_render(bpy.types.Operator):
         from pipeline.blender.capture.export_dataset import _setup_cycles
         scene = context.scene
         _setup_cycles(scene)
+        # persistent data is for the headless batch loop ONLY: interactively it
+        # pins the whole Cycles scene in VRAM after the render and starves the
+        # viewport (blacks out on heavy terrain). One test frame gains nothing.
+        scene.render.use_persistent_data = False
         scene.render.resolution_x = sample["resolution"]
         scene.render.resolution_y = sample["resolution"]
         scene.cycles.samples = sample["samples"]

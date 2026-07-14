@@ -73,6 +73,26 @@ def clear_preview(vantage):
             bpy.data.materials.remove(mat)
 
 
+def set_marker_display(vantage, mode="SOLID", scale=1.0):
+    """Marker visibility/size: mode SOLID | WIRE | OFF, scale multiplies each
+    marker's base size (scene sizes vary a lot). Returns marker count."""
+    coll = bpy.data.collections.get(f"PREVIEW_{vantage}")
+    if coll is None:
+        return 0
+    n = 0
+    for ob in coll.objects:
+        if ob.type != "MESH":
+            continue
+        base = float(ob.get("prv_base", ob.scale[0]))
+        ob["prv_base"] = base
+        s = base * max(0.05, scale)
+        ob.scale = (s, s, s)
+        ob.hide_viewport = mode == "OFF"
+        ob.display_type = "WIRE" if mode == "WIRE" else "TEXTURED"
+        n += 1
+    return n
+
+
 def _format_stats(result):
     lines = [
         f"CAPTURE PREVIEW — vantage '{result['vantage']}'  "
@@ -237,6 +257,7 @@ def run_preview(vantage_name):
         rot.translation = Vector(s["pos"])
         ob.matrix_world = rot
         size = min(6.0, max(0.5, 0.05 * s["shell_m"]))
+        ob["prv_base"] = size  # marker display scaling works off this base
         ob.scale = (size, size, size)
         ob.hide_render = True
         ob.hide_select = True

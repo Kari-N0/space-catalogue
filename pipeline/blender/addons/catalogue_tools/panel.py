@@ -25,6 +25,15 @@ def vantage_items(_self, _context):
     return _ITEMS_CACHE
 
 
+def _marker_update(self, _context):
+    try:
+        from . import ops as _ops
+        preview = _ops.capture_modules()[1]
+        preview.set_marker_display(self.vantage, self.marker_mode, self.marker_scale)
+    except Exception:
+        pass  # no preview yet / no vantage — nothing to restyle
+
+
 class CatalogueToolsState(bpy.types.PropertyGroup):
     vantage: bpy.props.EnumProperty(name="Capture", items=vantage_items)
     new_name: bpy.props.StringProperty(
@@ -36,6 +45,15 @@ class CatalogueToolsState(bpy.types.PropertyGroup):
     cam_index: bpy.props.IntProperty(name="Camera", min=0, default=0,
                                      description="rig sample the preview camera shows")
     cam_info: bpy.props.StringProperty()
+    marker_mode: bpy.props.EnumProperty(
+        name="Markers", update=_marker_update, items=[
+            ("SOLID", "Solid", "shaded frustum markers"),
+            ("WIRE", "Wire", "wireframe markers"),
+            ("OFF", "Off", "hide markers"),
+        ])
+    marker_scale: bpy.props.FloatProperty(
+        name="Marker Size", default=1.0, min=0.05, max=20.0,
+        update=_marker_update, description="marker size multiplier (scene sizes vary)")
     job_id: bpy.props.StringProperty()
     job_state: bpy.props.StringProperty()
     job_stage: bpy.props.StringProperty()
@@ -80,6 +98,9 @@ class CATALOGUE_PT_capture(bpy.types.Panel):
         row = box.row(align=True)
         row.operator("catalogue.preview", icon="OVERLAY")
         row.operator("catalogue.clear_preview", text="", icon="TRASH")
+        row = box.row(align=True)
+        row.prop(st, "marker_mode", expand=True)
+        box.prop(st, "marker_scale", slider=True)
         if st.last_hash:
             box.label(text=f"rig hash: {st.last_hash}  ({st.last_vantage})")
             for line in st.last_summary.split("\n"):
