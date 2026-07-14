@@ -27,7 +27,9 @@ from mathutils import Vector
 from . import presets
 
 CAPTURE_ROOT = "capture"
-NAME_RE = re.compile(r"^[a-z0-9-]+$")
+# letters/digits/underscore/hyphen; "__" is reserved as the child-rig separator
+# (CAPTURE_<capture>__<object>) and therefore forbidden inside a name
+NAME_RE = re.compile(r"^(?!.*__)[A-Za-z0-9_-]+$")
 CHILD_SEP = "__"
 
 
@@ -175,7 +177,7 @@ def create_vantage(name, focus, preset="draft", snap_to_terrain_surface=False):
     samples are written as explicit resolved numbers (directly editable — no
     0-means-preset sentinels on freshly created vantages)."""
     if not NAME_RE.match(name):
-        raise ValueError(f"vantage name must match [a-z0-9-]+: {name!r}")
+        raise ValueError(f"capture name: letters, digits, - and _ (no double underscore): {name!r}")
     if preset not in presets.PRESETS:
         raise ValueError(f"unknown preset {preset!r}")
     root = ensure_capture_root()

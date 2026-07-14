@@ -90,11 +90,12 @@ def _sample_shell(env, scene_bvh, focus, r, count, cfg, tol, phase,
     """
     tally = {"outside_env": 0, "below_terrain": 0, "low_height": 0,
              "clearance": 0, "standoff": 0, "los": 0}
+    blockers = {}
     min_height = cfg["min_height_m"] if height_floor is None else height_floor
     los_slack = max(0.0, cfg["los_slack_m"] - tol)
     accepted = []
     if count <= 0:
-        return accepted, tally
+        return accepted, tally, blockers
     for d in frames.fibonacci_dirs(count * OVERSAMPLE, phase):
         pos = (focus[0] + d[0] * r, focus[1] + d[1] * r, focus[2] + d[2] * r)
         if check_env and not env.contains(pos):
@@ -117,14 +118,17 @@ def _sample_shell(env, scene_bvh, focus, r, count, cfg, tol, phase,
             if sd is not None and sd < cfg["standoff_min_m"] + tol:
                 tally["standoff"] += 1
                 continue
-        if cfg["require_los"] and scene_bvh.los_blocked(pos, focus, los_slack, target_object):
-            tally["los"] += 1
-            continue
+        if cfg["require_los"]:
+            blk = scene_bvh.los_blocked(pos, focus, los_slack, target_object)
+            if blk:
+                tally["los"] += 1
+                blockers[blk] = blockers.get(blk, 0) + 1
+                continue
         accepted.append((pos, d))
     if len(accepted) > count:
         keep = frames.farthest_point_downsample([a[1] for a in accepted], count)
         accepted = [accepted[i] for i in keep]
-    return accepted, tally
+    return accepted, tally, blockers
 
 
 def _sample_rig(rig_name, coll, scene_bvh, cfg, focus, tol, prefix,
@@ -143,18 +147,22 @@ def _sample_rig(rig_name, coll, scene_bvh, cfg, focus, tol, prefix,
 
     for si, (r, n) in enumerate(zip(shells, counts)):
         phase = 0.61803 * (cfg["seed"] + si)
-        acc, tally = _sample_shell(env, scene_bvh, focus, r, n, cfg, tol, phase,
-                                   target_object=target_object)
+        acc, tally, blockers = _sample_shell(env, scene_bvh, focus, r, n, cfg, tol, phase,
+                                             target_object=target_object)
         az = [frames.alpha_deg_from_delta(frames.vec_sub(p, focus)) for p, _ in acc]
         shell_stats.append({
             "rig": rig_name, "shell_m": r, "requested": n, "kept": len(acc),
-            "rejected": tally, "max_azimuth_gap_deg": round(frames.max_azimuth_gap_deg(az), 1),
+            "rejected": tally, "los_blockers": blockers,
+            "max_azimuth_gap_deg": round(frames.max_azimuth_gap_deg(az), 1),
         })
         if len(acc) < n * 0.8:
+            rej = ", ".join(f"{k}={v}" for k, v in tally.items() if v)
+            if blockers:
+                top = sorted(blockers.items(), key=lambda kv: -kv[1])[:3]
+                rej += " — LOS blocked by " + ", ".join(f"'{k}'×{v}" for k, v in top)
             warnings.append(
                 f"{rig_name}: shell {r} m short {len(acc)}/{n} — grow ENV_{convention.vantage_name(coll)} "
-                f"or relax min_height/clearance (rejections: "
-                + ", ".join(f"{k}={v}" for k, v in tally.items() if v) + ")")
+                f"or relax min_height/clearance ({rej})")
         for pos, _d in acc:
             samples.append(_mk_sample(f"{prefix}{idx:04d}.png", rig_name, "playback",
                                       r, pos, focus, cfg))
@@ -174,9 +182,9 @@ def _sample_rig(rig_name, coll, scene_bvh, cfg, focus, tol, prefix,
         for r, frac in ((max(shells) * (1 + cfg["train_margin_radius_pct"] / 100.0), 3),
                         (min(shells) * (1 - cfg["train_margin_radius_pct"] / 100.0), 6)):
             n = max(4, cfg["views"] // (frac * 2))
-            acc, _ = _sample_shell(env, scene_bvh, focus, r, n, cfg, tol,
-                                   0.61803 * (cfg["seed"] + 17), target_object=target_object,
-                                   check_env=False, height_floor=margin_floor)
+            acc, _, _blk = _sample_shell(env, scene_bvh, focus, r, n, cfg, tol,
+                                         0.61803 * (cfg["seed"] + 17), target_object=target_object,
+                                         check_env=False, height_floor=margin_floor)
             for pos, _d in acc:
                 samples.append(_mk_sample(f"{prefix}{idx:04d}.png", rig_name, "margin",
                                           round(r, 2), pos, focus, cfg))
@@ -251,6 +259,14 @@ def generate_rig(vantage_coll, render_fidelity=False):
                 "to the surface (the panel's Create does this automatically).")
         elif h < -0.5:
             warnings.append(f"FOCUS_{name} sits {-h:.1f} m below the terrain surface")
+        if cfg["require_los"]:
+            above = (focus[0], focus[1], focus[2] + 1000.0)
+            blk = scene_bvh.los_blocked(above, focus, cfg["los_slack_m"])
+            if blk:
+                warnings.append(
+                    f"FOCUS_{name} is hidden inside/behind '{blk}' (even from directly "
+                    "above) — to orbit that object, move the FOCUS above it or raise "
+                    "los_slack_m past the object's radius")
 
         samples, shell_stats, w = _sample_rig(
             "parent", vantage_coll, scene_bvh, cfg, focus, tol, prefix="p")
@@ -287,7 +303,7 @@ def generate_rig(vantage_coll, render_fidelity=False):
                 dmin = min(frames.vec_len(frames.vec_sub(tuple(s["pos"]), cfocus))
                            for s in playback_parent)
                 r_b = math.sqrt(dmin * max(ccfg["distance_shells_m"]))
-                acc, _ = _sample_shell(
+                acc, _, _blk = _sample_shell(
                     validity.EnvVolume(convention.env_object(child_coll)), scene_bvh,
                     cfocus, r_b, ccfg["bridge_views"], ccfg, tol,
                     0.61803 * (ccfg["seed"] + 33),
