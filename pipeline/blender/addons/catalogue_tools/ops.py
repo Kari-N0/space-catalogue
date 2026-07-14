@@ -408,27 +408,43 @@ class CATALOGUE_OT_clear_ground(bpy.types.Operator):
 
 
 class CATALOGUE_OT_fit_shells(bpy.types.Operator):
-    """Fit camera distance shells to each ENV's current size — the parent AND
-    every child rig, each against its own envelope"""
+    """Fit this rig's camera distance shells to its own ENV's current size"""
     bl_idname = "catalogue.fit_shells"
     bl_label = "Fit Shells to ENV"
     bl_options = {"REGISTER", "UNDO"}
 
+    coll_name: bpy.props.StringProperty()
+
     def execute(self, context):
         convention = capture_modules()[0]
-        vantage = active_vantage(context)
-        if vantage is None:
-            self.report({"ERROR"}, "no active capture")
+        coll = bpy.data.collections.get(self.coll_name)
+        if coll is None:
+            self.report({"ERROR"}, f"collection {self.coll_name!r} not found")
             return {"CANCELLED"}
-        changes, errors = convention.fit_all_shells(vantage)
-        for err in errors:
-            self.report({"WARNING"}, err)
-        changed = [(n, o, s) for n, o, s in changes if o != s]
-        if not changed:
-            self.report({"INFO"}, "shells already fit their ENVs — nothing changed")
-            return {"FINISHED"}
-        msg = "; ".join(f"{n}: {o} → {s}" for n, o, s in changed)
-        self.report({"INFO"}, f"{msg} — re-run Preview")
+        old = [round(float(s), 2) for s in coll.get("distance_shells_m", [])]
+        try:
+            shells = convention.fit_shells_to_env(coll)
+        except ValueError as err:
+            self.report({"ERROR"}, str(err))
+            return {"CANCELLED"}
+        if old == [round(s, 2) for s in shells]:
+            self.report({"INFO"}, "shells already fit this ENV — nothing changed")
+        else:
+            self.report({"INFO"}, f"{self.coll_name}: {old} → {shells} — re-run Preview")
+        return {"FINISHED"}
+
+
+class CATALOGUE_OT_toggle_section(bpy.types.Operator):
+    """Expand/collapse this rig's settings"""
+    bl_idname = "catalogue.toggle_section"
+    bl_label = "Toggle Rig Settings"
+
+    coll_name: bpy.props.StringProperty()
+
+    def execute(self, _context):
+        coll = bpy.data.collections.get(self.coll_name)
+        if coll is not None:
+            coll["_ui_open"] = not coll.get("_ui_open", False)
         return {"FINISHED"}
 
 
@@ -455,6 +471,7 @@ CLASSES = (
     CATALOGUE_OT_set_ground,
     CATALOGUE_OT_clear_ground,
     CATALOGUE_OT_fit_shells,
+    CATALOGUE_OT_toggle_section,
     CATALOGUE_OT_camera_look,
     CATALOGUE_OT_camera_apply,
     CATALOGUE_OT_test_render,

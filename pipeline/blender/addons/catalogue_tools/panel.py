@@ -101,31 +101,54 @@ class CATALOGUE_PT_capture(bpy.types.Panel):
 
         coll = bpy.data.collections.get(f"CAPTURE_{st.vantage}")
         if coll is not None:
-            props = layout.box()
-            props.label(text=f"CAPTURE_{st.vantage}", icon="PROPERTIES")
-            if "distance_shells_m" in coll.keys():
-                props.prop(coll, '["distance_shells_m"]', text="camera distances (m)")
-                props.operator("catalogue.fit_shells", icon="FULLSCREEN_ENTER")
+            # capture-wide: ground applies to the parent and every child rig
+            gbox = layout.box()
             ground = str(coll.get("ground_objects", "") or coll.get("ground_object", ""))
             names = [n for n in ground.split(";") if n]
             label = (f"ground: {len(names)} object(s) — " + ", ".join(names[:3])
                      + ("…" if len(names) > 3 else "")) if names else "ground: automatic (terrain*)"
-            props.label(text=label, icon="VIEW_PERSPECTIVE")
-            row = props.row(align=True)
+            gbox.label(text=label, icon="VIEW_PERSPECTIVE")
+            row = gbox.row(align=True)
             row.operator("catalogue.set_ground", icon="RESTRICT_SELECT_OFF")
             row.operator("catalogue.clear_ground", text="", icon="X")
-            for key, label in (
-                ("views", "camera views"),
-                ("resolution", "image resolution (square)"),
-                ("samples", "samples"),
-                ("min_height_m", "min height from ground m"),
-                ("clearance_m", "clearance from objects m"),
-                ("seed", "seed"),
-                ("assembly", "assembly"),
-            ):
-                if key in coll.keys():
-                    props.prop(coll, f'["{key}"]', text=label)
-            props.label(text="all knobs: Properties ▸ Collection", icon="INFO")
+
+            # per-rig collapsible settings: parent first, then each child rig —
+            # every section edits ITS OWN collection (shells/views etc. are per-ENV)
+            rigs = [(coll, f"CAPTURE_{st.vantage}", False)]
+            prefix = coll.name + "__"
+            for child in sorted(coll.children, key=lambda c: c.name):
+                if child.name.startswith(prefix):
+                    key = child.name[len(prefix):]
+                    tgt = child.get("target_object", "?")
+                    rigs.append((child, f"{key}  (around {tgt})", True))
+            for rig_coll, rig_label, is_child in rigs:
+                sec = layout.box()
+                is_open = bool(rig_coll.get("_ui_open", not is_child))
+                head = sec.row(align=True)
+                op = head.operator("catalogue.toggle_section", text="", emboss=False,
+                                   icon="TRIA_DOWN" if is_open else "TRIA_RIGHT")
+                op.coll_name = rig_coll.name
+                head.label(text=rig_label,
+                           icon="MESH_ICOSPHERE" if is_child else "OUTLINER_COLLECTION")
+                if not is_open:
+                    continue
+                if "distance_shells_m" in rig_coll.keys():
+                    sec.prop(rig_coll, '["distance_shells_m"]', text="camera distances (m)")
+                    fit = sec.operator("catalogue.fit_shells", icon="FULLSCREEN_ENTER")
+                    fit.coll_name = rig_coll.name
+                keys = [("views", "camera views"),
+                        ("resolution", "image resolution (square)"),
+                        ("samples", "samples"),
+                        ("min_height_m", "min height from ground m"),
+                        ("clearance_m", "clearance from objects m")]
+                if is_child:
+                    keys.append(("standoff_min_m", "standoff from target m"))
+                else:
+                    keys += [("seed", "seed"), ("assembly", "assembly")]
+                for key, label in keys:
+                    if key in rig_coll.keys():
+                        sec.prop(rig_coll, f'["{key}"]', text=label)
+            layout.label(text="all knobs: Properties ▸ Collection", icon="INFO")
 
         box = layout.box()
         box.label(text="Preview (no rendering)", icon="HIDE_OFF")

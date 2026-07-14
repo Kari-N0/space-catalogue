@@ -50,6 +50,10 @@ def _rig_fingerprint(vantage_coll):
 
     def coll_print(coll, child):
         cfg = convention.read_config(coll, child=child)
+        # non-rig properties must not void approvals: UI state (_-prefixed,
+        # e.g. panel section collapse) and the output folder don't change the rig
+        cfg = {k: v for k, v in cfg.items()
+               if not k.startswith("_") and k != "output_dir"}
         env = convention.env_object(coll)
         foc = convention.focus_object(coll)
         return {
