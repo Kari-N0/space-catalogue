@@ -25,13 +25,13 @@
         0.0
       ],
       "distance_m": {
-        "min": 30.0,
-        "max": 65.0,
-        "start": 30.0
+        "min": 4591.2,
+        "max": 8447.8,
+        "start": 4591.2
       },
       "angle_up_down_deg": {
-        "min": 3.7,
-        "max": 91.3
+        "min": 3.9,
+        "max": 92.0
       },
       "angle_around_deg": {
         "min": null,
@@ -46,19 +46,79 @@
         "glide_after_release": 0.9
       },
       "object_envelopes": {
-        "proxy-boulder": {
+        "blk-berm": {
           "look_at_m": [
-            18.403,
-            -3.193,
-            21.949
+            532.93,
+            71.517,
+            -1045.193
           ],
           "distance_m": {
-            "min": 5.42,
-            "max": 13.01
+            "min": 678.8,
+            "max": 1249.1
           },
           "angle_up_down_deg": {
-            "min": 4.6,
-            "max": 91.3
+            "min": 5.1,
+            "max": 92.0
+          },
+          "angle_around_deg": {
+            "min": null,
+            "max": null
+          },
+          "zoom_fov_deg": 73.7
+        },
+        "blk-hls-hull": {
+          "look_at_m": [
+            472.055,
+            39.48,
+            -1774.754
+          ],
+          "distance_m": {
+            "min": 642.7,
+            "max": 1182.6
+          },
+          "angle_up_down_deg": {
+            "min": 5.1,
+            "max": 103.8
+          },
+          "angle_around_deg": {
+            "min": null,
+            "max": null
+          },
+          "zoom_fov_deg": 48.5
+        },
+        "blk-ltv-pegasus": {
+          "look_at_m": [
+            173.031,
+            0.567,
+            375.407
+          ],
+          "distance_m": {
+            "min": 597.6,
+            "max": 1099.5
+          },
+          "angle_up_down_deg": {
+            "min": 5.1,
+            "max": 90.4
+          },
+          "angle_around_deg": {
+            "min": null,
+            "max": null
+          },
+          "zoom_fov_deg": 48.5
+        },
+        "blk-fsp-core": {
+          "look_at_m": [
+            -703.77,
+            75.116,
+            1252.206
+          ],
+          "distance_m": {
+            "min": 553.4,
+            "max": 1018.3
+          },
+          "angle_up_down_deg": {
+            "min": 5.1,
+            "max": 95.7
           },
           "angle_around_deg": {
             "min": null,
@@ -69,10 +129,10 @@
       },
       "_camera_generated": {
         "note": "envelope fields generated from the capture rig — do not hand-edit look_at_m/distance min,max/angles; edit the vantage in Blender and re-export",
-        "vantage": "rehearsal",
-        "rig_hash": "8b70305046fb",
-        "blend_file": "\\\\wsl.localhost\\Ubuntu-24.04\\home\\karin\\dev\\space-catalogue\\assets_src\\lunar-base\\terrain\\terrain_site11_v005.blend",
-        "generated": "2026-07-13T23:55:59",
+        "vantage": "capture_05",
+        "rig_hash": "6531ecabafae",
+        "blend_file": "\\\\wsl.localhost\\Ubuntu-24.04\\home\\karin\\dev\\space-catalogue\\assets_src\\lunar-base\\terrain\\terrain_site11_v004b_splat_area_002.blend",
+        "generated": "2026-07-15T09:53:03",
         "tool": "pipeline/pack/envelope_to_concept.py"
       }
     },
