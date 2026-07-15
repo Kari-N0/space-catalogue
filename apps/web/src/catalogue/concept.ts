@@ -24,12 +24,20 @@ export interface CameraControls {
 
 export interface CameraEnvelope {
   target_m: [number, number, number];
+  /** min/max = zoom limits; default = opening distance. */
   radius_m: Range3;
+  /** min/max = horizontal orbit limits; default = opening angle. */
   alpha_deg: Range3;
+  /** min/max = up/down tilt limits; default = opening angle. */
   beta_deg: Range3;
   fov_deg: number;
   /** Ground panning (right-drag): max distance from target_m; null/absent = panning off. */
   pan_m?: { max_from_center: number } | null;
+  /** Camera near clip (m); null = viewer default 0.05. Raise for km-scale scenes. */
+  clip_near_m?: number | null;
+  /** Camera far clip (m); null = Babylon default 10 km. Km-scale scenes MUST set this
+   *  or splats past ~10 km from the camera get culled ("fall off"). */
+  clip_far_m?: number | null;
   controls: CameraControls;
 }
 
@@ -171,10 +179,12 @@ function parseCamera(id: string, v: unknown, baseControls?: CameraControls): Cam
     controls: parseControls(c.controls, baseControls),
     target_m: c.look_at_m,
     radius_m: { min: limit(distance.min), max: limit(distance.max), default: limit(distance.start) ?? undefined },
-    beta_deg: { min: limit(upDown.min), max: limit(upDown.max) },
-    alpha_deg: { min: limit(around.min), max: limit(around.max) },
+    beta_deg: { min: limit(upDown.min), max: limit(upDown.max), default: limit(upDown.start) ?? undefined },
+    alpha_deg: { min: limit(around.min), max: limit(around.max), default: limit(around.start) ?? undefined },
     fov_deg: fov,
     pan_m: move && move > 0 ? { max_from_center: move } : null,
+    clip_near_m: limit(c.clip_near_m),
+    clip_far_m: limit(c.clip_far_m),
   };
 }
 

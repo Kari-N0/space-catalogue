@@ -12,9 +12,15 @@ export function applyEnvelope(camera: ArcRotateCamera, e: CameraEnvelope): void 
   camera.setTarget(new Vector3(e.target_m[0], e.target_m[1], e.target_m[2]));
   camera.fov = rad(e.fov_deg);
 
+  // Opening pose — each is optional; when absent the camera keeps its
+  // constructed default. Set BEFORE the alpha limits so the wrap-normalization
+  // below branches around the authored opening angle, not the constructed one.
+  if (e.radius_m.default != null) camera.radius = e.radius_m.default;
+  if (e.alpha_deg.default != null) camera.alpha = rad(e.alpha_deg.default);
+  if (e.beta_deg.default != null) camera.beta = rad(e.beta_deg.default);
+
   camera.lowerRadiusLimit = e.radius_m.min;
   camera.upperRadiusLimit = e.radius_m.max;
-  if (e.radius_m.default != null) camera.radius = e.radius_m.default;
 
   if (e.alpha_deg.min == null || e.alpha_deg.max == null) {
     camera.lowerAlphaLimit = e.alpha_deg.min == null ? null : rad(e.alpha_deg.min);
@@ -46,7 +52,10 @@ export function applyEnvelope(camera: ArcRotateCamera, e: CameraEnvelope): void 
   }
   applyControls(camera, e.controls, panEnabled);
   camera.useNaturalPinchZoom = true;
-  camera.minZ = 0.05;
+  // Clip planes. Near defaults to 0.05 m; far is left at Babylon's 10 km default
+  // unless set — km-scale scenes MUST author clip_far_m or distant splats cull.
+  camera.minZ = e.clip_near_m ?? 0.05;
+  if (e.clip_far_m != null) camera.maxZ = e.clip_far_m;
 }
 
 /**

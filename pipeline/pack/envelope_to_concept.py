@@ -74,8 +74,23 @@ def merge(meta_path, concept_path, apply=False, set_fov=False):
             warnings.append(f"authored distance_m.start {start} clamped to {clamped}")
         dist["start"] = clamped
 
-    cam["angle_up_down_deg"] = dict(env["angle_up_down_deg"])
-    cam["angle_around_deg"] = dict(env["angle_around_deg"])
+    # angle limits are generated; the authored opening angle (.start) is preserved
+    # and re-clamped into the new limits, exactly like distance_m.start
+    def _merge_angle(key, gen):
+        old_start = cam.get(key, {}).get("start")
+        cam[key] = dict(gen)
+        if isinstance(old_start, (int, float)) and gen.get("min") is not None and gen.get("max") is not None:
+            clamped = min(max(old_start, gen["min"]), gen["max"])
+            if clamped != old_start:
+                warnings.append(f"authored {key}.start {old_start} clamped to {clamped}")
+            cam[key]["start"] = clamped
+        elif isinstance(old_start, (int, float)):
+            cam[key]["start"] = old_start  # free-spin axis: keep as authored
+
+    _merge_angle("angle_up_down_deg", env["angle_up_down_deg"])
+    _merge_angle("angle_around_deg", env["angle_around_deg"])
+    # clip_near_m / clip_far_m / move_limit_m / controls are authored, never
+    # generated — left untouched by the merge (preserved automatically)
 
     rig_fov = env["zoom_fov_deg"]
     if "zoom_fov_deg" not in cam or set_fov:

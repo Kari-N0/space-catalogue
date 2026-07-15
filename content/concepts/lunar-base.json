@@ -1,5 +1,5 @@
 {
-  "_readme": "This file drives the whole concept page — edit text/images here, no code needed. Field guide with examples: content/concepts/README.md. View at /concept/?id=lunar-base",
+  "_readme": "This file drives the whole concept page \u2014 edit text/images here, no code needed. Field guide with examples: content/concepts/README.md. View at /concept/?id=lunar-base",
   "id": "lunar-base",
   "page_title": "Concept 001: Artemis Lunar Base",
   "footer_label": "Concept 001",
@@ -8,14 +8,14 @@
     "status": "In Development",
     "title_line_1": "Artemis",
     "title_line_2": "Lunar Base",
-    "era_line": "Post-Artemis IV buildout, ~2030–2035",
+    "era_line": "Post-Artemis IV buildout, ~2030\u20132035",
     "button_text": "Enter 3D",
     "video": "assets/placeholders/rerender.mp4",
     "poster_image": "assets/placeholders/moon_site_image_placeholder.webp"
   },
   "live_view": {
     "heading": "Live View",
-    "note": "[Live placeholder scene — drag to orbit, right-drag to move, scroll to zoom; pins, framing and copy are samples]",
+    "note": "[Live placeholder scene \u2014 drag to orbit, right-drag to move, scroll to zoom; pins, framing and copy are samples]",
     "scene_file": "assets/splats/lunar-base-hero-d.sog",
     "scene_file_mobile": "assets/splats/lunar-base-hero-m.sog",
     "camera": {
@@ -31,11 +31,13 @@
       },
       "angle_up_down_deg": {
         "min": 3.9,
-        "max": 92.0
+        "max": 92.0,
+        "start": 63.0
       },
       "angle_around_deg": {
         "min": null,
-        "max": null
+        "max": null,
+        "start": -90.0
       },
       "zoom_fov_deg": 60,
       "move_limit_m": 5,
@@ -128,13 +130,15 @@
         }
       },
       "_camera_generated": {
-        "note": "envelope fields generated from the capture rig — do not hand-edit look_at_m/distance min,max/angles; edit the vantage in Blender and re-export",
+        "note": "envelope fields generated from the capture rig \u2014 do not hand-edit look_at_m/distance min,max/angles; edit the vantage in Blender and re-export",
         "vantage": "capture_05",
         "rig_hash": "6531ecabafae",
         "blend_file": "\\\\wsl.localhost\\Ubuntu-24.04\\home\\karin\\dev\\space-catalogue\\assets_src\\lunar-base\\terrain\\terrain_site11_v004b_splat_area_002.blend",
         "generated": "2026-07-15T09:53:03",
         "tool": "pipeline/pack/envelope_to_concept.py"
-      }
+      },
+      "clip_near_m": 10.0,
+      "clip_far_m": 250000.0
     },
     "pins": [
       {
@@ -154,7 +158,7 @@
           0.48
         ],
         "title": "Surface rover",
-        "text": "[sample] Unpressurized utility rover staged for a logistics run. Placeholder position — authored per scene.",
+        "text": "[sample] Unpressurized utility rover staged for a logistics run. Placeholder position \u2014 authored per scene.",
         "image": "assets/placeholders/rover_image_placeholder.webp"
       },
       {
@@ -164,19 +168,19 @@
           3.75
         ],
         "title": "Boulder field",
-        "text": "[sample] Ejecta boulders shield the northern perimeter. Placeholder position — authored per scene.",
+        "text": "[sample] Ejecta boulders shield the northern perimeter. Placeholder position \u2014 authored per scene.",
         "image": "assets/placeholders/satellite_orbit_image_placeholder.webp"
       }
     ]
   },
   "overview": {
     "heading": "Overview",
-    "intro": "[sample copy — content in production] A crewed surface habitat cluster near the lunar south pole, built out in the years following Artemis IV. [sample copy — the final summary will follow the scene bible and cover habitat modules, power, and surface logistics.]",
+    "intro": "[sample copy \u2014 content in production] A crewed surface habitat cluster near the lunar south pole, built out in the years following Artemis IV. [sample copy \u2014 the final summary will follow the scene bible and cover habitat modules, power, and surface logistics.]",
     "features": [
       {
-        "label": "F_01 — Site",
+        "label": "F_01 \u2014 Site",
         "title": "South-polar ridge",
-        "text": "[sample — an elevated ridge site trades the 29.5-day lunar day-night cycle for near-continuous low-angle sunlight, with permanently shadowed craters in rover range]",
+        "text": "[sample \u2014 an elevated ridge site trades the 29.5-day lunar day-night cycle for near-continuous low-angle sunlight, with permanently shadowed craters in rover range]",
         "view_angle_deg": 35,
         "controls": {
           "rotate_speed": 1.0,
@@ -186,9 +190,9 @@
         }
       },
       {
-        "label": "F_02 — Surface Ops",
+        "label": "F_02 \u2014 Surface Ops",
         "title": "Mobility & logistics",
-        "text": "[sample — regolith dust is electrostatically charged and abrasive; airlock and radiator placement in the scene reflects dust-mitigation spacing]",
+        "text": "[sample \u2014 regolith dust is electrostatically charged and abrasive; airlock and radiator placement in the scene reflects dust-mitigation spacing]",
         "view_angle_deg": -50,
         "controls": {
           "rotate_speed": 1.0,
@@ -198,9 +202,9 @@
         }
       },
       {
-        "label": "F_03 — Comms",
+        "label": "F_03 \u2014 Comms",
         "title": "Orbital relay",
-        "text": "[sample — one-way light time to Earth is ~1.3 s; a relay covers far-side and shadowed-region operations in near-real time]",
+        "text": "[sample \u2014 one-way light time to Earth is ~1.3 s; a relay covers far-side and shadowed-region operations in near-real time]",
         "view_angle_deg": 150,
         "controls": {
           "rotate_speed": 1.0,
@@ -210,9 +214,9 @@
         }
       },
       {
-        "label": "F_04 — Shielding",
+        "label": "F_04 \u2014 Shielding",
         "title": "Regolith overburden",
-        "text": "[sample — a few meters of regolith over the habitat modules attenuates galactic cosmic radiation for long-duration stays]",
+        "text": "[sample \u2014 a few meters of regolith over the habitat modules attenuates galactic cosmic radiation for long-duration stays]",
         "view_angle_deg": -120,
         "controls": {
           "rotate_speed": 1.0,
@@ -232,16 +236,16 @@
       },
       {
         "type": "paragraph",
-        "text": "[sample copy — this section is a free-form editorial area: write blog-style chapters of any length here, with headings, paragraphs and images between chapters as needed. The template renders whatever this file provides.]"
+        "text": "[sample copy \u2014 this section is a free-form editorial area: write blog-style chapters of any length here, with headings, paragraphs and images between chapters as needed. The template renders whatever this file provides.]"
       },
       {
         "type": "paragraph",
-        "text": "[sample copy — a second paragraph demonstrating running text rhythm. The pressurized modules arrive as integrated lander payloads and are connected by short tunnels; the regolith-shielded core hosts crew quarters and the radiation shelter.]"
+        "text": "[sample copy \u2014 a second paragraph demonstrating running text rhythm. The pressurized modules arrive as integrated lander payloads and are connected by short tunnels; the regolith-shielded core hosts crew quarters and the radiation shelter.]"
       },
       {
         "type": "image",
         "file": "assets/placeholders/moon_site_image_placeholder.webp",
-        "caption": "FIG_01 — [sample caption: site plan render]"
+        "caption": "FIG_01 \u2014 [sample caption: site plan render]"
       },
       {
         "type": "chapter",
@@ -249,12 +253,12 @@
       },
       {
         "type": "paragraph",
-        "text": "[sample copy — solar arrays track the low polar sun on short masts; a fission surface power unit a kilometre up-slope provides night and contingency power. Radiators run cool on the permanently shaded side of the berm.]"
+        "text": "[sample copy \u2014 solar arrays track the low polar sun on short masts; a fission surface power unit a kilometre up-slope provides night and contingency power. Radiators run cool on the permanently shaded side of the berm.]"
       },
       {
         "type": "image",
         "file": "assets/placeholders/rover_image_placeholder.webp",
-        "caption": "FIG_02 — [sample caption: logistics rover]"
+        "caption": "FIG_02 \u2014 [sample caption: logistics rover]"
       },
       {
         "type": "chapter",
@@ -262,7 +266,7 @@
       },
       {
         "type": "paragraph",
-        "text": "[sample copy — cargo landers arrive at ~6-month intervals; unpressurized rovers move payloads from the landing zone along a dust-managed route. The scene shows the route markers and the berm crossing.]"
+        "text": "[sample copy \u2014 cargo landers arrive at ~6-month intervals; unpressurized rovers move payloads from the landing zone along a dust-managed route. The scene shows the route markers and the berm crossing.]"
       }
     ]
   },
@@ -271,15 +275,15 @@
     "items": [
       {
         "label": "SRC_01",
-        "text": "[sample: agency reference architecture document — citation in production]"
+        "text": "[sample: agency reference architecture document \u2014 citation in production]"
       },
       {
         "label": "SRC_02",
-        "text": "[sample: peer-reviewed habitat shielding study — citation in production]"
+        "text": "[sample: peer-reviewed habitat shielding study \u2014 citation in production]"
       },
       {
         "label": "SRC_03",
-        "text": "[sample: polar volatiles survey data — citation in production]"
+        "text": "[sample: polar volatiles survey data \u2014 citation in production]"
       }
     ]
   },
@@ -290,6 +294,6 @@
     "label": "Email Address",
     "placeholder": "you@example.com",
     "button": "Notify Me",
-    "note": "Activates at launch — no data is collected yet"
+    "note": "Activates at launch \u2014 no data is collected yet"
   }
 }

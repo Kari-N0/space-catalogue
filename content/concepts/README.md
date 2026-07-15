@@ -37,10 +37,14 @@ from the JSON, that's a template gap: ask for it.
 | `scene_file_mobile` | optional lighter `.sog` for phones (`null` = use the main one) |
 | `camera.look_at_m` | point the camera orbits around, in meters `[x, y, z]` |
 | `camera.distance_m` | zoom limits: `min`/`max`, and `start` = distance on load |
-| `camera.angle_up_down_deg` | how low/high the camera may tilt (degrees; 90 = horizon) |
-| `camera.angle_around_deg` | horizontal orbit limits (`null` = free spin) |
+| `camera.angle_up_down_deg` | up/down tilt: `min`/`max` limits (degrees; 90 = horizon), and `start` = opening tilt |
+| `camera.angle_around_deg` | horizontal orbit: `min`/`max` limits (`null` = free spin), and `start` = opening direction |
 | `camera.zoom_fov_deg` | lens field of view |
+| `camera.clip_near_m` | nearest visible distance (m); omit = `0.05`. Raise for large scenes to avoid flicker |
+| `camera.clip_far_m` | farthest visible distance (m); omit = `10000` (10 km). **Large scenes MUST set this** or splats past ~10 km from the camera vanish ("fall off") |
 | `camera.move_limit_m` | how far right-drag panning may move from `look_at_m` |
+
+The **opening shot** is `distance_m.start` + `angle_up_down_deg.start` + `angle_around_deg.start` (all three; each falls back to a sensible default if omitted). Change these to set where the camera sits and which way it faces when the page loads.
 | `camera.controls.rotate_speed` | orbit drag speed — `1` = normal, `2` = twice as fast, `0.5` = half |
 | `camera.controls.move_speed` | right-drag pan speed, same scale |
 | `camera.controls.zoom_speed` | scroll/pinch zoom speed, same scale |
