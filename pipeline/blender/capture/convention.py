@@ -284,6 +284,10 @@ def create_child_rig(vantage, object_name, preset=None):
     props["distance_shells_m"] = [round(radius * f, 2) for f in presets.CHILD_DEFAULTS["shell_factors"]]
     props["min_height_m"] = 0.5   # close-ups may skim the ground
     props["clearance_m"] = max(0.3, round(0.15 * radius, 2))
+    # LOS for a child rig means "can this camera see the TARGET'S REGION", not
+    # its exact bounds-center — a ring/cluster target (berm, pad ensemble) has
+    # other geometry AT its center, which would wrongly block everything
+    props["los_slack_m"] = max(2.0, round(1.1 * radius, 1))
     props.pop("shell_factors", None)
     props.pop("assembly", None)   # assembly is a parent-vantage decision
     _write_props(coll, props)
