@@ -16,22 +16,22 @@
   "live_view": {
     "heading": "Live View",
     "note": "[Live placeholder scene — drag to orbit, right-drag to move, scroll to zoom; pins, framing and copy are samples]",
-    "scene_file": "assets/placeholders/hero_moon_site_placeholder-d.sog",
-    "scene_file_mobile": null,
+    "scene_file": "assets/splats/lunar-base-hero-d.sog",
+    "scene_file_mobile": "assets/splats/lunar-base-hero-m.sog",
     "camera": {
       "look_at_m": [
-        0,
-        1,
-        0
+        0.0,
+        0.0,
+        0.0
       ],
       "distance_m": {
-        "min": 3,
-        "max": 16,
-        "start": 8
+        "min": 30.0,
+        "max": 65.0,
+        "start": 30.0
       },
       "angle_up_down_deg": {
-        "min": 25,
-        "max": 80
+        "min": 3.7,
+        "max": 91.3
       },
       "angle_around_deg": {
         "min": null,
@@ -44,6 +44,36 @@
         "move_speed": 1.0,
         "zoom_speed": 1.0,
         "glide_after_release": 0.9
+      },
+      "object_envelopes": {
+        "proxy-boulder": {
+          "look_at_m": [
+            18.403,
+            -3.193,
+            21.949
+          ],
+          "distance_m": {
+            "min": 5.42,
+            "max": 13.01
+          },
+          "angle_up_down_deg": {
+            "min": 4.6,
+            "max": 91.3
+          },
+          "angle_around_deg": {
+            "min": null,
+            "max": null
+          },
+          "zoom_fov_deg": 48.5
+        }
+      },
+      "_camera_generated": {
+        "note": "envelope fields generated from the capture rig — do not hand-edit look_at_m/distance min,max/angles; edit the vantage in Blender and re-export",
+        "vantage": "rehearsal",
+        "rig_hash": "8b70305046fb",
+        "blend_file": "\\\\wsl.localhost\\Ubuntu-24.04\\home\\karin\\dev\\space-catalogue\\assets_src\\lunar-base\\terrain\\terrain_site11_v005.blend",
+        "generated": "2026-07-13T23:55:59",
+        "tool": "pipeline/pack/envelope_to_concept.py"
       }
     },
     "pins": [
