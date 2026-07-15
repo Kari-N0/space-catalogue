@@ -31,8 +31,14 @@ export interface EngineBundle {
 export async function createEngine(canvas: HTMLCanvasElement, profile: TierProfile): Promise<EngineBundle> {
   RegisterAbstractEngineViews();
 
-  const wantWebGPU =
-    profile.engineForce !== "webgl2" && (profile.engineForce === "webgpu" || (await WebGPUEngine.IsSupportedAsync));
+  // WebGPU is opt-in (?engine=webgpu) — WebGL2 is the default. On the WebGPU
+  // path the GaussianSplatting material's WGSL shaders are fetched at runtime
+  // and 404 to the SPA fallback HTML, so Tint parses "<!doctype html>" as a
+  // shader, the pipeline is invalid, and the splat renders black (Chrome/Edge
+  // default to WebGPU, so this hit every such visitor). WebGL2's GLSL shaders
+  // bundle correctly and render the splat perfectly. Revisit if the WGSL
+  // shader-bundling is fixed and verified end-to-end on a real WebGPU adapter.
+  const wantWebGPU = profile.engineForce === "webgpu";
 
   // hidden working canvas — never in the DOM; views size it per frame
   const workingCanvas = document.createElement("canvas");
