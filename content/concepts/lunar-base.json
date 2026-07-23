@@ -143,9 +143,9 @@
     "pins": [
       {
         "position_m": [
-          0.94,
-          1.0,
-          1.23
+          472.055,
+          39.48,
+          -1774.754
         ],
         "title": "Crew EVA",
         "text": "[sample] Two crew on surface operations near the habitat approach path. Final hotspot copy lands with the scene bible.",
@@ -153,9 +153,9 @@
       },
       {
         "position_m": [
-          -0.14,
-          0.45,
-          0.48
+          173.031,
+          0.567,
+          375.407
         ],
         "title": "Surface rover",
         "text": "[sample] Unpressurized utility rover staged for a logistics run. Placeholder position \u2014 authored per scene.",
@@ -163,9 +163,9 @@
       },
       {
         "position_m": [
-          -4.87,
-          1.6,
-          3.75
+          532.93,
+          71.517,
+          -1045.193
         ],
         "title": "Boulder field",
         "text": "[sample] Ejecta boulders shield the northern perimeter. Placeholder position \u2014 authored per scene.",
