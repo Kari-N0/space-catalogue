@@ -212,6 +212,17 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
         opts.onHotspotSelect?.(h);
       });
     }
+
+    // permanent QA overlay: ?debug=hotspots renders in-scene anchor spheres
+    // (asset-integration checklist, content/concepts/README.md) — own lazy
+    // chunk, never loaded without the flag
+    const debugFlags = new URLSearchParams(location.search).get("debug")?.split(",") ?? [];
+    if (debugFlags.includes("hotspots") && concept.hotspots.length > 0) {
+      const startRadius = hero.camera.radius;
+      void import("./debugHotspots").then((m) => {
+        if (!disposed && gen === generation) m.mountHotspotDebug(hero.scene, concept.hotspots, startRadius);
+      });
+    }
   };
 
   const enterInspect = async () => {

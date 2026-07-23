@@ -87,6 +87,11 @@ Consequences:
   above. The same trap must be ruled out for any new trainer: **the first
   .sog exported from a new tool gets verified meter-true + upright in the web
   viewer before anything ships.**
+- **After any new splat drop or hotspot/pin export: open the concept page
+  with `?debug=hotspots`, orbit — including top-down — and confirm marker
+  lock** (each in-scene anchor sphere stays glued to its splat feature and
+  each pin ring stays glued to its sphere; pin authoring recipe in
+  content/concepts/README.md).
 - `content/concepts/<id>.json` gets the friendly camera block from the SAME rig
   samples (playback set only): `look_at_m` `[0,0,0]`-centered on FOCUS,
   `distance_m` min/max, `angle_up_down_deg` (floored at 2° from zenith),

@@ -344,14 +344,17 @@ a:hover { color: var(--color-text-emphasis); }
 }
 .overlay .viewer-hotspot {
   pointer-events: auto;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  /* the button box must contain ONLY the pin: hotspots.ts centers the whole
+     button on the projected anchor (translate(-50%,-50%)), so anything else
+     in flow (the label used to be) pushes the visible pin off the 3D anchor
+     by half its width — the label hangs out of flow to the right instead */
+  display: block;
   background: transparent;
   border: 0;
   padding: 4px;
 }
 .viewer-hotspot__pin {
+  display: block;
   width: 16px;
   height: 16px;
   flex: none;
@@ -383,6 +386,11 @@ a:hover { color: var(--color-text-emphasis); }
   70%, 100% { transform: scale(2.1); opacity: 0; }
 }
 .viewer-hotspot__label {
+  /* out of flow (see .viewer-hotspot): 8px visual gap right of the pin,
+     vertically centered on it — same place it sat in the old flex layout */
+  position: absolute;
+  left: calc(100% + 4px);
+  top: 50%;
   font-family: var(--font-body);
   font-size: var(--text-ref);
   font-weight: var(--weight-medium);
@@ -396,7 +404,7 @@ a:hover { color: var(--color-text-emphasis); }
   padding: 2px 8px;
   white-space: nowrap;
   opacity: 0;
-  transform: translateX(-4px);
+  transform: translate(-4px, -50%);
   transition: opacity var(--dur-base) var(--ease-brand),
               transform var(--dur-base) var(--ease-brand);
 }
@@ -407,7 +415,7 @@ a:hover { color: var(--color-text-emphasis); }
 .viewer-hotspot:hover .viewer-hotspot__label,
 .viewer-hotspot:focus-visible .viewer-hotspot__label {
   opacity: 1;
-  transform: translateX(0);
+  transform: translate(0, -50%);
 }
 
 /* hotspot popup card (with image, Kari 2026-07-13) */

@@ -68,6 +68,13 @@ export function mountHotspots(
   let observer: Observer<Scene> | null = null;
   if (items.length > 0) {
     observer = scene.onAfterRenderObservable.add(() => {
+      // multi-canvas views render this scene once per enabled view, and the
+      // views extension swaps scene.activeCamera to the view's camera for its
+      // pass (abstractEngine.views: _renderViewStep) while the shared working
+      // canvas is resized to THAT view — so during a feature-view pass the
+      // main camera's projection matrix recomputes at the wrong aspect ratio.
+      // Only the pass rendered with the tracked camera may write pin positions.
+      if (scene.activeCamera !== camera) return;
       // project straight into CSS pixel space (layer size) — engine render
       // size varies per view when multi-canvas views are active, and hardware
       // scaling diverges from CSS pixels under DPR caps

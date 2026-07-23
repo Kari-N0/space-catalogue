@@ -81,9 +81,32 @@ a normal refresh is enough — the page always fetches the latest JSON.
   "image": "assets/…/photo.webp"
 }
 ```
-`position_m` is a real 3D point in scene meters (take it from Blender — the
-same coordinates as the scene). Clicking a pin also glides the camera to it.
-`image` is optional (`null` for text-only popups).
+`position_m` is a real 3D point in scene meters, in the **viewer frame** —
+the same frame as `look_at_m`. This is NOT the raw Blender coordinate. To
+convert a Blender point (an empty, a cursor position) into `position_m`:
+
+1. Take the Blender world position of the point, `(Bx, By, Bz)`.
+2. Subtract the vantage FOCUS empty's world position `(Fx, Fy, Fz)`
+   (the splat's origin — for the current lunar-base captures it is
+   `(5697.7695, -5286.2061, 1660.4834)`).
+3. Swap the last two axes — **no sign flips**:
+
+   `position_m = [Bx - Fx, Bz - Fz, By - Fy]`
+
+   (viewer X = Blender X, viewer Y = Blender Z = height, viewer Z = Blender Y.)
+
+Sanity check: the middle number is the point's height above the FOCUS — for
+anything on the terrain it should be near the surrounding `look_at_m` heights
+(tens of meters here), never hundreds. A wrong height reads as the pin
+"sliding" over the terrain while orbiting (parallax).
+
+**Verify after every pin or splat change:** open the page with
+`?debug=hotspots` — magenta spheres render in-scene at each anchor. Orbit,
+including top-down, and confirm each sphere stays glued to its feature and
+each pin ring stays glued to its sphere.
+
+Clicking a pin also glides the camera to it. `image` is optional (`null` for
+text-only popups).
 
 ### `overview` — intro text + the live 3D windows
 - `intro` — the lead paragraph.
