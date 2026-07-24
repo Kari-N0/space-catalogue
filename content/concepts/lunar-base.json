@@ -16,7 +16,7 @@
   "live_view": {
     "heading": "Live View",
     "note": "[Live placeholder scene \u2014 drag to orbit, right-drag to move, scroll to zoom; pins, framing and copy are samples]",
-    "scene_file": "assets/splats/lunar-base-hero-d.sog",
+    "scene_file": "assets/splats/lunar_base_v005-d.sog",
     "scene_file_mobile": "assets/splats/lunar-base-hero-m.sog",
     "camera": {
       "look_at_m": [
@@ -25,22 +25,22 @@
         0.0
       ],
       "distance_m": {
-        "min": 4591.2,
-        "max": 8447.8,
-        "start": 4591.2
+        "min": 1500,
+        "max": 3500,
+        "start": 3500
       },
       "angle_up_down_deg": {
-        "min": 3.9,
-        "max": 92.0,
-        "start": 63.0
+        "min": 10,
+        "max": 80,
+        "start": 80
       },
       "angle_around_deg": {
         "min": null,
         "max": null,
-        "start": -90.0
+        "start": -100
       },
       "zoom_fov_deg": 60,
-      "move_limit_m": 5,
+      "move_limit_m": 5000,
       "controls": {
         "rotate_speed": 1.0,
         "move_speed": 1.0,

@@ -57,6 +57,20 @@ export function applyEnvelope(camera: ArcRotateCamera, e: CameraEnvelope): void 
     camera.panningAxis = new Vector3(1, 0, 1); // ground plane only
     camera.panningOriginTarget = new Vector3(e.target_m[0], e.target_m[1], e.target_m[2]);
     camera.panningDistanceLimit = e.pan_m.max_from_center;
+    // an authored limit that spans a handful of pixels at the opening
+    // framing reads as "panning is broken" (the live site shipped 5 m at a
+    // 4.6 km distance = 0.7 px once) — say so instead of staying silent
+    const heightPx = camera.getEngine().getRenderHeight() * camera.getEngine().getHardwareScalingLevel();
+    if (heightPx > 0) {
+      const pxSpan = (2 * e.pan_m.max_from_center * heightPx) / (2 * camera.radius * Math.tan(camera.fov / 2));
+      if (pxSpan < 24) {
+        console.info(
+          `camera.move_limit_m ${e.pan_m.max_from_center} spans only ~${Math.max(1, Math.round(pxSpan))}px ` +
+            `at the opening distance (${Math.round(camera.radius)} m) — pans will look like nothing happens; ` +
+            `raise move_limit_m or lower distance_m.start`,
+        );
+      }
+    }
   }
   applyControls(camera, e.controls, panEnabled);
   camera.useNaturalPinchZoom = true;
