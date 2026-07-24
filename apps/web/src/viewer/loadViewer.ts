@@ -4,8 +4,8 @@
 
 import type { Scene } from "@babylonjs/core/scene";
 import type { Observer } from "@babylonjs/core/Misc/observable";
-import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
+import { GroundPanCamera } from "./groundPanCamera";
 // multi-canvas views: registerView/unRegisterView on AbstractEngine
 import "@babylonjs/core/Engines/Extensions/engine.views";
 import { createEngine, type EngineBundle } from "./engine";
@@ -213,14 +213,23 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
       });
     }
 
-    // permanent QA overlay: ?debug=hotspots renders in-scene anchor spheres
-    // (asset-integration checklist, content/concepts/README.md) — own lazy
-    // chunk, never loaded without the flag
+    // permanent QA overlays, each its own lazy chunk, never loaded without
+    // the flag: ?debug=hotspots renders in-scene anchor spheres,
+    // ?debug=camera mounts a live camera/envelope/config readout (both in
+    // the asset-integration checklist; comma-combinable)
     const debugFlags = new URLSearchParams(location.search).get("debug")?.split(",") ?? [];
     if (debugFlags.includes("hotspots") && concept.hotspots.length > 0) {
       const startRadius = hero.camera.radius;
       void import("./debugHotspots").then((m) => {
         if (!disposed && gen === generation) m.mountHotspotDebug(hero.scene, concept.hotspots, startRadius);
+      });
+    }
+    const debugParent = canvas.parentElement;
+    if (debugFlags.includes("camera") && debugParent) {
+      void import("./debugCamera").then((m) => {
+        if (!disposed && gen === generation) {
+          m.mountCameraDebug(hero.scene, hero.camera, concept.camera_envelope, debugParent);
+        }
       });
     }
   };
@@ -245,7 +254,7 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
     if (mode !== "hero" || !activeScene) throw new Error("feature views attach to the live hero scene");
     const scene = activeScene;
 
-    const camera = new ArcRotateCamera(
+    const camera = new GroundPanCamera(
       `feature-${featureViews.length}`,
       -Math.PI / 2,
       1.1,

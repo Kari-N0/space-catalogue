@@ -8,6 +8,14 @@ import type { CameraControls, CameraEnvelope } from "../catalogue/concept";
 
 const rad = (deg: number) => (deg * Math.PI) / 180;
 
+/**
+ * Input-side pan divisor at move_speed 1. groundPanCamera.ts multiplies the
+ * same constant back out, so pan gain is defined THERE (ground-tracking,
+ * radius-proportional) and this value only sets the units — keep the two in
+ * sync via this export.
+ */
+export const PAN_BASE_SENSIBILITY = 350;
+
 export function applyEnvelope(camera: ArcRotateCamera, e: CameraEnvelope): void {
   camera.setTarget(new Vector3(e.target_m[0], e.target_m[1], e.target_m[2]));
   camera.fov = rad(e.fov_deg);
@@ -62,13 +70,19 @@ export function applyEnvelope(camera: ArcRotateCamera, e: CameraEnvelope): void 
  * Author-tunable camera feel (JSON camera.controls; 1/1/1/0.9 = baseline).
  * Babylon sensibilities are inverse ("higher = slower"), hence the divisions.
  * Feature views call this again with their own per-window controls.
+ *
+ * move_speed multiplies the ground-tracked pan gain (groundPanCamera.ts): at
+ * 1.0 a drag moves the terrain ~1:1 with the pointer at any orbit radius.
+ * panningSensibility 0 = pan OFF — deliberate whenever the envelope carries
+ * no pan_m (object-focus envelopes never do: the camera must not pan off the
+ * trained close-up).
  */
 export function applyControls(camera: ArcRotateCamera, c: CameraControls, panEnabled: boolean): void {
   camera.angularSensibilityX = 1000 / c.rotate_speed;
   camera.angularSensibilityY = 1000 / c.rotate_speed;
   camera.inertia = c.glide_after_release;
   camera.panningInertia = c.glide_after_release;
-  camera.panningSensibility = panEnabled ? 350 / c.move_speed : 0;
+  camera.panningSensibility = panEnabled ? PAN_BASE_SENSIBILITY / c.move_speed : 0;
   camera.wheelDeltaPercentage = 0.01 * c.zoom_speed;
   camera.pinchDeltaPercentage = 0.01 * c.zoom_speed;
 }

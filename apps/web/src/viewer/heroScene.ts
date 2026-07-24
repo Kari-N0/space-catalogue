@@ -4,8 +4,9 @@
 
 import type { AbstractEngine } from "@babylonjs/core/Engines/abstractEngine";
 import { Scene } from "@babylonjs/core/scene";
-import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
+import type { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
+import { GroundPanCamera } from "./groundPanCamera";
 import { Color4 } from "@babylonjs/core/Maths/math.color";
 import { ImportMeshAsync } from "@babylonjs/core/Loading/sceneLoader";
 import type { GaussianSplattingMesh } from "@babylonjs/core/Meshes/GaussianSplatting/gaussianSplattingMesh";
@@ -49,10 +50,17 @@ async function fillHeroScene(
 ): Promise<HeroScene> {
   scene.clearColor = new Color4(0, 0, 0, 1); // splat scenes carry their own baked sky
 
-  const camera = new ArcRotateCamera("hero", -Math.PI / 2, 1.1, 9, Vector3.Zero(), scene);
-  // no-arg attachControl => camera inputs preventDefault; wheel over the
-  // canvas must zoom, not scroll the (scrollable) concept page behind it
-  camera.attachControl();
+  // GroundPanCamera = ArcRotateCamera with screen-anchored ground panning
+  // (see groundPanCamera.ts for why stock panning fails at km scale)
+  const camera = new GroundPanCamera("hero", -Math.PI / 2, 1.1, 9, Vector3.Zero(), scene);
+  // Input mapping (deliberate — Babylon 9.16.1 defaults made explicit):
+  //   left/middle drag = rotate · right drag or ctrl+left drag = pan (only
+  //   when the envelope grants pan_m; applyControls sets panningSensibility 0
+  //   otherwise) · wheel/pinch = zoom. noPreventDefault=false: wheel over the
+  //   canvas must zoom, not scroll the (scrollable) concept page behind it.
+  //   The browser context menu on right-drag is suppressed in loadViewer
+  //   (canvas) and hotspots.ts (pin buttons).
+  camera.attachControl(false, /* useCtrlForPanning */ true, /* panningMouseButton */ 2);
   if (envelope) applyEnvelope(camera, envelope);
 
   onProgress({ phase: "download", ratio: 0 });

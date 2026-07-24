@@ -153,30 +153,76 @@ const DEFAULT_CONTROLS: CameraControls = {
   glide_after_release: 0.9,
 };
 
-/** Missing fields fall back to `base` (main-view controls, or the defaults). */
-function parseControls(v: unknown, base: CameraControls = DEFAULT_CONTROLS): CameraControls {
+/**
+ * Silent-ignore is banned in the camera block (Kari 2026-07-24): a typo'd
+ * key must show up in the console, not vanish. Keys starting with "_" are
+ * the notes convention and stay silent.
+ */
+function warnUnknownKeys(id: string, path: string, v: unknown, known: readonly string[]): void {
+  if (typeof v !== "object" || v === null) return;
+  for (const k of Object.keys(v)) {
+    if (!k.startsWith("_") && !known.includes(k)) {
+      console.warn(`concept "${id}": unrecognized key "${path}.${k}" is IGNORED — check content/concepts/README.md`);
+    }
+  }
+}
+
+const CONTROL_KEYS = ["rotate_speed", "move_speed", "zoom_speed", "glide_after_release"] as const;
+const RANGE_KEYS = ["min", "max", "start"] as const;
+const CAMERA_KEYS = [
+  "look_at_m",
+  "distance_m",
+  "angle_up_down_deg",
+  "angle_around_deg",
+  "zoom_fov_deg",
+  "move_limit_m",
+  "controls",
+  "object_envelopes",
+  "clip_near_m",
+  "clip_far_m",
+] as const;
+
+/**
+ * Missing fields fall back to `base` (main-view controls, or the defaults).
+ * When `where` is given ("<id>|<path>"), unknown keys and out-of-range
+ * clamps are reported to the console.
+ */
+function parseControls(v: unknown, base: CameraControls = DEFAULT_CONTROLS, where?: [string, string]): CameraControls {
   const c = obj(v);
+  if (where && v != null) warnUnknownKeys(where[0], where[1], c, CONTROL_KEYS);
+  const take = (key: keyof CameraControls, lo: number, hi: number): number => {
+    const raw = c[key];
+    const val = clamp(num(raw, base[key]), lo, hi);
+    if (where && typeof raw === "number" && Number.isFinite(raw) && raw !== val) {
+      console.warn(`concept "${where[0]}": "${where[1]}.${key}" ${raw} clamped to ${val} (allowed ${lo}–${hi})`);
+    }
+    return val;
+  };
   return {
-    rotate_speed: clamp(num(c.rotate_speed, base.rotate_speed), 0.1, 10),
-    move_speed: clamp(num(c.move_speed, base.move_speed), 0.1, 10),
-    zoom_speed: clamp(num(c.zoom_speed, base.zoom_speed), 0.1, 10),
-    glide_after_release: clamp(num(c.glide_after_release, base.glide_after_release), 0, 0.95),
+    rotate_speed: take("rotate_speed", 0.1, 10),
+    move_speed: take("move_speed", 0.1, 10),
+    zoom_speed: take("zoom_speed", 0.1, 10),
+    glide_after_release: take("glide_after_release", 0, 0.95),
   };
 }
 
 /** Friendly camera block → viewer envelope. */
-function parseCamera(id: string, v: unknown, baseControls?: CameraControls): CameraEnvelope | null {
+function parseCamera(id: string, v: unknown, baseControls?: CameraControls, path = "camera"): CameraEnvelope | null {
   if (v == null) return null;
   const c = obj(v);
-  if (!isVec3(c.look_at_m)) throw new ConceptValidationError(id, "camera.look_at_m must be [x, y, z] numbers");
+  warnUnknownKeys(id, path, c, CAMERA_KEYS);
+  warnUnknownKeys(id, `${path}.distance_m`, c.distance_m, RANGE_KEYS);
+  warnUnknownKeys(id, `${path}.angle_up_down_deg`, c.angle_up_down_deg, RANGE_KEYS);
+  warnUnknownKeys(id, `${path}.angle_around_deg`, c.angle_around_deg, RANGE_KEYS);
+  if (!isVec3(c.look_at_m)) throw new ConceptValidationError(id, `${path}.look_at_m must be [x, y, z] numbers`);
   const distance = obj(c.distance_m);
   const upDown = obj(c.angle_up_down_deg);
   const around = obj(c.angle_around_deg);
   const fov = num(c.zoom_fov_deg, 60);
-  if (fov < 1 || fov > 179) throw new ConceptValidationError(id, "camera.zoom_fov_deg must be between 1 and 179");
+  if (fov < 1 || fov > 179) throw new ConceptValidationError(id, `${path}.zoom_fov_deg must be between 1 and 179`);
   const move = limit(c.move_limit_m);
   return {
-    controls: parseControls(c.controls, baseControls),
+    controls: parseControls(c.controls, baseControls, [id, `${path}.controls`]),
     target_m: c.look_at_m,
     radius_m: { min: limit(distance.min), max: limit(distance.max), default: limit(distance.start) ?? undefined },
     beta_deg: { min: limit(upDown.min), max: limit(upDown.max), default: limit(upDown.start) ?? undefined },
@@ -199,7 +245,7 @@ function parseObjectEnvelopes(id: string, v: unknown, base: CameraEnvelope | nul
   for (const key of Object.keys(map)) {
     if (key.startsWith("_")) continue; // notes convention
     try {
-      const env = parseCamera(id, map[key], base?.controls);
+      const env = parseCamera(id, map[key], base?.controls, `camera.object_envelopes.${key}`);
       if (env) out[key] = env;
     } catch (err) {
       // a malformed generated block must not kill the page — but stay loud,

@@ -60,6 +60,10 @@ export function mountHotspots(
       layer.appendChild(desc);
     }
     if (onSelect) el.addEventListener("click", () => onSelect(h));
+    // the 24px pin is the one DOM element allowed to capture pointer input
+    // over the canvas — a right-press on it must still not open the browser
+    // menu (the canvas suppresses it too, loadViewer.ts)
+    el.addEventListener("contextmenu", (e) => e.preventDefault());
     layer.appendChild(el);
     return { el, desc, pos: new Vector3(h.position_m[0], h.position_m[1], h.position_m[2]) };
   });

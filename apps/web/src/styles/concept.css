@@ -387,7 +387,11 @@ a:hover { color: var(--color-text-emphasis); }
 }
 .viewer-hotspot__label {
   /* out of flow (see .viewer-hotspot): 8px visual gap right of the pin,
-     vertically centered on it — same place it sat in the old flex layout */
+     vertically centered on it — same place it sat in the old flex layout.
+     While hidden it must NOT hit-test (an invisible ~100px strip right of
+     every pin was swallowing right-drag pans); once revealed it hit-tests
+     again so mousing onto it keeps the hover and clicks reach the button. */
+  pointer-events: none;
   position: absolute;
   left: calc(100% + 4px);
   top: 50%;
@@ -416,6 +420,7 @@ a:hover { color: var(--color-text-emphasis); }
 .viewer-hotspot:focus-visible .viewer-hotspot__label {
   opacity: 1;
   transform: translate(0, -50%);
+  pointer-events: auto;
 }
 
 /* hotspot popup card (with image, Kari 2026-07-13) */

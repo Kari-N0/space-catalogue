@@ -42,11 +42,11 @@ from the JSON, that's a template gap: ask for it.
 | `camera.zoom_fov_deg` | lens field of view |
 | `camera.clip_near_m` | nearest visible distance (m); omit = `0.05`. Raise for large scenes to avoid flicker |
 | `camera.clip_far_m` | farthest visible distance (m); omit = `10000` (10 km). **Large scenes MUST set this** or splats past ~10 km from the camera vanish ("fall off") |
-| `camera.move_limit_m` | how far right-drag panning may move from `look_at_m` |
+| `camera.move_limit_m` | how far right-drag panning may move from `look_at_m`, in real meters. Reaching the limit slides along the boundary (no dead-stop). **Scale it to the scene**: at a 3.5 km viewing distance a 50 m limit spans ~8 screen pixels — for visible panning use a value comparable to the area you want reachable. `0`/omit = panning off |
 
 The **opening shot** is `distance_m.start` + `angle_up_down_deg.start` + `angle_around_deg.start` (all three; each falls back to a sensible default if omitted). Change these to set where the camera sits and which way it faces when the page loads.
 | `camera.controls.rotate_speed` | orbit drag speed — `1` = normal, `2` = twice as fast, `0.5` = half |
-| `camera.controls.move_speed` | right-drag pan speed, same scale |
+| `camera.controls.move_speed` | right-drag pan speed, same scale. At `1` the terrain tracks the pointer roughly 1:1 at any zoom distance and any tilt (including top-down) |
 | `camera.controls.zoom_speed` | scroll/pinch zoom speed, same scale |
 | `camera.controls.glide_after_release` | how long the camera keeps gliding after you let go: `0` = stops instantly, `0.9` = normal, `0.95` = long glide (max) |
 
@@ -66,6 +66,20 @@ generated map of per-object zoom envelopes (from child capture rigs): the
 viewer can glide into one for a close-up of that object while enforcing its
 own trained limits. Nothing on the page triggers them yet — how they're
 triggered (pin click, button, …) is a separate design decision.
+
+**Panning notes:** right-drag (or ctrl+left-drag) pans; left/middle drag
+rotates; wheel/pinch zooms. Panning is deliberately OFF while zoomed into an
+object close-up (`object_envelopes` carry no `move_limit_m` — the camera must
+not pan off the trained region) and comes back when you zoom out to the main
+view.
+
+**Checking what the viewer actually loaded:** open the page with
+`?debug=camera` — a live overlay shows the camera pose, the pan distance vs.
+your `move_limit_m`, and every loaded `controls` value, so a stale or ignored
+edit is visible immediately. Misspelled keys anywhere in the `camera` block
+are named in the browser console (`unrecognized key … is IGNORED`), and
+out-of-range values report what they were clamped to. Combine flags with a
+comma: `?debug=camera,hotspots`.
 
 **Seeing your edits:** the live site updates only after you commit + push
 (deploy takes ~1 min — check the Actions tab turns green). Editing the file
