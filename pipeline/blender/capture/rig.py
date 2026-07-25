@@ -85,7 +85,7 @@ OVERSAMPLE = 8
 
 
 def _sample_shell(env, scene_bvh, focus, r, count, cfg, tol, phase,
-                  target_object=None, check_env=True, height_floor=None):
+                  target_object=None, check_env=True, height_floor=None, los_exempt=None):
     """One distance shell -> (accepted [(pos, dir)], reject tally). Deterministic.
 
     tol tightens every check for the coarse-terrain interactive preview: more
@@ -123,7 +123,8 @@ def _sample_shell(env, scene_bvh, focus, r, count, cfg, tol, phase,
                 tally["standoff"] += 1
                 continue
         if cfg["require_los"]:
-            blk = scene_bvh.los_blocked(pos, focus, los_slack, target_object)
+            blk = scene_bvh.los_blocked(pos, focus, los_slack,
+                                        los_exempt if los_exempt is not None else target_object)
             if blk:
                 tally["los"] += 1
                 blockers[blk] = blockers.get(blk, 0) + 1
@@ -136,8 +137,14 @@ def _sample_shell(env, scene_bvh, focus, r, count, cfg, tol, phase,
 
 
 def _sample_rig(rig_name, coll, scene_bvh, cfg, focus, tol, prefix,
-                target_object=None):
-    """All shells + margin samples for one rig -> (samples, shell_stats, warnings)."""
+                target_object=None, los_exempt=None):
+    """All shells + margin samples for one rig -> (samples, shell_stats, warnings).
+
+    los_exempt: names of the capture SUBJECT (parent rig capturing a standalone
+    object) — never counted as LOS blockers. Defaults to the single
+    target_object (child rigs), so an object never occludes its own capture.
+    """
+    exempt = los_exempt if los_exempt is not None else target_object
     env_ob = convention.env_object(coll)
     env = validity.EnvVolume(env_ob) if env_ob else None
     if env is None:
@@ -152,7 +159,7 @@ def _sample_rig(rig_name, coll, scene_bvh, cfg, focus, tol, prefix,
     for si, (r, n) in enumerate(zip(shells, counts)):
         phase = 0.61803 * (cfg["seed"] + si)
         acc, tally, blockers = _sample_shell(env, scene_bvh, focus, r, n, cfg, tol, phase,
-                                             target_object=target_object)
+                                             target_object=target_object, los_exempt=exempt)
         az = [frames.alpha_deg_from_delta(frames.vec_sub(p, focus)) for p, _ in acc]
         shell_stats.append({
             "rig": rig_name, "shell_m": r, "requested": n, "kept": len(acc),
@@ -188,7 +195,7 @@ def _sample_rig(rig_name, coll, scene_bvh, cfg, focus, tol, prefix,
             n = max(4, cfg["views"] // (frac * 2))
             acc, _, _blk = _sample_shell(env, scene_bvh, focus, r, n, cfg, tol,
                                          0.61803 * (cfg["seed"] + 17), target_object=target_object,
-                                         check_env=False, height_floor=margin_floor)
+                                         check_env=False, height_floor=margin_floor, los_exempt=exempt)
             for pos, _d in acc:
                 samples.append(_mk_sample(f"{prefix}{idx:04d}.png", rig_name, "margin",
                                           round(r, 2), pos, focus, cfg))
@@ -208,7 +215,7 @@ def _sample_rig(rig_name, coll, scene_bvh, cfg, focus, tol, prefix,
             h = scene_bvh.height_above_terrain(pos)
             c, _ = scene_bvh.clearance(pos, within_m=cfg["clearance_m"] + tol + 1.0)
             if h is not None and h >= margin_floor + tol and (c is None or c >= cfg["clearance_m"] + tol):
-                if not (cfg["require_los"] and scene_bvh.los_blocked(pos, focus, los_slack, target_object)):
+                if not (cfg["require_los"] and scene_bvh.los_blocked(pos, focus, los_slack, exempt)):
                     samples.append(_mk_sample(f"{prefix}{idx:04d}.png", rig_name, "margin",
                                               r, pos, focus, cfg))
                     idx += 1
@@ -273,17 +280,25 @@ def generate_rig(vantage_coll, render_fidelity=False):
                 "to the surface (the panel's Create does this automatically).")
         elif h < -0.5:
             warnings.append(f"FOCUS_{name} sits {-h:.1f} m below the terrain surface")
+        # capture SUBJECT: objects the parent rig must not treat as LOS blockers
+        # (a standalone object whose own body encloses the focus — e.g. capturing
+        # a rocket: every camera looking at its base sees it through the hull).
+        # Empty by default, so open scene/terrain captures are unchanged.
+        raw_subject = cfg.get("subject_objects") or ""
+        subject_set = {n.strip() for n in raw_subject.split(";") if n.strip()} or None
         if cfg["require_los"]:
             above = (focus[0], focus[1], focus[2] + 1000.0)
-            blk = scene_bvh.los_blocked(above, focus, cfg["los_slack_m"])
+            blk = scene_bvh.los_blocked(above, focus, cfg["los_slack_m"], subject_set)
             if blk:
                 warnings.append(
-                    f"FOCUS_{name} is hidden inside/behind '{blk}' (even from directly "
-                    "above) — to orbit that object, move the FOCUS above it or raise "
-                    "los_slack_m past the object's radius")
+                    f"FOCUS_{name} is hidden inside/behind {blk!r} (even from directly "
+                    f"above) — if {blk!r} is the object you are capturing, select it and "
+                    "click 'Set Selected as Subject'; otherwise move the FOCUS above it "
+                    "or raise los_slack_m past the object's radius")
 
         samples, shell_stats, w = _sample_rig(
-            "parent", vantage_coll, scene_bvh, cfg, focus, tol, prefix="p")
+            "parent", vantage_coll, scene_bvh, cfg, focus, tol, prefix="p",
+            los_exempt=subject_set)
         warnings += w
         playback_parent = [s for s in samples if s["kind"] == "playback"]
 

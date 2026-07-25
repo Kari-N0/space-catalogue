@@ -126,7 +126,7 @@ def _init_points(result):
     render_visible_objects = _validity.render_visible_objects
 
     scene_pts, child_pts = [], []
-    for ob in render_visible_objects(bpy.context.scene):
+    for ob in render_visible_objects(bpy.context.scene, deps):
         if ob.type != "MESH":
             continue
         if root is not None and _under_collection(ob, root):

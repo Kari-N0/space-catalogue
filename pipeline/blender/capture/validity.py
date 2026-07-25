@@ -43,11 +43,25 @@ def _under_collection(ob, coll):
     return any(_under_collection(ob, child) for child in coll.children)
 
 
-def render_visible_objects(scene):
-    """Objects that will actually appear in a render: ob.hide_render False AND
-    reachable through at least one collection path with no hide_render ancestor.
-    (A collection-level hide_render — e.g. a hidden Blockout — must remove its
-    objects from validity too, or invisible geometry blocks LOS/clearance.)"""
+def render_visible_objects(scene, depsgraph=None):
+    """Objects that will actually appear in a render AND can be evaluated:
+    ob.hide_render False, reachable through a collection path with no
+    hide_render ancestor, AND present in the evaluated depsgraph.
+
+    The depsgraph-membership test is essential. A collection EXCLUDED from the
+    view layer (the outliner checkbox — distinct from hide_render/hide_viewport)
+    keeps its objects in `scene.objects` but drops them from the depsgraph, so
+    they have NO evaluated mesh: ray_cast / closest_point_on_mesh / to_mesh on
+    them raise "Object '<name>' has no evaluated mesh data" — which broke
+    Preview/Execute on any scene with an excluded backup collection. Filtering
+    by depsgraph.objects also drops viewport-hidden objects that likewise can't
+    be queried, so every caller (validity, rig hash, init cloud) is handed only
+    objects it can safely evaluate. The hide_render walk is kept so a
+    collection-level hide_render (e.g. a hidden Blockout) still removes its
+    objects from validity/LOS.
+    """
+    depsgraph = depsgraph or bpy.context.evaluated_depsgraph_get()
+    evaluable = {ob.name for ob in depsgraph.objects}
     visible = set()
 
     def walk(coll, hidden):
@@ -59,7 +73,8 @@ def render_visible_objects(scene):
             walk(child, hidden)
 
     walk(scene.collection, False)
-    return [ob for ob in scene.objects if ob.name in visible and not ob.hide_render]
+    return [ob for ob in scene.objects
+            if ob.name in visible and ob.name in evaluable and not ob.hide_render]
 
 
 class _Entry:
@@ -105,7 +120,7 @@ class SceneGeo:
         self.deps = bpy.context.evaluated_depsgraph_get()
         grounds = {n for n in (ground_objects or []) if n}
         self.entries = []
-        for ob in render_visible_objects(scene):
+        for ob in render_visible_objects(scene, self.deps):
             if ob.type != "MESH":
                 continue
             if exclude_root is not None and _under_collection(ob, exclude_root):
@@ -155,9 +170,15 @@ class SceneGeo:
         """Name of the object blocking the p->focus ray, or None when clear.
 
         Hits within slack_m of the focus don't count (the focus often sits on
-        the ground or at an object's center). For child rigs pass target_object:
-        hits on the target itself are what the camera is FOR, never a blocker.
+        the ground or at an object's center). `target_object` names the capture
+        SUBJECT and is never a blocker (self-occlusion of the thing being
+        captured is exactly what the camera is FOR): pass a single name (child
+        rigs orbiting one object) or an iterable of names (a parent rig
+        capturing a standalone object whose own body encloses the focus).
+        None = every object can block (open scene/terrain capture).
         """
+        exempt = ({target_object} if isinstance(target_object, str)
+                  else set(target_object) if target_object else frozenset())
         p, focus = Vector(p), Vector(focus)
         direction = focus - p
         dist = direction.length
@@ -167,7 +188,7 @@ class SceneGeo:
         blocker, blocker_d = None, dist - slack_m
         origin = p + direction * _EPS
         for e in self.entries:
-            if target_object is not None and e.name == target_object:
+            if e.name in exempt:
                 continue
             hit = e.ray_world(origin, direction, self.deps)
             if hit is not None:

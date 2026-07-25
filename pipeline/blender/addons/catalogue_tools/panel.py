@@ -112,6 +112,18 @@ class CATALOGUE_PT_capture(bpy.types.Panel):
             row.operator("catalogue.set_ground", icon="RESTRICT_SELECT_OFF")
             row.operator("catalogue.clear_ground", text="", icon="X")
 
+            # capture SUBJECT: object(s) being captured — exempt from LOS blocking
+            # (needed when the subject's own body would hide the FOCUS, e.g. a rocket)
+            subject = str(coll.get("subject_objects", "") or "")
+            snames = [n for n in subject.split(";") if n]
+            slabel = (f"subject: {len(snames)} object(s) — " + ", ".join(snames[:3])
+                      + ("…" if len(snames) > 3 else "")) if snames else \
+                "subject: none (all geometry blocks LOS)"
+            gbox.label(text=slabel, icon="OBJECT_DATA")
+            srow = gbox.row(align=True)
+            srow.operator("catalogue.set_subject", icon="RESTRICT_SELECT_OFF")
+            srow.operator("catalogue.clear_subject", text="", icon="X")
+
             # per-rig collapsible settings: parent first, then each child rig —
             # every section edits ITS OWN collection (shells/views etc. are per-ENV)
             rigs = [(coll, f"CAPTURE_{st.vantage}", False)]

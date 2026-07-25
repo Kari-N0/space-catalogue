@@ -407,6 +407,51 @@ class CATALOGUE_OT_clear_ground(bpy.types.Operator):
         return {"FINISHED"}
 
 
+class CATALOGUE_OT_set_subject(bpy.types.Operator):
+    """Use the selected mesh objects as this capture's SUBJECT — the parent rig
+    stops treating them as line-of-sight blockers. Use this when capturing a
+    standalone object (e.g. a rocket) whose own body would otherwise hide the
+    FOCUS from every camera. Select all the object's meshes, then click."""
+    bl_idname = "catalogue.set_subject"
+    bl_label = "Set Selected as Subject"
+    bl_options = {"REGISTER", "UNDO"}
+
+    @classmethod
+    def poll(cls, context):
+        return any(o.type == "MESH" for o in context.selected_objects)
+
+    def execute(self, context):
+        vantage = active_vantage(context)
+        if vantage is None:
+            self.report({"ERROR"}, "no active capture")
+            return {"CANCELLED"}
+        names = [o.name for o in context.selected_objects
+                 if o.type == "MESH" and not o.name.startswith(
+                     ("ENV_", "FOCUS_", "PRV_", "CAPCAM_"))]
+        if not names:
+            self.report({"ERROR"}, "selection has no usable meshes (capture helpers don't count)")
+            return {"CANCELLED"}
+        vantage["subject_objects"] = ";".join(sorted(names))
+        self.report({"INFO"}, f"subject = {len(names)} object(s): " + ", ".join(sorted(names)[:4])
+                    + ("…" if len(names) > 4 else "") + " — re-run Preview")
+        return {"FINISHED"}
+
+
+class CATALOGUE_OT_clear_subject(bpy.types.Operator):
+    """Clear the capture subject (the parent rig treats every object as a
+    possible line-of-sight blocker again — the scene/terrain-capture default)"""
+    bl_idname = "catalogue.clear_subject"
+    bl_label = "Clear Subject"
+
+    def execute(self, context):
+        vantage = active_vantage(context)
+        if vantage is None:
+            return {"CANCELLED"}
+        vantage["subject_objects"] = ""
+        self.report({"INFO"}, "subject cleared (all geometry blocks LOS) — re-run Preview")
+        return {"FINISHED"}
+
+
 class CATALOGUE_OT_fit_shells(bpy.types.Operator):
     """Fit this rig's camera distance shells to its own ENV's current size"""
     bl_idname = "catalogue.fit_shells"
@@ -470,6 +515,8 @@ CLASSES = (
     CATALOGUE_OT_export_envelope,
     CATALOGUE_OT_set_ground,
     CATALOGUE_OT_clear_ground,
+    CATALOGUE_OT_set_subject,
+    CATALOGUE_OT_clear_subject,
     CATALOGUE_OT_fit_shells,
     CATALOGUE_OT_toggle_section,
     CATALOGUE_OT_camera_look,

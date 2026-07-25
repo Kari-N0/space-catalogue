@@ -145,6 +145,11 @@ _PROP_UI = {
     "ground_objects": "semicolon-separated ground mesh names for min-height "
                       "('' = any terrain* mesh); set via the panel from selection",
     "seed": "rotates the sampling spiral; same seed = identical rig",
+    "subject_objects": "semicolon-separated names of the capture SUBJECT — the "
+                       "object(s) being captured; the parent rig will not treat "
+                       "them as line-of-sight blockers ('' = every object blocks, "
+                       "the default for open scene/terrain captures). Set via the "
+                       "panel from selection for standalone-object captures.",
     "target_object": "object this child rig orbits (read-only by convention)",
     "standoff_min_m": "min camera distance from the target object's surface (m)",
 }
