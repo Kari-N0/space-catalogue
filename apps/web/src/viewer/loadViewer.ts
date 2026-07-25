@@ -77,7 +77,7 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
   const onMainEnter = () => {
     if (currentInput && currentInput.canvas !== canvas && activeScene && mode === "hero") {
       const heroCam = activeScene.activeCamera;
-      if (heroCam) activateInput({ canvas, camera: heroCam });
+      if (heroCam) activateInput({ canvas, camera: heroCam, scene: activeScene });
     }
   };
   canvas.addEventListener("pointerenter", onMainEnter);
@@ -91,28 +91,45 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
   let disposed = false;
   let generation = 0; // stale async scene builds (rapid mode switches) get discarded
   const featureViews: (FeatureViewHandle & { _teardown(): void })[] = [];
+  // Multi-view render loop: the views extension sets engine.activeView before
+  // each view's render pass, so render THAT view's camera scene. Feature windows
+  // with their own splat live in a separate scene and thus draw their own splat;
+  // the display canvas (view #0, no camera) and any hero-scene feature views
+  // fall back to the active hero/inspect scene. Shared by swapScene AND the
+  // visibility handler so a tab hide/show never reverts to a hero-only loop
+  // (which would redraw the hero splat into every window).
+  const renderActiveView = () => {
+    const av = (engine as unknown as { activeView?: { camera?: { getScene(): Scene } | null } | null }).activeView;
+    (av?.camera?.getScene() ?? activeScene)?.render();
+  };
   // per-object zoom state (capture child-rig envelopes) — hero mode only
   let objectFocus: string | null = null;
   let focusEnvelope: ((env: CameraEnvelope) => void) | null = null;
 
-  // Multi-view input model: exactly ONE camera has controls attached at a
-  // time, switched on pointerenter — otherwise every camera consumes the same
-  // pointer stream (all views move together, and an off-screen view's input
-  // can steal focus and smooth-scroll the page to it).
+  // Multi-view input model: exactly ONE (scene, camera) has controls attached
+  // at a time, switched on pointerenter — otherwise every camera consumes the
+  // same pointer stream. Scene-aware: a feature window may render its OWN scene
+  // (per-window splat), so we attach/detach THAT entry's scene, not just the
+  // hero's — without this those windows never receive pointer events.
+  // attachControl(false) keeps preventDefault ON (a bare drag must rotate, not
+  // start a page-scrolling selection — the same guard the hero camera uses).
   interface InputEntry {
     canvas: HTMLCanvasElement;
+    scene: Scene;
     camera: { attachControl(noPreventDefault?: boolean): void; detachControl(): void };
   }
   let currentInput: InputEntry | null = null;
   const activateInput = (entry: InputEntry) => {
-    if (disposed || currentInput === entry || !activeScene) return;
-    currentInput?.camera.detachControl();
-    // the scene's inputManager owns the DOM listeners — it must rebind to the
-    // new canvas too, or events from that canvas never reach camera inputs
-    activeScene.detachControl();
+    if (disposed || currentInput?.canvas === entry.canvas) return;
+    if (currentInput) {
+      currentInput.camera.detachControl();
+      // the scene's inputManager owns the DOM listeners — detach the old
+      // scene and bind the new one, or events never reach the new camera
+      currentInput.scene.detachControl();
+    }
     engine.inputElement = entry.canvas;
-    activeScene.attachControl();
-    entry.camera.attachControl();
+    entry.scene.attachControl();
+    entry.camera.attachControl(false);
     currentInput = entry;
   };
 
@@ -143,15 +160,6 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
     activeScene = next;
     mode = nextMode;
     engine.stopRenderLoop();
-    // Multi-view render: the views extension sets engine.activeView before each
-    // view's render pass, so render THAT view's camera scene. Feature windows
-    // with their own splat live in a separate scene and thus draw their own
-    // splat; the display canvas (view #0, no camera) and any hero-scene feature
-    // views fall back to `next` (the active hero/inspect scene) — unchanged.
-    const renderActiveView = () => {
-      const av = (engine as unknown as { activeView?: { camera?: { getScene(): Scene } | null } | null }).activeView;
-      (av?.camera?.getScene() ?? next).render();
-    };
     engine.runRenderLoop(renderActiveView);
     // dispose the old scene only after the new one produced a frame, so the
     // switch never shows a black flash (flushPendingOld is idempotent)
@@ -185,7 +193,7 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
     }
     swapScene(hero.scene, "hero", false);
     // buildHeroScene attached hero controls; it is the current input owner
-    currentInput = { canvas, camera: hero.camera };
+    currentInput = { canvas, camera: hero.camera, scene: hero.scene };
 
     // one camera animation at a time: glides the target (and optionally the
     // radius) with ease-out cubic over ~600 ms, then runs onDone. A replaced
@@ -303,16 +311,49 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
 
   // An Overview window that shows its OWN splat (concept feature scene_file):
   // a standalone scene, auto-framed to the splat's bounds, rendered into this
-  // view canvas. Display-only — the single-input-owner model targets the hero
-  // scene, so per-splat windows don't take pointer control. The scene is torn
-  // down with the feature view (on scene swap / dispose).
+  // view canvas. Interactive via DIRECT pointer handlers driving its camera's
+  // alpha/beta/radius — Babylon's camera pointer input routes through the ACTIVE
+  // scene's input manager (scoped to the hero scene here), so a secondary
+  // scene's camera never receives it; driving the angles directly is robust,
+  // isolated, and prevent-defaults so a drag never scrolls the page. Torn down
+  // with the feature view (scene swap / dispose).
   const attachSplatFeatureView = (viewCanvas: HTMLCanvasElement, sogUrl: string, alphaOffsetDeg: number) => {
     let featScene: Scene | null = null;
     let camera: GroundPanCamera | null = null;
     let view: { enabled: boolean } | null = null;
     let enabled = true;
     let killed = false;
+    let dragging = false, lastX = 0, lastY = 0;
+    const onDown = (e: PointerEvent) => {
+      if (!camera) return;
+      dragging = true; lastX = e.clientX; lastY = e.clientY;
+      viewCanvas.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    };
+    const onMove = (e: PointerEvent) => {
+      if (!dragging || !camera) return;
+      camera.alpha -= (e.clientX - lastX) * 0.01;
+      camera.beta = Math.min(Math.PI - 0.05, Math.max(0.05, camera.beta - (e.clientY - lastY) * 0.01));
+      lastX = e.clientX; lastY = e.clientY;
+      e.preventDefault();
+    };
+    const onUp = (e: PointerEvent) => {
+      dragging = false;
+      try { viewCanvas.releasePointerCapture(e.pointerId); } catch { /* already released */ }
+    };
+    const onWheel = (e: WheelEvent) => {
+      if (camera) {
+        const r = camera.radius * (1 + Math.sign(e.deltaY) * 0.12);
+        camera.radius = Math.min(camera.upperRadiusLimit ?? r, Math.max(camera.lowerRadiusLimit ?? r, r));
+      }
+      e.preventDefault();
+    };
     viewCanvas.addEventListener("contextmenu", preventDefault);
+    viewCanvas.addEventListener("pointerdown", onDown);
+    viewCanvas.addEventListener("pointermove", onMove);
+    viewCanvas.addEventListener("pointerup", onUp);
+    viewCanvas.addEventListener("pointercancel", onUp);
+    viewCanvas.addEventListener("wheel", onWheel, { passive: false });
     void (async () => {
       try {
         const built = await buildFeatureSplatScene(engine, sogUrl, profile.useSogTextures);
@@ -350,6 +391,11 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
       _teardown() {
         killed = true;
         viewCanvas.removeEventListener("contextmenu", preventDefault);
+        viewCanvas.removeEventListener("pointerdown", onDown);
+        viewCanvas.removeEventListener("pointermove", onMove);
+        viewCanvas.removeEventListener("pointerup", onUp);
+        viewCanvas.removeEventListener("pointercancel", onUp);
+        viewCanvas.removeEventListener("wheel", onWheel);
         engine.unRegisterView(viewCanvas);
         camera?.dispose();
         featScene?.dispose();
@@ -384,7 +430,7 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
     camera.alpha += rad(viewOpts?.alphaOffsetDeg ?? 0);
 
     // controls attach on pointerenter (single-owner input model above)
-    const entry = { canvas: viewCanvas, camera };
+    const entry = { canvas: viewCanvas, camera, scene };
     const onEnter = () => activateInput(entry);
     viewCanvas.addEventListener("pointerenter", onEnter);
     viewCanvas.addEventListener("contextmenu", preventDefault);
@@ -422,11 +468,11 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
     if (document.hidden) {
       engine.stopRenderLoop();
     } else if (activeScene) {
-      const scene = activeScene;
       // a swap that completed while hidden already registered its loop —
-      // never stack a second one
+      // never stack a second one. Reuse the multi-view loop so feature windows
+      // keep drawing their own splats after a hide/show.
       engine.stopRenderLoop();
-      engine.runRenderLoop(() => scene.render());
+      engine.runRenderLoop(renderActiveView);
     }
   };
   addEventListener("pagehide", onPageHide);

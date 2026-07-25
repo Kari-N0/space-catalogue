@@ -515,6 +515,11 @@ a:hover { color: var(--color-text-emphasis); }
   aspect-ratio: 16 / 10;
   display: block;
   touch-action: none;
+  /* a bare mouse-drag to orbit must not start a text selection that
+     auto-scrolls the page (the camera control also prevent-defaults, but this
+     guards windows before/without an attached camera) */
+  user-select: none;
+  -webkit-user-select: none;
   outline: none;
 }
 .feature-copy .idx {
