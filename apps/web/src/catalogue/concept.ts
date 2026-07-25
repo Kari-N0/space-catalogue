@@ -97,6 +97,19 @@ export interface PageFeature {
    */
   scene_file: string | null;
   scene_file_mobile: string | null;
+  /**
+   * Optional per-window camera framing (`camera` in the JSON — same shape as
+   * live_view.camera: look_at_m, distance_m, angle_around_deg, zoom_fov_deg …).
+   * When present it overrides the auto-fit; when null the window auto-fits its
+   * splat's bounds. Framing is Kari's to author (art-direction boundary).
+   */
+  camera_envelope: CameraEnvelope | null;
+  /**
+   * Optional POIs for this window (`pins` in the JSON). Hover shows the title;
+   * click/tap smoothly re-centers the window's camera on the point. No popup
+   * (unlike the hero pins) — overview POIs are hover-text + camera-focus only.
+   */
+  pins: Hotspot[];
 }
 
 export type ArticleBlock =
@@ -328,7 +341,7 @@ export function parseConceptPage(raw: unknown): ConceptPage {
       heading: str(overview.heading, "Overview"),
       intro: str(overview.intro),
       features: Array.isArray(overview.features)
-        ? overview.features.map((f) => {
+        ? overview.features.map((f, i) => {
             const feat = obj(f);
             return {
               label: str(feat.label),
@@ -338,6 +351,8 @@ export function parseConceptPage(raw: unknown): ConceptPage {
               controls: parseControls(feat.controls, mainControls),
               scene_file: str(feat.scene_file) || null,
               scene_file_mobile: str(feat.scene_file_mobile) || null,
+              camera_envelope: parseCamera(id, feat.camera, mainControls, `overview.features[${i}].camera`),
+              pins: parsePins(feat.pins),
             };
           })
         : [],

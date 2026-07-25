@@ -160,25 +160,34 @@ function renderLiveView(data: ConceptPage): { root: HTMLElement; refs: StageRefs
   };
 }
 
-function renderOverview(data: ConceptPage): { root: HTMLElement; featureCanvases: HTMLCanvasElement[] } {
+function renderOverview(data: ConceptPage): {
+  root: HTMLElement;
+  featureCanvases: HTMLCanvasElement[];
+  featureOverlays: HTMLElement[];
+} {
   const { overview } = data.page;
   const { root, container } = section("kicker-overview", overview.heading);
   container.appendChild(el("p", "overview-lead", overview.intro));
 
   const featureCanvases: HTMLCanvasElement[] = [];
+  const featureOverlays: HTMLElement[] = [];
   for (const f of overview.features) {
     const row = el("div", "feature");
     const media = el("div", "feature-media");
     const canvas = el("canvas", "feature-canvas");
     canvas.setAttribute("aria-label", `Live 3D detail view: ${f.title}`);
-    media.append(canvas, el("span", "scrim-chip", "Live — Sample Scene"));
+    // POI overlay: the viewer fills it with hotspot pins (pointer-events:none
+    // so it never blocks orbit/pan; the pins themselves re-enable it)
+    const overlay = el("div", "overlay feature-overlay");
+    media.append(canvas, el("span", "scrim-chip", "Live — Sample Scene"), overlay);
     const copy = el("div", "feature-copy");
     copy.append(el("span", "idx", f.label), el("h3", undefined, f.title), el("p", undefined, f.text));
     row.append(media, copy);
     container.appendChild(row);
     featureCanvases.push(canvas);
+    featureOverlays.push(overlay);
   }
-  return { root, featureCanvases };
+  return { root, featureCanvases, featureOverlays };
 }
 
 function renderArticle(data: ConceptPage): HTMLElement {
@@ -256,7 +265,12 @@ function renderSignup(data: ConceptPage): HTMLElement {
 
 /* ---------------- viewer wiring ------------------------------------------ */
 
-function wireViewer(data: ConceptPage, refs: StageRefs, featureCanvases: HTMLCanvasElement[]): void {
+function wireViewer(
+  data: ConceptPage,
+  refs: StageRefs,
+  featureCanvases: HTMLCanvasElement[],
+  featureOverlays: HTMLElement[],
+): void {
   let handle: ViewerHandle | null = null;
   let lastPin: HTMLElement | null = null;
 
@@ -313,6 +327,9 @@ function wireViewer(data: ConceptPage, refs: StageRefs, featureCanvases: HTMLCan
             alphaOffsetDeg: feature?.view_angle_deg ?? 0,
             controls: feature?.controls,
             sogUrl: sog ? assetUrl(sog) : null,
+            cameraEnvelope: feature?.camera_envelope ?? null,
+            pins: feature?.pins ?? [],
+            hotspotLayer: featureOverlays[i] ?? null,
           }),
         );
       } catch (err) {
@@ -387,7 +404,7 @@ async function boot(): Promise<void> {
     const signup = renderSignup(data);
 
     app.replaceChildren(hero, live.root, overview.root, article, sources, signup);
-    wireViewer(data, live.refs, overview.featureCanvases);
+    wireViewer(data, live.refs, overview.featureCanvases, overview.featureOverlays);
   } catch (err) {
     if (pageStatus) pageStatus.textContent = "could not load this concept — check the JSON (see content/concepts/README.md)";
     console.error(err);

@@ -16,7 +16,7 @@ import { startOptimizer, type OptimizerHandle } from "./optimizer";
 import { mountHud, type Hud } from "./hud";
 import { pickSogUrl } from "./tiering";
 import { applyEnvelope } from "./cameraEnvelope";
-import { assetUrl, type CameraControls, type CameraEnvelope } from "../catalogue/concept";
+import { assetUrl, type CameraControls, type CameraEnvelope, type Hotspot } from "../catalogue/concept";
 import type { FeatureViewHandle, ViewerHandle, ViewerMode, ViewerOptions } from "./types";
 
 const rad = (deg: number) => (deg * Math.PI) / 180;
@@ -29,6 +29,13 @@ const FEATURE_CONTROLS_FALLBACK: CameraControls = {
   move_speed: 1,
   zoom_speed: 1,
   glide_after_release: 0.9,
+};
+
+// One-sided-safe alpha clamp (either limit may be null = unbounded).
+const clampAlpha = (a: number, lo: number | null, hi: number | null): number => {
+  if (lo != null) a = Math.max(lo, a);
+  if (hi != null) a = Math.min(hi, a);
+  return a;
 };
 
 // Neutral "fit to object" framing for a per-window feature splat — allowed
@@ -71,6 +78,37 @@ function frameCameraToSplat(cam: GroundPanCamera, splat: GaussianSplattingMesh, 
   cam.fov = rad(45);
   cam.alpha = -Math.PI / 2 + rad(alphaOffsetDeg);
   cam.beta = rad(68);
+}
+
+// Overview POIs re-center the window camera on the clicked point: a smooth
+// ease-out target glide, zoom (radius) unchanged — no popup. Returns a focus()
+// (a new click retargets an in-flight glide) and cancel() for teardown.
+function makeFocuser(scene: Scene, camera: GroundPanCamera): {
+  focus(pos: [number, number, number]): void;
+  cancel(): void;
+} {
+  let obs: Observer<Scene> | null = null;
+  const cancel = () => {
+    if (obs) {
+      scene.onBeforeRenderObservable.remove(obs);
+      obs = null;
+    }
+  };
+  return {
+    cancel,
+    focus(pos) {
+      cancel();
+      const from = camera.target.clone();
+      const dest = new Vector3(pos[0], pos[1], pos[2]);
+      let t = 0;
+      obs = scene.onBeforeRenderObservable.add(() => {
+        t += scene.getEngine().getDeltaTime() / 500;
+        const k = t >= 1 ? 1 : 1 - Math.pow(1 - t, 3); // ease-out cubic
+        Vector3.LerpToRef(from, dest, k, camera.target);
+        if (t >= 1) cancel();
+      });
+    },
+  };
 }
 
 export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
@@ -181,8 +219,14 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
       const dx = e.clientX - lastX;
       const dy = e.clientY - lastY;
       if (dragMode === "orbit") {
-        cam.alpha -= dx * rotK;
-        cam.beta = Math.min(Math.PI - 0.05, Math.max(0.05, cam.beta - dy * rotK));
+        // enforce the authored angle limits directly (a view camera driven by
+        // these handlers doesn't run Babylon's stock input clamp): distance
+        // limits are applied on the wheel, angle limits here.
+        const a = cam.alpha - dx * rotK;
+        cam.alpha = clampAlpha(a, cam.lowerAlphaLimit, cam.upperAlphaLimit);
+        const bLo = Math.max(0.02, cam.lowerBetaLimit ?? 0.02);
+        const bHi = Math.min(Math.PI - 0.02, cam.upperBetaLimit ?? Math.PI - 0.02);
+        cam.beta = Math.min(bHi, Math.max(bLo, cam.beta - dy * rotK));
       } else {
         cam.panByPixels(dx, dy, ctrl.move_speed);
       }
@@ -412,12 +456,17 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
     sogUrl: string,
     alphaOffsetDeg: number,
     controls: CameraControls,
+    cameraEnvelope: CameraEnvelope | null,
+    pins: Hotspot[],
+    hotspotLayer: HTMLElement | null,
   ) => {
     let featScene: Scene | null = null;
     let camera: GroundPanCamera | null = null;
     let view: { enabled: boolean } | null = null;
     let enabled = true;
     let killed = false;
+    let poiLayer: HotspotLayer | null = null;
+    let focuser: ReturnType<typeof makeFocuser> | null = null;
     const detachControls = attachDirectControls(viewCanvas, () => camera, controls);
     void (async () => {
       try {
@@ -429,7 +478,10 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
         featScene = built.scene;
         const cam = new GroundPanCamera(
           `feature-splat-${featureViews.length}`, -Math.PI / 2, 1.1, 9, Vector3.Zero(), featScene);
-        if (built.splat) {
+        // authored per-window framing wins; otherwise auto-fit the splat
+        if (cameraEnvelope) {
+          applyEnvelope(cam, cameraEnvelope);
+        } else if (built.splat) {
           frameCameraToSplat(cam, built.splat, alphaOffsetDeg);
         } else {
           cam.fov = rad(45);
@@ -439,6 +491,11 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
         camera = cam;
         view = engine.registerView(viewCanvas, cam);
         view.enabled = enabled;
+        // POIs: hover = title, click = re-center on the point (no popup)
+        if (hotspotLayer && pins.length > 0) {
+          focuser = makeFocuser(featScene, cam);
+          poiLayer = mountHotspots(featScene, cam, hotspotLayer, pins, (h) => focuser?.focus(h.position_m));
+        }
       } catch (err) {
         console.error(`feature splat failed (${sogUrl})`, err);
       }
@@ -456,6 +513,8 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
       _teardown() {
         killed = true;
         detachControls();
+        focuser?.cancel();
+        poiLayer?.dispose();
         engine.unRegisterView(viewCanvas);
         camera?.dispose();
         featScene?.dispose();
@@ -470,13 +529,24 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
     if (disposed) throw new Error("viewer disposed");
     if (mode !== "hero" || !activeScene) throw new Error("feature views attach to the live hero scene");
     const ctrl = viewOpts?.controls ?? FEATURE_CONTROLS_FALLBACK;
+    const pins = viewOpts?.pins ?? [];
+    const poiHost = viewOpts?.hotspotLayer ?? null;
     if (viewOpts?.sogUrl) {
-      return attachSplatFeatureView(viewCanvas, viewOpts.sogUrl, viewOpts.alphaOffsetDeg ?? 0, ctrl);
+      return attachSplatFeatureView(
+        viewCanvas,
+        viewOpts.sogUrl,
+        viewOpts.alphaOffsetDeg ?? 0,
+        ctrl,
+        viewOpts.cameraEnvelope ?? null,
+        pins,
+        poiHost,
+      );
     }
     const scene = activeScene;
 
     // No per-window splat: fall back to a second camera on the hero scene, so
-    // this window shows the hero splat from its own angle.
+    // this window shows the hero splat from its own angle. Per-window framing
+    // wins when authored; otherwise use the hero envelope + view_angle_deg.
     const camera = new GroundPanCamera(
       `feature-${featureViews.length}`,
       -Math.PI / 2,
@@ -485,8 +555,11 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
       Vector3.Zero(),
       scene,
     );
-    if (concept.camera_envelope) applyEnvelope(camera, concept.camera_envelope);
-    camera.alpha += rad(viewOpts?.alphaOffsetDeg ?? 0);
+    const env = viewOpts?.cameraEnvelope ?? concept.camera_envelope;
+    if (env) applyEnvelope(camera, env);
+    // the azimuth offset only shapes the hero-fallback framing; an authored
+    // per-window camera already specifies its opening angle_around_deg.start
+    if (!viewOpts?.cameraEnvelope) camera.alpha += rad(viewOpts?.alphaOffsetDeg ?? 0);
 
     // Drive this camera directly (see attachDirectControls). It has its own
     // camera, so orbiting/panning here never disturbs the hero's main view;
@@ -494,6 +567,16 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
     const detachControls = attachDirectControls(viewCanvas, () => camera, ctrl);
 
     const view = engine.registerView(viewCanvas, camera);
+
+    // POIs: hover = title, click = re-center on the point (no popup). The layer
+    // observer guards on this camera, so during the hero's own render pass these
+    // pins stay put — only this window's pass writes their positions.
+    let poiLayer: HotspotLayer | null = null;
+    let focuser: ReturnType<typeof makeFocuser> | null = null;
+    if (poiHost && pins.length > 0) {
+      focuser = makeFocuser(scene, camera);
+      poiLayer = mountHotspots(scene, camera, poiHost, pins, (h) => focuser?.focus(h.position_m));
+    }
 
     const fv = {
       setEnabled(enabled: boolean) {
@@ -506,6 +589,8 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
       },
       _teardown() {
         detachControls();
+        focuser?.cancel();
+        poiLayer?.dispose();
         engine.unRegisterView(viewCanvas);
         camera.dispose();
       },

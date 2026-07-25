@@ -135,8 +135,25 @@ text-only popups).
   `view_angle_deg`. Add `scene_file_mobile` for a lighter tier (falls back to
   `scene_file`). Omit or set `null` to keep the default: a view of the hero
   splat. Each distinct splat is a full download + GPU cost, so only add what you
-  need. The auto-fit is a neutral framing — tell me if a window needs a
-  specific look and I'll wire per-window framing.
+  need.
+- `features[].camera` *(optional)* — full per-window framing, **the same fields
+  as `live_view.camera`** (`look_at_m`, `distance_m`, `angle_around_deg`,
+  `angle_up_down_deg`, `zoom_fov_deg`, `move_limit_m`, `clip_near_m/far_m`,
+  `controls`). When present it **replaces the auto-fit**; when absent the window
+  auto-fits. `look_at_m` must be that splat's own focus point in meters (read it
+  from Blender) — the hero's `look_at_m` won't match a different splat. The
+  opening shot is `distance_m.start` + `angle_*_deg.start`, exactly like the
+  hero. Every window controls all four windows' feel independently.
+- `features[].pins` *(optional)* — POIs for that window. **Simpler than the hero
+  pins: hover shows the `title`, click/tap smoothly re-centers the window's
+  camera on `position_m` — no pop-up box.** Each entry needs `position_m`
+  `[x,y,z]` (meters, hand-authored) and `title`; `text` is optional extra
+  hover text. `image` is ignored here (no pop-up). Default is `[]` (no POIs).
+
+`lunar-base.json`'s first Overview feature carries `_camera_example` and
+`_pins_example` blocks (keys starting with `_` are ignored) — copy either and
+rename to `camera` / `pins` to start authoring. The auto-fit is a neutral
+utility framing; the `camera` block is yours to set.
 
 ### `article` — the free-form "Specifications" section
 A list of blocks, rendered in order. Three kinds:

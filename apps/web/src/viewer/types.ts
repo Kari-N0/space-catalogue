@@ -1,7 +1,7 @@
 // Viewer public types — deliberately free of Babylon imports so landing-route
 // code can import them at zero bundle cost.
 
-import type { CameraControls, ConceptDoc, Hotspot } from "../catalogue/concept";
+import type { CameraControls, CameraEnvelope, ConceptDoc, Hotspot } from "../catalogue/concept";
 
 export type EngineKind = "webgpu" | "webgl2";
 export type Tier = "mobile" | "desktop";
@@ -51,12 +51,22 @@ export interface ViewerHandle {
    * Render an additional canvas as an engine view. By default it shows the live
    * hero scene from its own envelope-constrained camera (one engine, one scene,
    * N views). If `sogUrl` is given, the window instead loads that splat into its
-   * OWN scene (auto-framed) so different windows can show different splats.
-   * Hero mode only; views/scenes are torn down on scene swap and dispose().
+   * OWN scene so different windows can show different splats. Framing: an
+   * authored `cameraEnvelope` wins; otherwise the window auto-fits its splat.
+   * `pins` render as POIs over `hotspotLayer` (hover = title, click = re-center
+   * the window camera on the point — no popup). Hero mode only; views/scenes
+   * are torn down on scene swap and dispose().
    */
   attachFeatureView(
     canvas: HTMLCanvasElement,
-    opts?: { alphaOffsetDeg?: number; controls?: CameraControls; sogUrl?: string | null },
+    opts?: {
+      alphaOffsetDeg?: number;
+      controls?: CameraControls;
+      sogUrl?: string | null;
+      cameraEnvelope?: CameraEnvelope | null;
+      pins?: Hotspot[];
+      hotspotLayer?: HTMLElement | null;
+    },
   ): FeatureViewHandle;
   /**
    * Per-object zoom (capture child-rig envelopes, ConceptDoc.object_envelopes):
