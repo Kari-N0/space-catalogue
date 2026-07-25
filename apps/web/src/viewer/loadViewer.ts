@@ -15,12 +15,21 @@ import { mountHotspots, type HotspotLayer } from "./hotspots";
 import { startOptimizer, type OptimizerHandle } from "./optimizer";
 import { mountHud, type Hud } from "./hud";
 import { pickSogUrl } from "./tiering";
-import { applyControls, applyEnvelope } from "./cameraEnvelope";
-import { assetUrl, type CameraEnvelope } from "../catalogue/concept";
+import { applyEnvelope } from "./cameraEnvelope";
+import { assetUrl, type CameraControls, type CameraEnvelope } from "../catalogue/concept";
 import type { FeatureViewHandle, ViewerHandle, ViewerMode, ViewerOptions } from "./types";
 
 const rad = (deg: number) => (deg * Math.PI) / 180;
 const preventDefault = (e: Event) => e.preventDefault();
+
+// Feature windows always carry a parsed controls block from the JSON; this only
+// covers a caller that omits it (the type allows it optional).
+const FEATURE_CONTROLS_FALLBACK: CameraControls = {
+  rotate_speed: 1,
+  move_speed: 1,
+  zoom_speed: 1,
+  glide_after_release: 0.9,
+};
 
 // Neutral "fit to object" framing for a per-window feature splat — allowed
 // utility framing (a validation-view default; precise framing stays Kari's).
@@ -131,6 +140,82 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
     entry.scene.attachControl();
     entry.camera.attachControl(false);
     currentInput = entry;
+  };
+
+  // Direct pointer controls for a secondary view canvas. Babylon routes camera
+  // input ONLY through the active scene's input manager, so feature windows
+  // (their own splat scene, or a second camera in the hero scene) never get it
+  // via scene.attachControl — we drive the camera ourselves. Button map matches
+  // the hero: left = orbit, right/middle = ground pan, wheel = zoom. Every
+  // handler preventDefaults so a drag never scrolls the page, opens the context
+  // menu, or triggers middle-click autoscroll (the last needs preventDefault on
+  // `mousedown`, which pointerdown's preventDefault does NOT suppress in Chrome).
+  // getCamera is late-bound: the splat window's camera doesn't exist until its
+  // .sog finishes loading. Returns a teardown that removes every listener.
+  const attachDirectControls = (
+    viewCanvas: HTMLCanvasElement,
+    getCamera: () => GroundPanCamera | null,
+    ctrl: CameraControls,
+  ): (() => void) => {
+    const rotK = 0.01 * ctrl.rotate_speed;
+    const zoomK = 0.12 * ctrl.zoom_speed;
+    let dragMode: "none" | "orbit" | "pan" = "none";
+    let lastX = 0, lastY = 0;
+    const onDown = (e: PointerEvent) => {
+      const cam = getCamera();
+      if (!cam) return;
+      dragMode = e.button === 0 ? "orbit" : "pan"; // right(2)/middle(1) → pan
+      lastX = e.clientX;
+      lastY = e.clientY;
+      try { viewCanvas.setPointerCapture(e.pointerId); } catch { /* headless */ }
+      e.preventDefault();
+    };
+    const onMove = (e: PointerEvent) => {
+      const cam = getCamera();
+      if (dragMode === "none" || !cam) return;
+      const dx = e.clientX - lastX;
+      const dy = e.clientY - lastY;
+      if (dragMode === "orbit") {
+        cam.alpha -= dx * rotK;
+        cam.beta = Math.min(Math.PI - 0.05, Math.max(0.05, cam.beta - dy * rotK));
+      } else {
+        cam.panByPixels(dx, dy, ctrl.move_speed);
+      }
+      lastX = e.clientX;
+      lastY = e.clientY;
+      e.preventDefault();
+    };
+    const onUp = (e: PointerEvent) => {
+      dragMode = "none";
+      try { viewCanvas.releasePointerCapture(e.pointerId); } catch { /* already released */ }
+    };
+    const onWheel = (e: WheelEvent) => {
+      const cam = getCamera();
+      if (cam) {
+        const r = cam.radius * (1 + Math.sign(e.deltaY) * zoomK);
+        cam.radius = Math.min(cam.upperRadiusLimit ?? r, Math.max(cam.lowerRadiusLimit ?? r, r));
+      }
+      e.preventDefault();
+    };
+    // kill Chrome middle-click autoscroll before it starts (pointerdown's
+    // preventDefault doesn't cover it)
+    const onMouseDown = (e: MouseEvent) => { if (e.button === 1) e.preventDefault(); };
+    viewCanvas.addEventListener("contextmenu", preventDefault);
+    viewCanvas.addEventListener("pointerdown", onDown);
+    viewCanvas.addEventListener("pointermove", onMove);
+    viewCanvas.addEventListener("pointerup", onUp);
+    viewCanvas.addEventListener("pointercancel", onUp);
+    viewCanvas.addEventListener("wheel", onWheel, { passive: false });
+    viewCanvas.addEventListener("mousedown", onMouseDown);
+    return () => {
+      viewCanvas.removeEventListener("contextmenu", preventDefault);
+      viewCanvas.removeEventListener("pointerdown", onDown);
+      viewCanvas.removeEventListener("pointermove", onMove);
+      viewCanvas.removeEventListener("pointerup", onUp);
+      viewCanvas.removeEventListener("pointercancel", onUp);
+      viewCanvas.removeEventListener("wheel", onWheel);
+      viewCanvas.removeEventListener("mousedown", onMouseDown);
+    };
   };
 
   const flushPendingOld = () => {
@@ -317,43 +402,18 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
   // scene's camera never receives it; driving the angles directly is robust,
   // isolated, and prevent-defaults so a drag never scrolls the page. Torn down
   // with the feature view (scene swap / dispose).
-  const attachSplatFeatureView = (viewCanvas: HTMLCanvasElement, sogUrl: string, alphaOffsetDeg: number) => {
+  const attachSplatFeatureView = (
+    viewCanvas: HTMLCanvasElement,
+    sogUrl: string,
+    alphaOffsetDeg: number,
+    controls: CameraControls,
+  ) => {
     let featScene: Scene | null = null;
     let camera: GroundPanCamera | null = null;
     let view: { enabled: boolean } | null = null;
     let enabled = true;
     let killed = false;
-    let dragging = false, lastX = 0, lastY = 0;
-    const onDown = (e: PointerEvent) => {
-      if (!camera) return;
-      dragging = true; lastX = e.clientX; lastY = e.clientY;
-      viewCanvas.setPointerCapture(e.pointerId);
-      e.preventDefault();
-    };
-    const onMove = (e: PointerEvent) => {
-      if (!dragging || !camera) return;
-      camera.alpha -= (e.clientX - lastX) * 0.01;
-      camera.beta = Math.min(Math.PI - 0.05, Math.max(0.05, camera.beta - (e.clientY - lastY) * 0.01));
-      lastX = e.clientX; lastY = e.clientY;
-      e.preventDefault();
-    };
-    const onUp = (e: PointerEvent) => {
-      dragging = false;
-      try { viewCanvas.releasePointerCapture(e.pointerId); } catch { /* already released */ }
-    };
-    const onWheel = (e: WheelEvent) => {
-      if (camera) {
-        const r = camera.radius * (1 + Math.sign(e.deltaY) * 0.12);
-        camera.radius = Math.min(camera.upperRadiusLimit ?? r, Math.max(camera.lowerRadiusLimit ?? r, r));
-      }
-      e.preventDefault();
-    };
-    viewCanvas.addEventListener("contextmenu", preventDefault);
-    viewCanvas.addEventListener("pointerdown", onDown);
-    viewCanvas.addEventListener("pointermove", onMove);
-    viewCanvas.addEventListener("pointerup", onUp);
-    viewCanvas.addEventListener("pointercancel", onUp);
-    viewCanvas.addEventListener("wheel", onWheel, { passive: false });
+    const detachControls = attachDirectControls(viewCanvas, () => camera, controls);
     void (async () => {
       try {
         const built = await buildFeatureSplatScene(engine, sogUrl, profile.useSogTextures);
@@ -390,12 +450,7 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
       },
       _teardown() {
         killed = true;
-        viewCanvas.removeEventListener("contextmenu", preventDefault);
-        viewCanvas.removeEventListener("pointerdown", onDown);
-        viewCanvas.removeEventListener("pointermove", onMove);
-        viewCanvas.removeEventListener("pointerup", onUp);
-        viewCanvas.removeEventListener("pointercancel", onUp);
-        viewCanvas.removeEventListener("wheel", onWheel);
+        detachControls();
         engine.unRegisterView(viewCanvas);
         camera?.dispose();
         featScene?.dispose();
@@ -409,9 +464,14 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
   const attachFeatureView: ViewerHandle["attachFeatureView"] = (viewCanvas, viewOpts) => {
     if (disposed) throw new Error("viewer disposed");
     if (mode !== "hero" || !activeScene) throw new Error("feature views attach to the live hero scene");
-    if (viewOpts?.sogUrl) return attachSplatFeatureView(viewCanvas, viewOpts.sogUrl, viewOpts.alphaOffsetDeg ?? 0);
+    const ctrl = viewOpts?.controls ?? FEATURE_CONTROLS_FALLBACK;
+    if (viewOpts?.sogUrl) {
+      return attachSplatFeatureView(viewCanvas, viewOpts.sogUrl, viewOpts.alphaOffsetDeg ?? 0, ctrl);
+    }
     const scene = activeScene;
 
+    // No per-window splat: fall back to a second camera on the hero scene, so
+    // this window shows the hero splat from its own angle.
     const camera = new GroundPanCamera(
       `feature-${featureViews.length}`,
       -Math.PI / 2,
@@ -420,20 +480,13 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
       Vector3.Zero(),
       scene,
     );
-    if (concept.camera_envelope) {
-      applyEnvelope(camera, concept.camera_envelope);
-      if (viewOpts?.controls) {
-        // per-window feel override (defaults to the main view's controls)
-        applyControls(camera, viewOpts.controls, !!concept.camera_envelope.pan_m?.max_from_center);
-      }
-    }
+    if (concept.camera_envelope) applyEnvelope(camera, concept.camera_envelope);
     camera.alpha += rad(viewOpts?.alphaOffsetDeg ?? 0);
 
-    // controls attach on pointerenter (single-owner input model above)
-    const entry = { canvas: viewCanvas, camera, scene };
-    const onEnter = () => activateInput(entry);
-    viewCanvas.addEventListener("pointerenter", onEnter);
-    viewCanvas.addEventListener("contextmenu", preventDefault);
+    // Drive this camera directly (see attachDirectControls). It has its own
+    // camera, so orbiting/panning here never disturbs the hero's main view;
+    // preventDefault on every handler keeps a drag from scrolling the page.
+    const detachControls = attachDirectControls(viewCanvas, () => camera, ctrl);
 
     const view = engine.registerView(viewCanvas, camera);
 
@@ -447,11 +500,8 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
         fv._teardown();
       },
       _teardown() {
-        viewCanvas.removeEventListener("pointerenter", onEnter);
-        viewCanvas.removeEventListener("contextmenu", preventDefault);
+        detachControls();
         engine.unRegisterView(viewCanvas);
-        if (currentInput?.canvas === viewCanvas) currentInput = null;
-        camera.detachControl();
         camera.dispose();
       },
     };

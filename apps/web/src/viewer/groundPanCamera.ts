@@ -34,25 +34,72 @@ import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { PAN_BASE_SENSIBILITY } from "./cameraEnvelope";
 
-export class GroundPanCamera extends ArcRotateCamera {}
-
 const tmpRight = new Vector3();
 const tmpFwd = new Vector3();
 
+// Normalized ground axes at the camera's current orientation: full pan
+// authority at any beta, directions matching stock (right along camera-right,
+// fwd along the view over the ground). Shared by the stock inertial pan
+// (_applyPanDelta) and the direct full-step pan (panByPixels).
+function groundAxes(cam: ArcRotateCamera): void {
+  cam.getDirectionToRef(Vector3.RightReadOnly, tmpRight);
+  cam.getDirectionToRef(Vector3.LeftHandedForwardReadOnly, tmpFwd);
+  tmpRight.y = 0;
+  tmpFwd.y = 0;
+  if (tmpFwd.lengthSquared() < 1e-10) {
+    // camera looking straight down: the view axis has no ground projection,
+    // but "screen-up over the ground" is exactly minus the up axis' one
+    cam.getDirectionToRef(Vector3.UpReadOnly, tmpFwd);
+    tmpFwd.set(-tmpFwd.x, 0, -tmpFwd.z);
+  }
+  tmpRight.normalize();
+  tmpFwd.normalize();
+}
+
+// XZ slide-clamp against the envelope: the radial component stops at the
+// boundary, the tangential component keeps moving. Returns clamped [x, z].
+function slideClamp(cam: GroundPanCamera, nx: number, nz: number): [number, number] {
+  const limit = cam.panningDistanceLimit;
+  if (limit) {
+    const o = cam.panningOriginTarget;
+    const ex = nx - o.x;
+    const ez = nz - o.z;
+    const d = Math.hypot(ex, ez);
+    if (d > limit) {
+      const s = limit / d;
+      return [o.x + ex * s, o.z + ez * s];
+    }
+  }
+  return [nx, nz];
+}
+
+export class GroundPanCamera extends ArcRotateCamera {
+  /**
+   * Ground-tracked pan by a raw screen-pixel delta, applied in FULL on the
+   * spot (no inertia). Secondary view canvases drive the camera directly —
+   * Babylon only routes camera input through the active scene's input manager,
+   * so those windows never get the stock inertial pan path. Sign matches stock
+   * (grab-style horizontally; drag-down pushes the target forward), gain tracks
+   * the terrain ~1:1 at any radius times moveSpeed, and the move slide-clamps
+   * against the envelope exactly like _applyPanDelta. target.y is untouched.
+   */
+  panByPixels(dxPx: number, dyPx: number, moveSpeed: number): void {
+    groundAxes(this);
+    const engine = this.getEngine();
+    const viewHeightCss = engine.getRenderHeight() * engine.getHardwareScalingLevel() || 1;
+    const worldPerPixel = (2 * this.radius * Math.tan(this.fov / 2)) / viewHeightCss;
+    const gain = worldPerPixel * moveSpeed;
+    const nx = this.target.x + (tmpRight.x * -dxPx + tmpFwd.x * dyPx) * gain;
+    const nz = this.target.z + (tmpRight.z * -dxPx + tmpFwd.z * dyPx) * gain;
+    const [cx, cz] = slideClamp(this, nx, nz);
+    this.target.x = cx;
+    this.target.z = cz;
+  }
+}
+
 (GroundPanCamera.prototype as unknown as { _applyPanDelta(panX: number, panY: number): void })._applyPanDelta =
   function (this: GroundPanCamera, panX: number, panY: number): void {
-    this.getDirectionToRef(Vector3.RightReadOnly, tmpRight);
-    this.getDirectionToRef(Vector3.LeftHandedForwardReadOnly, tmpFwd);
-    tmpRight.y = 0;
-    tmpFwd.y = 0;
-    if (tmpFwd.lengthSquared() < 1e-10) {
-      // camera looking straight down: the view axis has no ground projection,
-      // but "screen-up over the ground" is exactly minus the up axis' one
-      this.getDirectionToRef(Vector3.UpReadOnly, tmpFwd);
-      tmpFwd.set(-tmpFwd.x, 0, -tmpFwd.z);
-    }
-    tmpRight.normalize();
-    tmpFwd.normalize();
+    groundAxes(this);
 
     // panX/panY arrive as dragged-pixels / panningSensibility, where
     // applyControls sets panningSensibility = PAN_BASE_SENSIBILITY/move_speed
@@ -65,22 +112,11 @@ const tmpFwd = new Vector3();
     const worldPerPixel = (2 * this.radius * Math.tan(this.fov / 2)) / viewHeightCss;
     const gain = PAN_BASE_SENSIBILITY * (1 - this.panningInertia) * worldPerPixel;
 
-    let nx = this.target.x + (tmpRight.x * panX + tmpFwd.x * panY) * gain;
-    let nz = this.target.z + (tmpRight.z * panX + tmpFwd.z * panY) * gain;
+    const nx = this.target.x + (tmpRight.x * panX + tmpFwd.x * panY) * gain;
+    const nz = this.target.z + (tmpRight.z * panX + tmpFwd.z * panY) * gain;
 
     // envelope boundary: clamp radially, keep the tangential component (slide)
-    const limit = this.panningDistanceLimit;
-    if (limit) {
-      const o = this.panningOriginTarget;
-      const ex = nx - o.x;
-      const ez = nz - o.z;
-      const d = Math.hypot(ex, ez);
-      if (d > limit) {
-        const s = limit / d;
-        nx = o.x + ex * s;
-        nz = o.z + ez * s;
-      }
-    }
-    this.target.x = nx;
-    this.target.z = nz;
+    const [cx, cz] = slideClamp(this, nx, nz);
+    this.target.x = cx;
+    this.target.z = cz;
   };
