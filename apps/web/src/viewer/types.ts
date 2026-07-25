@@ -48,13 +48,15 @@ export interface ViewerHandle {
   enterInspect(): Promise<void>;
   enterHero(): Promise<void>;
   /**
-   * Render the live hero scene into an additional canvas with its own
-   * envelope-constrained camera (one engine, one scene, N views). Hero mode
-   * only; views are torn down on scene swap and dispose().
+   * Render an additional canvas as an engine view. By default it shows the live
+   * hero scene from its own envelope-constrained camera (one engine, one scene,
+   * N views). If `sogUrl` is given, the window instead loads that splat into its
+   * OWN scene (auto-framed) so different windows can show different splats.
+   * Hero mode only; views/scenes are torn down on scene swap and dispose().
    */
   attachFeatureView(
     canvas: HTMLCanvasElement,
-    opts?: { alphaOffsetDeg?: number; controls?: CameraControls },
+    opts?: { alphaOffsetDeg?: number; controls?: CameraControls; sogUrl?: string | null },
   ): FeatureViewHandle;
   /**
    * Per-object zoom (capture child-rig envelopes, ConceptDoc.object_envelopes):

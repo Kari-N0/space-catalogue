@@ -4,8 +4,8 @@
 // a new concept page is a new JSON file only.
 
 import { assetUrl, loadConceptPage, type ArticleBlock, type ConceptPage, type Hotspot } from "./concept";
-import { pickTier } from "../viewer/tiering";
-import type { FeatureViewHandle, ViewerHandle } from "../viewer/types";
+import { pickTier, pickSogUrl } from "../viewer/tiering";
+import type { FeatureViewHandle, TierProfile, ViewerHandle } from "../viewer/types";
 
 const app = document.getElementById("app") as HTMLElement;
 
@@ -297,14 +297,23 @@ function wireViewer(data: ConceptPage, refs: StageRefs, featureCanvases: HTMLCan
     });
   }
 
-  const attachFeatureViews = (h: ViewerHandle): void => {
+  const attachFeatureViews = (h: ViewerHandle, profile: TierProfile): void => {
     const views = new Map<HTMLCanvasElement, FeatureViewHandle>();
     for (const [i, c] of featureCanvases.entries()) {
       try {
         const feature = data.page.overview.features[i];
+        // per-window splat (feature.scene_file) — tiered like the hero; when
+        // absent the window shows the hero splat from view_angle_deg
+        const sog = feature
+          ? pickSogUrl(profile.tier, { desktop: feature.scene_file, mobile: feature.scene_file_mobile })
+          : null;
         views.set(
           c,
-          h.attachFeatureView(c, { alphaOffsetDeg: feature?.view_angle_deg ?? 0, controls: feature?.controls }),
+          h.attachFeatureView(c, {
+            alphaOffsetDeg: feature?.view_angle_deg ?? 0,
+            controls: feature?.controls,
+            sogUrl: sog ? assetUrl(sog) : null,
+          }),
         );
       } catch (err) {
         console.error("feature view failed", err);
@@ -340,7 +349,7 @@ function wireViewer(data: ConceptPage, refs: StageRefs, featureCanvases: HTMLCan
         onHotspotSelect: openPopup,
       });
       refs.poster?.remove();
-      attachFeatureViews(handle);
+      attachFeatureViews(handle, profile);
     } catch (err) {
       refs.status.textContent = "could not load the 3D scene";
       console.error(err);

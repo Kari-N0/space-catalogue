@@ -63,9 +63,27 @@ async function fillHeroScene(
   camera.attachControl(false, /* useCtrlForPanning */ true, /* panningMouseButton */ 2);
   if (envelope) applyEnvelope(camera, envelope);
 
-  onProgress({ phase: "download", ratio: 0 });
+  const splat = await importSplatIntoScene(scene, sogUrl, useSogTextures, onProgress);
+  onProgress({ phase: "ready" });
+  return { scene, camera, splat };
+}
+
+/**
+ * Import a .sog into an existing scene with the project-pinned loader options
+ * (bundled fflate; no-CDN SPZ; file-embedded camera limits ignored) and apply
+ * the validated splat material tweaks (compensation, kernelSize). Shared by the
+ * hero scene and per-window feature splats so those options never drift.
+ */
+export async function importSplatIntoScene(
+  scene: Scene,
+  sogUrl: string,
+  useSogTextures: boolean,
+  onProgress?: (p: ViewerProgress) => void,
+): Promise<GaussianSplattingMesh | null> {
+  onProgress?.({ phase: "download", ratio: 0 });
   const result = await ImportMeshAsync(sogUrl, scene, {
     onProgress: (e) => {
+      if (!onProgress) return;
       if (e.lengthComputable && e.total > 0) {
         const ratio = e.loaded / e.total;
         onProgress(ratio >= 1 ? { phase: "decode" } : { phase: "download", ratio });
@@ -98,7 +116,33 @@ async function fillHeroScene(
     mat.compensation = true;
     mat.kernelSize = 0.3;
   }
+  return splat;
+}
 
-  onProgress({ phase: "ready" });
-  return { scene, camera, splat };
+export interface FeatureSplatScene {
+  scene: Scene;
+  splat: GaussianSplattingMesh | null;
+}
+
+/**
+ * A standalone scene holding ONE splat, for an Overview window that shows a
+ * different splat than the hero (concept feature `scene_file`). No camera or
+ * envelope — the caller adds a feature camera and frames it to the splat's
+ * bounds (feature splats can be any scale, unrelated to the hero envelope).
+ */
+export async function buildFeatureSplatScene(
+  engine: AbstractEngine,
+  sogUrl: string,
+  useSogTextures: boolean,
+): Promise<FeatureSplatScene> {
+  const scene = new Scene(engine);
+  scene.clearColor = new Color4(0, 0, 0, 1);
+  try {
+    const splat = await importSplatIntoScene(scene, sogUrl, useSogTextures);
+    return { scene, splat };
+  } catch (err) {
+    // a failed import must not leave a half-built scene registered on the engine
+    scene.dispose();
+    throw err;
+  }
 }

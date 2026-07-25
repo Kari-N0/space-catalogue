@@ -89,6 +89,14 @@ export interface PageFeature {
   view_angle_deg: number;
   /** Camera feel for this window — defaults to the main view's controls. */
   controls: CameraControls;
+  /**
+   * Optional: show a DIFFERENT Gaussian splat in this Overview window. When
+   * set, the window loads its own splat scene (auto-framed to that splat's
+   * bounds); when null it stays a view of the hero splat at `view_angle_deg`.
+   * Tiered like live_view.scene_file (desktop) / scene_file_mobile (mobile).
+   */
+  scene_file: string | null;
+  scene_file_mobile: string | null;
 }
 
 export type ArticleBlock =
@@ -328,6 +336,8 @@ export function parseConceptPage(raw: unknown): ConceptPage {
               text: str(feat.text),
               view_angle_deg: num(feat.view_angle_deg, 0),
               controls: parseControls(feat.controls, mainControls),
+              scene_file: str(feat.scene_file) || null,
+              scene_file_mobile: str(feat.scene_file_mobile) || null,
             };
           })
         : [],

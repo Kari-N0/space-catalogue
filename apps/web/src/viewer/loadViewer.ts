@@ -5,11 +5,12 @@
 import type { Scene } from "@babylonjs/core/scene";
 import type { Observer } from "@babylonjs/core/Misc/observable";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
+import type { GaussianSplattingMesh } from "@babylonjs/core/Meshes/GaussianSplatting/gaussianSplattingMesh";
 import { GroundPanCamera } from "./groundPanCamera";
 // multi-canvas views: registerView/unRegisterView on AbstractEngine
 import "@babylonjs/core/Engines/Extensions/engine.views";
 import { createEngine, type EngineBundle } from "./engine";
-import { buildHeroScene } from "./heroScene";
+import { buildHeroScene, buildFeatureSplatScene } from "./heroScene";
 import { mountHotspots, type HotspotLayer } from "./hotspots";
 import { startOptimizer, type OptimizerHandle } from "./optimizer";
 import { mountHud, type Hud } from "./hud";
@@ -20,6 +21,48 @@ import type { FeatureViewHandle, ViewerHandle, ViewerMode, ViewerOptions } from 
 
 const rad = (deg: number) => (deg * Math.PI) / 180;
 const preventDefault = (e: Event) => e.preventDefault();
+
+// Neutral "fit to object" framing for a per-window feature splat — allowed
+// utility framing (a validation-view default; precise framing stays Kari's).
+// Gaussian splats routinely carry sparse outlier gaussians (and the lunar tile
+// a ~100 km skirt), so the raw bounding sphere zooms the subject to a speck; a
+// robust 90th-percentile radius around the median of the splat's own centers
+// frames the actual mass instead. Falls back to the bounding sphere if the
+// internal position buffer is unavailable (deps are exact-pinned @ 9.16.1).
+function frameCameraToSplat(cam: GroundPanCamera, splat: GaussianSplattingMesh, alphaOffsetDeg: number): void {
+  splat.computeWorldMatrix(true);
+  const wm = splat.getWorldMatrix();
+  let cx = 0, cy = 0, cz = 0, radius = 1;
+  const pos = (splat as unknown as { _splatPositions?: Float32Array })._splatPositions;
+  if (pos && pos.length >= 3) {
+    const n = pos.length / 3;
+    const step = Math.max(1, Math.floor(n / 8000));
+    const xs: number[] = [], ys: number[] = [], zs: number[] = [];
+    const v = new Vector3();
+    for (let i = 0; i < n; i += step) {
+      v.set(pos[i * 3], pos[i * 3 + 1], pos[i * 3 + 2]);
+      Vector3.TransformCoordinatesToRef(v, wm, v);
+      xs.push(v.x); ys.push(v.y); zs.push(v.z);
+    }
+    const median = (a: number[]) => { const s = a.slice().sort((p, q) => p - q); return s[s.length >> 1]; };
+    cx = median(xs); cy = median(ys); cz = median(zs);
+    const d = xs.map((x, k) => Math.hypot(x - cx, ys[k] - cy, zs[k] - cz)).sort((p, q) => p - q);
+    radius = d[Math.floor(d.length * 0.9)] || 1;
+  } else {
+    const bs = splat.getBoundingInfo().boundingSphere;
+    cx = bs.centerWorld.x; cy = bs.centerWorld.y; cz = bs.centerWorld.z; radius = bs.radiusWorld;
+  }
+  radius = Math.max(0.1, radius);
+  cam.setTarget(new Vector3(cx, cy, cz));
+  cam.radius = radius * 2.6;
+  cam.lowerRadiusLimit = radius * 0.3;
+  cam.upperRadiusLimit = radius * 10;
+  cam.minZ = Math.max(0.01, radius * 0.01);
+  cam.maxZ = radius * 200;
+  cam.fov = rad(45);
+  cam.alpha = -Math.PI / 2 + rad(alphaOffsetDeg);
+  cam.beta = rad(68);
+}
 
 export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
   const { canvas, concept, profile, hotspotLayer } = opts;
@@ -100,7 +143,16 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
     activeScene = next;
     mode = nextMode;
     engine.stopRenderLoop();
-    engine.runRenderLoop(() => next.render());
+    // Multi-view render: the views extension sets engine.activeView before each
+    // view's render pass, so render THAT view's camera scene. Feature windows
+    // with their own splat live in a separate scene and thus draw their own
+    // splat; the display canvas (view #0, no camera) and any hero-scene feature
+    // views fall back to `next` (the active hero/inspect scene) — unchanged.
+    const renderActiveView = () => {
+      const av = (engine as unknown as { activeView?: { camera?: { getScene(): Scene } | null } | null }).activeView;
+      (av?.camera?.getScene() ?? next).render();
+    };
+    engine.runRenderLoop(renderActiveView);
     // dispose the old scene only after the new one produced a frame, so the
     // switch never shows a black flash (flushPendingOld is idempotent)
     next.onAfterRenderObservable.addOnce(flushPendingOld);
@@ -249,9 +301,69 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
     hotspots = inspect.hotspots;
   };
 
+  // An Overview window that shows its OWN splat (concept feature scene_file):
+  // a standalone scene, auto-framed to the splat's bounds, rendered into this
+  // view canvas. Display-only — the single-input-owner model targets the hero
+  // scene, so per-splat windows don't take pointer control. The scene is torn
+  // down with the feature view (on scene swap / dispose).
+  const attachSplatFeatureView = (viewCanvas: HTMLCanvasElement, sogUrl: string, alphaOffsetDeg: number) => {
+    let featScene: Scene | null = null;
+    let camera: GroundPanCamera | null = null;
+    let view: { enabled: boolean } | null = null;
+    let enabled = true;
+    let killed = false;
+    viewCanvas.addEventListener("contextmenu", preventDefault);
+    void (async () => {
+      try {
+        const built = await buildFeatureSplatScene(engine, sogUrl, profile.useSogTextures);
+        if (disposed || killed) {
+          built.scene.dispose();
+          return;
+        }
+        featScene = built.scene;
+        const cam = new GroundPanCamera(
+          `feature-splat-${featureViews.length}`, -Math.PI / 2, 1.1, 9, Vector3.Zero(), featScene);
+        if (built.splat) {
+          frameCameraToSplat(cam, built.splat, alphaOffsetDeg);
+        } else {
+          cam.fov = rad(45);
+          cam.alpha = -Math.PI / 2 + rad(alphaOffsetDeg);
+          cam.beta = rad(68);
+        }
+        camera = cam;
+        view = engine.registerView(viewCanvas, cam);
+        view.enabled = enabled;
+      } catch (err) {
+        console.error(`feature splat failed (${sogUrl})`, err);
+      }
+    })();
+    const fv = {
+      setEnabled(e: boolean) {
+        enabled = e;
+        if (view) view.enabled = e;
+      },
+      dispose() {
+        const i = featureViews.indexOf(fv);
+        if (i >= 0) featureViews.splice(i, 1);
+        fv._teardown();
+      },
+      _teardown() {
+        killed = true;
+        viewCanvas.removeEventListener("contextmenu", preventDefault);
+        engine.unRegisterView(viewCanvas);
+        camera?.dispose();
+        featScene?.dispose();
+        featScene = null;
+      },
+    };
+    featureViews.push(fv);
+    return fv;
+  };
+
   const attachFeatureView: ViewerHandle["attachFeatureView"] = (viewCanvas, viewOpts) => {
     if (disposed) throw new Error("viewer disposed");
     if (mode !== "hero" || !activeScene) throw new Error("feature views attach to the live hero scene");
+    if (viewOpts?.sogUrl) return attachSplatFeatureView(viewCanvas, viewOpts.sogUrl, viewOpts.alphaOffsetDeg ?? 0);
     const scene = activeScene;
 
     const camera = new GroundPanCamera(

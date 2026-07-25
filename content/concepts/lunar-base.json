@@ -182,6 +182,7 @@
         "title": "South-polar ridge",
         "text": "[sample \u2014 an elevated ridge site trades the 29.5-day lunar day-night cycle for near-continuous low-angle sunlight, with permanently shadowed craters in rover range]",
         "view_angle_deg": 35,
+        "scene_file": null,
         "controls": {
           "rotate_speed": 1.0,
           "move_speed": 1.0,
@@ -194,6 +195,7 @@
         "title": "Mobility & logistics",
         "text": "[sample \u2014 regolith dust is electrostatically charged and abrasive; airlock and radiator placement in the scene reflects dust-mitigation spacing]",
         "view_angle_deg": -50,
+        "scene_file": "assets/splats/starshop_hsl_v001.sog",
         "controls": {
           "rotate_speed": 1.0,
           "move_speed": 1.0,
@@ -206,6 +208,7 @@
         "title": "Orbital relay",
         "text": "[sample \u2014 one-way light time to Earth is ~1.3 s; a relay covers far-side and shadowed-region operations in near-real time]",
         "view_angle_deg": 150,
+        "scene_file": "assets/splats/lunar-base-hero-d.sog",
         "controls": {
           "rotate_speed": 1.0,
           "move_speed": 1.0,
@@ -218,6 +221,7 @@
         "title": "Regolith overburden",
         "text": "[sample \u2014 a few meters of regolith over the habitat modules attenuates galactic cosmic radiation for long-duration stays]",
         "view_angle_deg": -120,
+        "scene_file": "assets/splats/starshop_hsl_v001.sog",
         "controls": {
           "rotate_speed": 1.0,
           "move_speed": 1.0,

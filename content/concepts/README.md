@@ -128,6 +128,15 @@ text-only popups).
   Each has `label` (mono index line), `title`, `text`, and
   `view_angle_deg` — how many degrees that window's camera is rotated
   around the scene compared to the main view.
+- `features[].scene_file` *(optional)* — show a **different Gaussian splat** in
+  that window instead of the hero splat. Give a path like the live-view
+  `scene_file` (e.g. `"assets/splats/starshop_hsl_v001.sog"`); the window loads
+  that splat in its own view and auto-fits the camera to it, rotated by
+  `view_angle_deg`. Add `scene_file_mobile` for a lighter tier (falls back to
+  `scene_file`). Omit or set `null` to keep the default: a view of the hero
+  splat. Each distinct splat is a full download + GPU cost, so only add what you
+  need. The auto-fit is a neutral framing — tell me if a window needs a
+  specific look and I'll wire per-window framing.
 
 ### `article` — the free-form "Specifications" section
 A list of blocks, rendered in order. Three kinds:
