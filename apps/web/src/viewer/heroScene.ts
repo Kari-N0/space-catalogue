@@ -54,13 +54,23 @@ async function fillHeroScene(
   // (see groundPanCamera.ts for why stock panning fails at km scale)
   const camera = new GroundPanCamera("hero", -Math.PI / 2, 1.1, 9, Vector3.Zero(), scene);
   // Input mapping (deliberate — Babylon 9.16.1 defaults made explicit):
-  //   left/middle drag = rotate · right drag or ctrl+left drag = pan (only
+  //   left drag = rotate · right/middle drag or ctrl+left drag = pan (only
   //   when the envelope grants pan_m; applyControls sets panningSensibility 0
   //   otherwise) · wheel/pinch = zoom. noPreventDefault=false: wheel over the
   //   canvas must zoom, not scroll the (scrollable) concept page behind it.
   //   The browser context menu on right-drag is suppressed in loadViewer
   //   (canvas) and hotspots.ts (pin buttons).
   camera.attachControl(false, /* useCtrlForPanning */ true, /* panningMouseButton */ 2);
+  // Middle-button (scroll-wheel press) drag also pans, matching the feature
+  // overview windows — one consistent control scheme across every splat window.
+  // Babylon's default input map leaves button 1 unmapped (it would trigger the
+  // browser's middle-click autoscroll instead; that is suppressed on the canvas
+  // in loadViewer.ts). Documented cast: `input` is declared on the concrete
+  // ArcRotateCameraMovement, not the base CameraMovement type camera.movement
+  // is typed as. Deps exact-pinned (@babylonjs/core 9.16.1) — revisit on a bump.
+  (camera.movement as unknown as {
+    input: { addEntry(e: { source: "pointer"; button: number; interaction: string }): void };
+  }).input.addEntry({ source: "pointer", button: 1, interaction: "pan" });
   if (envelope) applyEnvelope(camera, envelope);
 
   const splat = await importSplatIntoScene(scene, sogUrl, useSogTextures, onProgress);

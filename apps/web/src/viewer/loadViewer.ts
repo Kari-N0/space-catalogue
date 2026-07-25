@@ -82,6 +82,11 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
   const { engine, kind } = bundle;
   // right-drag pans (when the envelope allows it) — the browser menu must not
   canvas.addEventListener("contextmenu", preventDefault);
+  // middle-button (scroll-wheel press) drag pans the hero (mapped in
+  // heroScene.ts) — kill Chrome's middle-click autoscroll, which starts on the
+  // native mousedown and is NOT covered by Babylon's pointer-event preventDefault.
+  const onMainMouseDown = (e: MouseEvent) => { if (e.button === 1) e.preventDefault(); };
+  canvas.addEventListener("mousedown", onMainMouseDown);
   // hovering the main canvas reclaims input from any feature view
   const onMainEnter = () => {
     if (currentInput && currentInput.canvas !== canvas && activeScene && mode === "hero") {
@@ -556,6 +561,7 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
       removeEventListener("pagehide", onPageHide);
       document.removeEventListener("visibilitychange", onVisibility);
       canvas.removeEventListener("contextmenu", preventDefault);
+      canvas.removeEventListener("mousedown", onMainMouseDown);
       canvas.removeEventListener("pointerenter", onMainEnter);
       stopSceneExtras();
       hud?.dispose();
