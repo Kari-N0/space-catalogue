@@ -5,17 +5,17 @@
   "footer_label": "Concept 001",
   "hero": {
     "label": "Concept 001",
-    "status": "In Development",
+    "status": "Proposal",
     "title_line_1": "Artemis",
-    "title_line_2": "Lunar Base",
-    "era_line": "Post-Artemis IV buildout, ~2030\u20132035",
-    "button_text": "Enter 3D",
+    "title_line_2": "Moon Base",
+    "era_line": "2032 \u2014 de Gerlache Crater Rim Outpost",
+    "button_text": "Explore in 3D",
     "video": "assets/placeholders/rerender.mp4",
     "poster_image": "assets/placeholders/moon_site_image_placeholder.webp"
   },
   "live_view": {
-    "heading": "Live View",
-    "note": "[Live placeholder scene \u2014 drag to orbit, right-drag to move, scroll to zoom; pins, framing and copy are samples]",
+    "heading": "3D View",
+    "note": "Navigation \u2014 Drag to orbit, Right-drag to pan, Scroll to zoom",
     "scene_file": "assets/splats/lunar_base_v005-d.sog",
     "scene_file_mobile": "assets/splats/lunar-base-hero-m.sog",
     "camera": {
@@ -174,8 +174,21 @@
     ]
   },
   "overview": {
-    "heading": "Overview",
-    "intro": "[sample copy \u2014 content in production] A crewed surface habitat cluster near the lunar south pole, built out in the years following Artemis IV. [sample copy \u2014 the final summary will follow the scene bible and cover habitat modules, power, and surface logistics.]",
+    "heading": "Closer Look",
+    "intro_blocks": [
+      {
+        "type": "paragraph",
+        "text": "Four resources are required for a camp to become a permanent settlement:"
+      },
+      {
+        "type": "list",
+        "items": ["Oxygen", "Water", "Energy", "Access to Earth"]
+      },
+      {
+        "type": "paragraph",
+        "text": "Oxygen is breathing air for the crew and propellant for the vehicles. Water is for life — and, split by current, for fuel. Energy, both solar and fission, is the currency that pays for extracting the first two. And access to Earth carries crew and cargo both ways — the lifeline the other three are slowly working to make optional."
+      }
+    ],
     "features": [
       {
         "label": "F_01 \u2014 Site",

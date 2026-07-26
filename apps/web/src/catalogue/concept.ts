@@ -115,6 +115,7 @@ export interface PageFeature {
 export type ArticleBlock =
   | { type: "chapter"; text: string }
   | { type: "paragraph"; text: string }
+  | { type: "list"; items: string[] }
   | { type: "image"; file: string; caption: string };
 
 export interface PageDoc {
@@ -122,7 +123,7 @@ export interface PageDoc {
   page_title: string;
   hero: PageHero;
   live_view: { heading: string; note: string };
-  overview: { heading: string; intro: string; features: PageFeature[] };
+  overview: { heading: string; intro: string; intro_blocks: ArticleBlock[]; features: PageFeature[] };
   article: { heading: string; blocks: ArticleBlock[] };
   sources: { heading: string; items: { label: string; text: string }[] };
   signup: {
@@ -299,6 +300,9 @@ function parseArticleBlocks(v: unknown): ArticleBlock[] {
     const b = obj(raw);
     if (b.type === "chapter" || b.type === "paragraph") {
       blocks.push({ type: b.type, text: str(b.text) });
+    } else if (b.type === "list" && Array.isArray(b.items)) {
+      const items = b.items.filter((x): x is string => typeof x === "string");
+      if (items.length > 0) blocks.push({ type: "list", items });
     } else if (b.type === "image" && typeof b.file === "string") {
       blocks.push({ type: "image", file: b.file, caption: str(b.caption) });
     }
@@ -340,6 +344,8 @@ export function parseConceptPage(raw: unknown): ConceptPage {
     overview: {
       heading: str(overview.heading, "Overview"),
       intro: str(overview.intro),
+      // structured intro (paragraph/list blocks); falls back to `intro` string
+      intro_blocks: parseArticleBlocks(overview.intro_blocks),
       features: Array.isArray(overview.features)
         ? overview.features.map((f, i) => {
             const feat = obj(f);

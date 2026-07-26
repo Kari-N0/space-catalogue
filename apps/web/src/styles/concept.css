@@ -490,6 +490,13 @@ a:hover { color: var(--color-text-emphasis); }
   max-width: 62ch;
   margin-bottom: 56px;
 }
+/* div variant: intro_blocks (paragraph/list) render as children */
+.overview-lead p {
+  margin: 0 0 16px;
+}
+.overview-lead > :last-child {
+  margin-bottom: 0;
+}
 .feature {
   display: grid;
   grid-template-columns: 1fr;
@@ -592,6 +599,35 @@ a:hover { color: var(--color-text-emphasis); }
   text-transform: uppercase;
   letter-spacing: var(--tracking-label);
   color: var(--color-text-secondary);
+}
+
+/* -- list block (article + overview intro) ------------------------------ */
+/* Round filled bullet in the muted label color, centered on the first text
+   line (absolute-positioned so the circle sits mid-line regardless of item
+   font size, and every item's text left-edge lines up). */
+.block-list {
+  list-style: none;
+  margin: 20px 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+.block-list li {
+  position: relative;
+  padding-left: 1.5em;
+  color: var(--color-text);
+  line-height: var(--leading-body);
+}
+.block-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.75em; /* center of the first line (line-height 1.5 ÷ 2) */
+  transform: translateY(-50%);
+  width: 0.42em;
+  height: 0.42em;
+  border-radius: 50%;
+  background: var(--color-text-secondary);
 }
 
 /* -- sources ------------------------------------------------------------ */

@@ -167,7 +167,14 @@ function renderOverview(data: ConceptPage): {
 } {
   const { overview } = data.page;
   const { root, container } = section("kicker-overview", overview.heading);
-  container.appendChild(el("p", "overview-lead", overview.intro));
+  // structured intro (paragraph/list blocks) when authored; else the plain lead
+  if (overview.intro_blocks.length > 0) {
+    const lead = el("div", "overview-lead");
+    for (const block of overview.intro_blocks) lead.appendChild(renderArticleBlock(block));
+    container.appendChild(lead);
+  } else if (overview.intro) {
+    container.appendChild(el("p", "overview-lead", overview.intro));
+  }
 
   const featureCanvases: HTMLCanvasElement[] = [];
   const featureOverlays: HTMLElement[] = [];
@@ -204,6 +211,11 @@ function renderArticle(data: ConceptPage): HTMLElement {
 function renderArticleBlock(block: ArticleBlock): HTMLElement {
   if (block.type === "chapter") return el("h3", undefined, block.text);
   if (block.type === "paragraph") return el("p", undefined, block.text);
+  if (block.type === "list") {
+    const ul = el("ul", "block-list");
+    for (const item of block.items) ul.appendChild(el("li", undefined, item));
+    return ul;
+  }
   const figure = el("figure");
   const img = el("img");
   img.src = assetUrl(block.file);

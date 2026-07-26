@@ -123,7 +123,19 @@ Clicking a pin also glides the camera to it. `image` is optional (`null` for
 text-only popups).
 
 ### `overview` — intro text + the live 3D windows
-- `intro` — the lead paragraph.
+- `intro` — the lead paragraph (plain string). Used only when `intro_blocks`
+  is absent.
+- `intro_blocks` *(optional)* — a structured lead: an array of `paragraph` and
+  `list` blocks (same shape as the `article` blocks above), rendered in order.
+  When present it **replaces** `intro`. Use it when the lead needs more than one
+  paragraph or an enumerated list, e.g.:
+  ```json
+  "intro_blocks": [
+    { "type": "paragraph", "text": "Four resources make a camp permanent:" },
+    { "type": "list", "items": ["Oxygen", "Water", "Energy", "Access to Earth"] },
+    { "type": "paragraph", "text": "…" }
+  ]
+  ```
 - `features` — one entry per row (any count works; they alternate sides).
   Each has `label` (mono index line), `title`, `text`, and
   `view_angle_deg` — how many degrees that window's camera is rotated
@@ -156,13 +168,16 @@ rename to `camera` / `pins` to start authoring. The auto-fit is a neutral
 utility framing; the `camera` block is yours to set.
 
 ### `article` — the free-form "Specifications" section
-A list of blocks, rendered in order. Three kinds:
+A list of blocks, rendered in order. Four kinds:
 ```json
 { "type": "chapter",   "text": "A heading" }
 { "type": "paragraph", "text": "Running text…" }
+{ "type": "list",      "items": ["First point", "Second point", "Third point"] }
 { "type": "image",     "file": "assets/…/fig.webp", "caption": "FIG_01 — caption" }
 ```
-Write as many chapters/paragraphs/images as you like, in any order.
+Write as many chapters/paragraphs/lists/images as you like, in any order. A
+`list` renders with round bullet markers in the brand's muted label color.
+Empty/non-string items are dropped.
 
 ### `sources`
 `items`: list of `{ "label": "SRC_01", "text": "citation…" }` rows.
