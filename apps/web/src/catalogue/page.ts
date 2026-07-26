@@ -273,6 +273,19 @@ function renderSources(data: ConceptPage): HTMLElement {
   return root;
 }
 
+function renderContact(data: ConceptPage): HTMLElement | null {
+  const { contact } = data.page;
+  if (!contact.email) return null;
+  // vidro.fi contact treatment: uppercase tracked kicker + large mailto with a
+  // trailing arrow (BRAND.md §5 secondary-action language)
+  const { root, container } = section("kicker-contact", contact.label);
+  const link = el("a", "contact-link", contact.email);
+  link.href = `mailto:${contact.email}`;
+  link.append(el("span", "contact-arrow", "→"));
+  container.appendChild(link);
+  return root;
+}
+
 function renderSignup(data: ConceptPage): HTMLElement {
   const { signup } = data.page;
   const root = el("section", "notify");
@@ -437,7 +450,7 @@ async function boot(): Promise<void> {
     if (!/^[a-z0-9-]+$/i.test(id)) throw new Error(`invalid concept id "${id}"`);
     const data = await loadConceptPage(`${import.meta.env.BASE_URL}content/concepts/${id}.json`);
 
-    document.title = `${data.page.page_title} — Space Engineering Catalogue`;
+    document.title = `${data.page.page_title} · FarsideLab`;
     const footerLabel = document.getElementById("footer-label");
     if (footerLabel) footerLabel.textContent = data.page.footer_label;
 
@@ -447,8 +460,13 @@ async function boot(): Promise<void> {
     const article = renderArticle(data);
     const sources = renderSources(data);
     const signup = renderSignup(data);
+    const contact = renderContact(data);
 
-    app.replaceChildren(hero, live.root, overview.root, article, sources, signup);
+    app.replaceChildren(
+      ...[hero, live.root, overview.root, article, sources, signup, contact].filter(
+        (n): n is HTMLElement => n !== null,
+      ),
+    );
     wireViewer(data, live.refs, overview.featureCanvases, overview.featureOverlays);
   } catch (err) {
     if (pageStatus) pageStatus.textContent = "could not load this concept — check the JSON (see content/concepts/README.md)";

@@ -169,6 +169,11 @@ a:hover { color: var(--color-text-emphasis); }
 }
 .vidro-credit:hover { color: var(--color-text); }
 .vidro-credit img { height: 20px; width: auto; }
+/* narrow screens: keep the credit on one line — logo + "Visuals by Vidro";
+   the full "Kari Nöjd | …" lockup returns from 640px up */
+@media (max-width: 639px) {
+  .credit-name { display: none; }
+}
 
 /* -- hero (Mockup A composition: left-aligned, bottom-anchored) ------ */
 
@@ -745,6 +750,33 @@ a:hover { color: var(--color-text-emphasis); }
   text-transform: uppercase;
   letter-spacing: var(--tracking-nav);
 }
+.footer-fineprint {
+  margin-top: 32px;
+  font-size: var(--text-ref);
+  color: var(--color-text-secondary);
+  letter-spacing: var(--tracking-nav);
+}
+
+/* -- contact band (vidro.fi treatment: kicker + large mailto with arrow;
+      centered per Kari 2026-07-27) -- */
+section[aria-labelledby="kicker-contact"] .container { text-align: center; }
+.contact-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 16px;
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  font-weight: var(--weight-display);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-text-emphasis);
+  transition: color var(--dur-base) var(--ease-brand);
+}
+.contact-link:hover { color: var(--chip-blue-text); }
+.contact-arrow {
+  font-family: var(--font-body);
+  transition: transform var(--dur-base) var(--ease-brand);
+}
+.contact-link:hover .contact-arrow { transform: translateX(6px); }
 .footer-meta {
   font-family: var(--font-mono);
   font-size: var(--text-ref);

@@ -1,14 +1,14 @@
 {
   "_readme": "This file drives the whole concept page \u2014 edit text/images here, no code needed. Field guide with examples: content/concepts/README.md. View at /concept/?id=lunar-base",
   "id": "lunar-base",
-  "page_title": "Concept 001: Artemis Lunar Base",
+  "page_title": "Concept 001: Moon Base — de Gerlache Crater",
   "footer_label": "Concept 001",
   "hero": {
     "label": "Concept 001",
     "status": "Proposal",
-    "title_line_1": "Artemis",
-    "title_line_2": "Moon Base",
-    "era_line": "2032 \u2014 de Gerlache Crater Rim Outpost",
+    "title_line_1": "Moon Base",
+    "title_line_2": "de Gerlache Crater",
+    "era_line": "2032 \u2014 The Artemis Era",
     "button_text": "Explore in 3D",
     "video": "assets/placeholders/rerender.mp4",
     "poster_image": "assets/placeholders/moon_site_image_placeholder.webp"
@@ -369,10 +369,14 @@
   "signup": {
     "kicker": "Notify",
     "heading_line_1": "Follow the",
-    "heading_line_2": "Buildout",
+    "heading_line_2": "New Concepts",
     "label": "Email Address",
     "placeholder": "you@example.com",
     "button": "Notify Me",
-    "note": "Activates at launch \u2014 no data is collected yet"
+    "note": "One email when a new concept or update goes live. Nothing else."
+  },
+  "contact": {
+    "label": "Contact",
+    "email": "kari.nojd@vidro.fi"
   }
 }

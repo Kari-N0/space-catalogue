@@ -151,6 +151,8 @@ export interface PageDoc {
     button: string;
     note: string;
   };
+  /** Contact band under the signup (vidro.fi treatment); empty email = section omitted. */
+  contact: { label: string; email: string };
   footer_label: string;
 }
 
@@ -397,6 +399,10 @@ export function parseConceptPage(raw: unknown): ConceptPage {
       items: Array.isArray(sources.items)
         ? sources.items.map((s) => ({ label: str(obj(s).label), text: str(obj(s).text) }))
         : [],
+    },
+    contact: {
+      label: str(obj(c.contact).label, "Contact"),
+      email: str(obj(c.contact).email),
     },
     signup: {
       kicker: str(signup.kicker, "Notify"),
