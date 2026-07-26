@@ -136,10 +136,14 @@ text-only popups).
     { "type": "paragraph", "text": "…" }
   ]
   ```
-- `features` — one entry per row (any count works; they alternate sides).
+- `features` — one entry per row. **Any number works** (1, 2, 5, …) — add or
+  remove entries freely; they alternate sides automatically.
   Each has `label` (mono index line), `title`, `text`, and
   `view_angle_deg` — how many degrees that window's camera is rotated
   around the scene compared to the main view.
+- `features[].chip` *(optional)* — the small badge overlaid on that 3D window
+  (shown uppercase). Each window is independent. Omit it for the default
+  `"Live — Sample Scene"`; set `""` (empty) to hide the badge on that window.
 - `features[].scene_file` *(optional)* — show a **different Gaussian splat** in
   that window instead of the hero splat. Give a path like the live-view
   `scene_file` (e.g. `"assets/splats/starshop_hsl_v001.sog"`); the window loads

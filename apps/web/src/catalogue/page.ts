@@ -186,7 +186,9 @@ function renderOverview(data: ConceptPage): {
     // POI overlay: the viewer fills it with hotspot pins (pointer-events:none
     // so it never blocks orbit/pan; the pins themselves re-enable it)
     const overlay = el("div", "overlay feature-overlay");
-    media.append(canvas, el("span", "scrim-chip", "Live — Sample Scene"), overlay);
+    media.append(canvas);
+    if (f.chip) media.append(el("span", "scrim-chip", f.chip)); // empty chip = no badge
+    media.append(overlay);
     const copy = el("div", "feature-copy");
     copy.append(el("span", "idx", f.label), el("h3", undefined, f.title), el("p", undefined, f.text));
     row.append(media, copy);

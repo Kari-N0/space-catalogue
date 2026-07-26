@@ -86,6 +86,12 @@ export interface PageFeature {
   label: string;
   title: string;
   text: string;
+  /**
+   * Small badge overlaid on the 3D window (`chip` in the JSON, displayed
+   * uppercase). Absent → the default "Live — Sample Scene"; an empty string
+   * hides the badge entirely.
+   */
+  chip: string;
   view_angle_deg: number;
   /** Camera feel for this window — defaults to the main view's controls. */
   controls: CameraControls;
@@ -353,6 +359,8 @@ export function parseConceptPage(raw: unknown): ConceptPage {
               label: str(feat.label),
               title: str(feat.title),
               text: str(feat.text),
+              // absent → default badge; explicit "" → hide it
+              chip: typeof feat.chip === "string" ? feat.chip : "Live — Sample Scene",
               view_angle_deg: num(feat.view_angle_deg, 0),
               controls: parseControls(feat.controls, mainControls),
               scene_file: str(feat.scene_file) || null,

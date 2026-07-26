@@ -186,14 +186,15 @@
       },
       {
         "type": "paragraph",
-        "text": "Oxygen is breathing air for the crew and propellant for the vehicles. Water is for life — and, split by current, for fuel. Energy, both solar and fission, is the currency that pays for extracting the first two. And access to Earth carries crew and cargo both ways — the lifeline the other three are slowly working to make optional."
+        "text": "Oxygen provides breathable air for the crew and propellant for the vehicles. Water sustains life and, when split by electricity, provides fuel. Energy, both solar and nuclear fission, is the currency that pays for extracting the first two. Access to Earth allows the transport of crew and cargo, the lifeline the other three are slowly working to make optional."
       }
     ],
     "features": [
       {
         "label": "F_01 \u2014 Site",
-        "title": "South-polar ridge",
-        "text": "[sample \u2014 an elevated ridge site trades the 29.5-day lunar day-night cycle for near-continuous low-angle sunlight, with permanently shadowed craters in rover range]",
+        "title": "de Gerlache Crater Rim Outpost",
+        "text": "The outpost sits directly on the crater rim. The crest holds near-continuous sunlight for power, and a few hundred meters away, a small cold trap offers permanently shadowed ground for the first water-harvesting tests. Farther out, in rover range, the floor of de Gerlache itself: a vast darkness unbroken for roughly two billion years, where the large ice deposits are believed to wait.",
+        "chip": "3D \u2014 Location",
         "view_angle_deg": 35,
         "scene_file": null,
         "controls": {
@@ -216,9 +217,10 @@
         ]
       },
       {
-        "label": "F_02 \u2014 Surface Ops",
-        "title": "Mobility & logistics",
-        "text": "[sample \u2014 regolith dust is electrostatically charged and abrasive; airlock and radiator placement in the scene reflects dust-mitigation spacing]",
+        "label": "F_02 \u2014 Landing Zone 1",
+        "title": "The Landing Pad \u2014 ISRU Experiment",
+        "text": "This pad is built from the moon ground itself by the base's own ISRU (In-Situ Resource Utilization) machinery. An excavator grades the site, then focused solar heat sinters the regolith at around 1,100 \u00B0C, fusing loose dust into a hard ceramic surface with no water, no cement, and no imports. The result is the port's protective architecture, a solid pad that kills the dust a landing would otherwise throw at bullet-like speeds, ringed by a berm to catch what the engines kick loose. On it stands Blue Origin's Mk2, the base's routine ride for crew and cargo.",
+        "chip": "3D \u2014 Landing Zone 1",
         "view_angle_deg": -50,
         "scene_file": "assets/splats/starshop_hsl_v001.sog",
         "controls": {
@@ -236,9 +238,10 @@
         ]
       },
       {
-        "label": "F_03 \u2014 Comms",
-        "title": "Orbital relay",
-        "text": "[sample \u2014 one-way light time to Earth is ~1.3 s; a relay covers far-side and shadowed-region operations in near-real time]",
+        "label": "F_03 \u2014 Landing Zone 2",
+        "title": "Heavy Cargo",
+        "text": "SpaceX's Starship HLS (Human Landing System) delivers up to 100 tonnes in a single landing, entirely changing the math of building a lunar outpost. It stands two kilometers from the base on open ground, where distance itself is the safety buffer. Cargo rides an elevator down the hull from a bay about 30 meters up, making the tallest structure on the Moon also its freight terminal.",
+        "chip": "3D \u2014 Landing Zone 2",
         "view_angle_deg": 150,
         "scene_file": "assets/splats/lunar-base-hero-d.sog",
         "controls": {
@@ -250,9 +253,10 @@
         "pins": []
       },
       {
-        "label": "F_04 \u2014 Shielding",
-        "title": "Regolith overburden",
-        "text": "[sample \u2014 a few meters of regolith over the habitat modules attenuates galactic cosmic radiation for long-duration stays]",
+        "label": "F_04 \u2014 Operations Hub",
+        "title": "Habitat, Power, and Research",
+        "text": "The habitat cluster rises at the center of the base, its vertical solar wings tracking a sun that never climbs. Daylight power is solar, while night and contingency power come from a fission unit parked a kilometer up-slope, close enough to cable, far enough to fail safely. Around the habitat, the base's working machinery spreads across the crest: the water-harvesting experiment at a nearby cold trap, and the plant that extracts oxygen from the lunar regolith.",
+        "chip": "3D \u2014 Operations Hub",
         "view_angle_deg": -120,
         "scene_file": "assets/splats/starshop_hsl_v001.sog",
         "controls": {
