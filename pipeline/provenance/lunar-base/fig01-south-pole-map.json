@@ -1,0 +1,23 @@
+{
+  "type": "reference",
+  "used_for": "FIG_01 'Map of the Moon's South Pole with the de Gerlache crater rim highlighted' (Making Of article, concept lunar-base). DEM -> dem_to_displacement.py -> Blender ortho map render.",
+  "accessed": "2026-07-26",
+  "publisher": "NASA PDS Geosciences Node (LRO LOLA GDR archive, imbrium.mit.edu)",
+  "usage_terms": "US Government work / public domain (NASA PDS policy: free, unrestricted); attribution requested",
+  "citation": "LRO LOLA Gridded Data Record LDEM_75S_60M, V2.0, polar stereographic 60 m/px; Smith, D.E., et al. (2010), 'The Lunar Orbiter Laser Altimeter Investigation on the Lunar Reconnaissance Orbiter Mission', Space Science Reviews 150, 209-241, doi:10.1007/s11214-009-9512-y. Archive volume LRO-L-LOLA-4-GDR-V1.0 (NASA/GSFC/MIT).",
+  "product_page": "https://imbrium.mit.edu/DATA/LOLA_GDR/POLAR/IMG/ (LDEM_75S_60M.IMG + .LBL)",
+  "entries": [
+    {
+      "source": "https://imbrium.mit.edu/DATA/LOLA_GDR/POLAR/IMG/LDEM_75S_60M.IMG (HTTP byte range 151107680-308741503 = grid rows 4955..10123 x full width; whole file 443.5 MB not retained as a unit)",
+      "sha256": "7724861dd7a4ab369233d6f6c872c56d394043b1c8c14641493bbec8b2467894 (row-block raw download)",
+      "product": "LDEM_75S_60M V2.0 - int16 LSB, 0.5 m scaling, offset radius 1737.4 km, 15248x15248 @ 60 m/px, polar stereographic CENTER_LATITUDE -90, LINE/SAMPLE_PROJECTION_OFFSET 7623.5 (label kept: assets_src/lunar-base/figures/fig01/dem/LDEM_75S_60M.LBL)",
+      "notes": "FIG_01 coverage box approved by Kari 2026-07-26: x [-145, +95] km, y [-150, +160] km from the pole (0E up), snapped outward to pixel grid -> crop cols 5205..9206 = 4002x5169 px, bounds x [-145080, 95040] y [-150060, 160080] m. Crop script: assets_src/lunar-base/figures/fig01/dem/crop_to_geotiff.py -> fig01_dem60.tif (float32 m, sha256 62f46068a794fc07cd574d0ecbdc96ea53ad132dc3261dbb008c15d8aaf53c1b) -> dem_to_displacement.py -> fig01_dem60.exr (+ .meta.json). Elevation -5500..+6799 m vs 1737.4 km sphere, 0 nodata px. Georeferencing verified visually: numpy hillshade (dem/hillshade_check.png) matches the labeled LOLA reference map crater-for-crater (de Gerlache, Shackleton, Sverdrup, Shoemaker, Faustini, Cabeus, Malapert massif). This DEM product is the data citation behind FIG_01."
+    },
+    {
+      "source": "assets_src/lunar-base/figures/fig01/fig01_south_pole_map.blend (Blender 5.1.2, Cycles true displacement at 1:1 meter scale, ortho top-down, polar stereographic scene coords; DEM EXR + Space Grotesk 500 packed)",
+      "sha256": "6f2cb4de0142170cdeddf3d83f09e82e7c154cff976da650e1a58fece4591b21 (fig01_map_blender_render.png, 2000x2000, final render + composition by Kari 2026-07-26)",
+      "product": "FIG_01 final render + web export",
+      "notes": "Marker/georeference gate passed 2026-07-26: markers computed in-scene from IAU lat/lon (de Gerlache 88.5S/87W, Shackleton, Malapert, Cabeus, Sverdrup) land on their DEM features; de Gerlache rim accent + MOON BASE site marker at projected (-31157.5, +10117.5) m (Site11 tile center + BLK layout offset, NE rim). Web export: 1500x1500 WebP q80 -> apps/web/public/assets/figures/fig01-south-pole-map.webp (sha256 a524c1ad8ecb36c7c70f3bc8c5b44d327a7233217881c6e2ecb2bf482fd38e34, 163 KB), referenced by content/concepts/lunar-base.json article FIG_01. CITATION for the figure: LOLA GDR LDEM_75S_60M V2.0 (see entry above); credit line 'NASA/GSFC/MIT LOLA' applies."
+    }
+  ]
+}

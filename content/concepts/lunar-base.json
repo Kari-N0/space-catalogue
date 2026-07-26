@@ -270,45 +270,78 @@
     ]
   },
   "article": {
-    "heading": "Specifications",
+    "heading": "Article",
     "blocks": [
       {
         "type": "chapter",
-        "text": "[sample chapter] Habitat architecture"
+        "text": "Building a Moon Base That Doesn't Exist Yet"
+      },
+      {
+        "type": "chapter",
+        "text": "Why I Built This"
       },
       {
         "type": "paragraph",
-        "text": "[sample copy \u2014 this section is a free-form editorial area: write blog-style chapters of any length here, with headings, paragraphs and images between chapters as needed. The template renders whatever this file provides.]"
+        "text": "I have tried looking for a picture or a video of what a real lunar base would actually look like, but I haven't found one. There are artist impressions, and there are NASA documents, but the impressions ignore the engineering, and the documents have no pictures worth staring at. Nothing lets you stand on the actual ground, under the actual light, next to hardware that follows the actual published designs. So I decided to build it myself: a Moon base you can look around in your browser, where every structure traces to a real design and every shadow is computed, not painted. This page is the result, and this article explains how it was made."
+      },
+      {
+        "type": "chapter",
+        "text": "Real Ground First"
       },
       {
         "type": "paragraph",
-        "text": "[sample copy \u2014 a second paragraph demonstrating running text rhythm. The pressurized modules arrive as integrated lander payloads and are connected by short tunnels; the regolith-shielded core hosts crew quarters and the radiation shelter.]"
+        "text": "The terrain under this base is not sculpted by hand. It uses real Moon DEM (Digital Elevation Model) data from NASA. I started from NASA's laser altimetry of the lunar South Pole, at five meters per pixel, and kept it at true scale. Then I let the data choose the site, with the help of Claude Code and a Blender MCP connection. Hundreds of candidate positions were scored on slope, sunlight, and distance to shadowed ice, and the analysis produced a discovery that shaped everything that followed: the flattest ground typically lay in basins that a full lighting simulation proved dark at every sun angle. On polar terrain, the easy ground and the lit ground are almost never the same ground. From a short list of viable candidates, I hand-picked the rim of de Gerlache Crater."
+      },
+      {
+        "type": "image",
+        "file": "assets/figures/fig01-south-pole-map.webp",
+        "caption": "Map of the Moon's South Pole with the de Gerlache crater rim highlighted."
+      },
+      {
+        "type": "chapter",
+        "text": "The Light Is the Location"
+      },
+      {
+        "type": "paragraph",
+        "text": "Lunar polar light is unique, and I didn't want to fake it. The sun here never rises. It circles, never climbing more than a hand's width above the horizon, dragging kilometer-long shadows around the base like the hand of a slow clock. I lit the scene using the correct solar intensity and geometry. The only compromise I made was adding a little ambient light to the shadowed areas, standing in for the faint real-world scatter from sunlit slopes, so you can still identify some terrain features hidden inside them."
       },
       {
         "type": "image",
         "file": "assets/placeholders/moon_site_image_placeholder.webp",
-        "caption": "FIG_01 \u2014 [sample caption: site plan render]"
+        "caption": "The de Gerlache Crater. Animation of the monthly sunlight rotation."
       },
       {
         "type": "chapter",
-        "text": "[sample chapter] Power & thermal"
+        "text": "From Path Tracing to Interactive Web Experience"
       },
       {
         "type": "paragraph",
-        "text": "[sample copy \u2014 solar arrays track the low polar sun on short masts; a fission surface power unit a kilometre up-slope provides night and contingency power. Radiators run cool on the permanently shaded side of the berm.]"
+        "text": "The biggest technical challenge for me was making cinematic, interactive lighting run smoothly in a web browser on both laptops and phones. With typical ray-tracing techniques, cinematic light cannot be computed efficiently on a phone at high frame rates. Additionally, file sizes become far too large when using high-poly models and high-resolution textures. Gaussian splatting turned out to be the perfect solution for both bottlenecks. The scene is path-traced in Blender's Cycles at full physical accuracy, then captured into 3D Gaussian splats, a technique that bakes the finished light into millions of tiny volumetric points a browser can render in real time."
       },
       {
         "type": "image",
         "file": "assets/placeholders/rover_image_placeholder.webp",
-        "caption": "FIG_02 \u2014 [sample caption: logistics rover]"
+        "caption": "From data to scene. elevation model, clay render, final light, capture rig."
       },
       {
         "type": "chapter",
-        "text": "[sample chapter] Surface logistics"
+        "text": "Where Does This Go?"
       },
       {
         "type": "paragraph",
-        "text": "[sample copy \u2014 cargo landers arrive at ~6-month intervals; unpressurized rovers move payloads from the landing zone along a dust-managed route. The scene shows the route markers and the berm crossing.]"
+        "text": "The scene is set in 2032, following the schedule NASA had sketched at the time this project was created. Of course, mission schedules and plans tend to evolve over time. Depending on audience interest, I might update this scene as those plans change. I also have ideas for introducing other space engineering concepts like this one. If I focus my time on building entirely new concepts, this specific Moon base page might not receive frequent updates. Let me know what you find more interesting: exploring brand new concepts, or keeping this base updated as NASA's real plans evolve. You can leave your email below to get notified when something new goes live."
+      },
+      {
+        "type": "paragraph",
+        "text": "Thank you for your time and your interest in this project."
+      },
+      {
+        "type": "paragraph",
+        "text": "\u2014 Kari N\u00f6jd \u2014"
+      },
+      {
+        "type": "paragraph",
+        "text": "Dated: 2026-08-15"
       }
     ]
   },
