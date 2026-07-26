@@ -172,16 +172,24 @@ rename to `camera` / `pins` to start authoring. The auto-fit is a neutral
 utility framing; the `camera` block is yours to set.
 
 ### `article` — the free-form "Specifications" section
-A list of blocks, rendered in order. Four kinds:
+A list of blocks, rendered in order. Five kinds:
 ```json
 { "type": "chapter",   "text": "A heading" }
 { "type": "paragraph", "text": "Running text…" }
 { "type": "list",      "items": ["First point", "Second point", "Third point"] }
 { "type": "image",     "file": "assets/…/fig.webp", "caption": "FIG_01 — caption" }
+{ "type": "video",     "file": "assets/…/anim-d.mp4", "file_webm": "assets/…/anim-d.webm",
+  "file_mobile": "assets/…/anim-m.mp4", "file_mobile_webm": "assets/…/anim-m.webm",
+  "poster": "assets/…/anim-poster.webp", "caption": "FIG_02 — caption" }
 ```
-Write as many chapters/paragraphs/lists/images as you like, in any order. A
-`list` renders with round bullet markers in the brand's muted label color.
-Empty/non-string items are dropped.
+Write as many blocks as you like, in any order. A `list` renders with round
+bullet markers in the brand's muted label color; empty/non-string items are
+dropped. A `video` renders as a silent looping figure (autoplay muted loop,
+plays inline, no controls, `preload="metadata"` + `poster` so nothing heavy
+loads before it's near the viewport). Only `file` (MP4) is required; `file_webm`
+is served preferentially where supported, and phones get the `*_mobile`
+variants when present (same tiering as the splats). Keep loops ~5 s and well
+under 5 MB.
 
 ### `sources`
 `items`: list of `{ "label": "SRC_01", "text": "citation…" }` rows.

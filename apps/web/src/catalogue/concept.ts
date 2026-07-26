@@ -122,7 +122,17 @@ export type ArticleBlock =
   | { type: "chapter"; text: string }
   | { type: "paragraph"; text: string }
   | { type: "list"; items: string[] }
-  | { type: "image"; file: string; caption: string };
+  | { type: "image"; file: string; caption: string }
+  | {
+      /** Looping figure video: autoplay muted loop playsinline, no controls. */
+      type: "video";
+      file: string;
+      file_webm: string | null;
+      file_mobile: string | null;
+      file_mobile_webm: string | null;
+      poster: string | null;
+      caption: string;
+    };
 
 export interface PageDoc {
   id: string;
@@ -311,6 +321,16 @@ function parseArticleBlocks(v: unknown): ArticleBlock[] {
       if (items.length > 0) blocks.push({ type: "list", items });
     } else if (b.type === "image" && typeof b.file === "string") {
       blocks.push({ type: "image", file: b.file, caption: str(b.caption) });
+    } else if (b.type === "video" && typeof b.file === "string") {
+      blocks.push({
+        type: "video",
+        file: b.file,
+        file_webm: str(b.file_webm) || null,
+        file_mobile: str(b.file_mobile) || null,
+        file_mobile_webm: str(b.file_mobile_webm) || null,
+        poster: str(b.poster) || null,
+        caption: str(b.caption),
+      });
     }
     // unknown block types are skipped, never fatal
   }

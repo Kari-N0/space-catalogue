@@ -1,0 +1,26 @@
+{
+  "type": "reference",
+  "used_for": "FIG_02 'The clock of shadows' (Making Of article CH_03, concept lunar-base): 5 s / 150-frame seamless loop of one lunar day of sunlight rotating around de Gerlache crater, with permanently shadowed regions highlighted.",
+  "accessed": "2026-07-26",
+  "publisher": "NASA PDS Geosciences Node (LOLA GDR) + NASA GSFC PGDA (Barker et al. site products)",
+  "usage_terms": "US Government work / public domain; attribution requested (NASA/GSFC/MIT LOLA; Barker et al.)",
+  "citation": "Terrain: PGDA Site11 5 m/px de Gerlache-rim tile + site11_regional 20 m/px crop (Barker et al. 2021/2023 - see terrain-dems.json for hashes) inset in a hole-matched frame; shadow-casting skirt: LOLA GDR LDEM_75S_60M V2.0 crop (see fig01-south-pole-map.json entry, sha 7724861d...). Smith, D.E., et al. (2010), Space Sci. Rev. 150, 209-241.",
+  "entries": [
+    {
+      "source": "assets_src/lunar-base/figures/fig02/fig02_shadow_clock.blend (Blender 5.1.2, scene FIG02)",
+      "product": "Shadow-sweep animation, 1376x1376, Cycles/OptiX 192 spl",
+      "notes": "Scene: 20 m regional terrain copy (subsurf render 3) + 5 m Site11 tile copy datum-aligned at z-30 (fills the inset hole in the regional mesh) + 60 m FIG_01-crop skirt as 4 bands tiling AROUND the regional footprint (no overlap; skirt extent = full FIG_01 coverage, 100-158 km of shadow casters in every direction incl. the Malapert massif). All terrain carries the standard flat-plane curvature correction z -= d^2/2R from the frame center (R 1737.4 km) - without it, distant peaks falsely occlude the grazing sun (validated: az-NE frame went from 0.3% to 25.9% lit). SUN CONVENTION (logged per spec): elevation 1.0 deg = the select_base_site.py sunlit threshold (horizon < 1.0 deg; real oscillation +-1.5 deg noted in that script); azimuth full 360 deg CCW (physically correct sense at the south pole viewed from above), 150 frames x 2.4 deg, frame 151 == frame 1 (verified pixel-identical, max delta 1/255) and dropped from the encode so frames 1-150 loop seamlessly. Camera: ortho top-down 65x65 km, x[-75,-10] y[-26.5,+38.5] km from the pole (Kari's marked crop, calibrated + approved 2026-07-26). Frame crop fully on 20 m data."
+    },
+    {
+      "source": "PSR mask computed FROM THE ANIMATION'S OWN FRAMES (150-frame sweep)",
+      "product": "fig02_psr_sdf.png (signed distance field, 0.5 = boundary, 1 px = 47.238 m) + psr_mask_major/_full.png, packed in the blend",
+      "notes": "Operator: per-pixel MAXIMUM illumination staying at the indirect floor = never directly lit (the brief said 'minimum'; a min-composite marks ever-shadowed pixels instead - caught by its own sanity check at 98% PSR - same intent, corrected realization). Threshold at the histogram valley; de Gerlache PSR stable 381-396 km2 across thresholds 16-37. VALIDATION vs site-selection sun-sweep: base pixel lit 90/150 frames = 0.600 vs illum_frac_horizon_proxy_2m 0.562 (site11.layout.json); 6 cold traps within 3 km of the base (0.60 km2, nearest 566 m) matching the F_01 'small cold trap a few hundred meters away' copy. Major mask = components >= 0.05 km2. Note: mask reflects this model (1.0 deg fixed elevation, 65 km frame + 150 km skirt, no seasonal +-1.5 deg sweep) - an illustration-grade PSR, not a Mazarico-style survey product."
+    },
+    {
+      "source": "D:\\renders\\fig02_frames_02 (150 frames, rendered + shader-graded by Kari 2026-07-26/27)",
+      "sha256": "6d56c7ecd3e102097cc2af9114d7d0f3b29e8c055db9368f0561bbdeeac872f9 (fig02-shadow-clock-d.mp4), 3cb7e2c7be496bcaa76754d335c4b175b5f54b864c6f5274d5a83aa6364e60e7 (fig02-shadow-clock-m.mp4)",
+      "product": "Web deliverables in apps/web/public/assets/figures/",
+      "notes": "Encode (ffmpeg 6.1.1): MP4 H.264 libx264 preset slow CRF 22 yuv420p, no audio, +faststart; WebM VP9 CRF 42 b:v 0 row-mt; 30 fps x 150 frames = 5.000 s. Sizes: d.mp4 3.33 MB / d.webm 1.15 MB (1376x1376), m.mp4 1.16 MB / m.webm 0.50 MB (720x720, Lanczos), poster webp 172 KB (frame 118, brightest base illumination). Loop seam verified numerically (wrap delta 2.16 vs adjacent 1.7-2.0) and visually. Wired into content/concepts/lunar-base.json article CH_03 as the first 'video' block (autoplay muted loop playsinline, poster, preload=metadata, desktop/mobile tiering)."
+    }
+  ]
+}

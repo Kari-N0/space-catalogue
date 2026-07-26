@@ -218,6 +218,37 @@ function renderArticleBlock(block: ArticleBlock): HTMLElement {
     for (const item of block.items) ul.appendChild(el("li", undefined, item));
     return ul;
   }
+  if (block.type === "video") {
+    // looping figure animation: autoplay muted loop playsinline, no controls,
+    // poster + preload=metadata (spec: FIG_02). Tiered like the splats —
+    // mobile gets the *_mobile files when present.
+    const figure = el("figure");
+    const video = el("video");
+    video.autoplay = true;
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.setAttribute("muted", ""); // attribute form required by autoplay policies
+    video.setAttribute("playsinline", "");
+    video.preload = "metadata";
+    if (block.poster) video.poster = assetUrl(block.poster);
+    if (block.caption) video.setAttribute("aria-label", block.caption);
+    const mobile = pickTier(new URLSearchParams(location.search)).tier === "mobile";
+    const mp4 = mobile ? (block.file_mobile ?? block.file) : block.file;
+    const webm = mobile ? (block.file_mobile_webm ?? block.file_webm) : block.file_webm;
+    if (webm) {
+      const s = el("source");
+      s.src = assetUrl(webm);
+      s.type = "video/webm";
+      video.appendChild(s);
+    }
+    const s2 = el("source");
+    s2.src = assetUrl(mp4);
+    s2.type = "video/mp4";
+    video.appendChild(s2);
+    figure.append(video, el("figcaption", undefined, block.caption));
+    return figure;
+  }
   const figure = el("figure");
   const img = el("img");
   img.src = assetUrl(block.file);

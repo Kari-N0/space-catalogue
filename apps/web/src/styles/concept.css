@@ -587,10 +587,12 @@ a:hover { color: var(--color-text-emphasis); }
 .article figure {
   margin: 32px 0;
 }
-.article figure img {
+.article figure img,
+.article figure video {
   width: 100%;
   border-radius: var(--radius-card);
   border: 1px solid var(--hairline-card);
+  display: block;
 }
 .article figcaption {
   margin-top: 10px;

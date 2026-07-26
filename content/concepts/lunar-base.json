@@ -295,7 +295,7 @@
       {
         "type": "image",
         "file": "assets/figures/fig01-south-pole-map.webp",
-        "caption": "Map of the Moon's South Pole with the de Gerlache crater rim highlighted."
+        "caption": "Map of the Moon's South Pole with the de Gerlache Crater rim and moon base location highlighted."
       },
       {
         "type": "chapter",
@@ -306,8 +306,12 @@
         "text": "Lunar polar light is unique, and I didn't want to fake it. The sun here never rises. It circles, never climbing more than a hand's width above the horizon, dragging kilometer-long shadows around the base like the hand of a slow clock. I lit the scene using the correct solar intensity and geometry. The only compromise I made was adding a little ambient light to the shadowed areas, standing in for the faint real-world scatter from sunlit slopes, so you can still identify some terrain features hidden inside them."
       },
       {
-        "type": "image",
-        "file": "assets/placeholders/moon_site_image_placeholder.webp",
+        "type": "video",
+        "file": "assets/figures/fig02-shadow-clock-d.mp4",
+        "file_webm": "assets/figures/fig02-shadow-clock-d.webm",
+        "file_mobile": "assets/figures/fig02-shadow-clock-m.mp4",
+        "file_mobile_webm": "assets/figures/fig02-shadow-clock-m.webm",
+        "poster": "assets/figures/fig02-shadow-clock-poster.webp",
         "caption": "The de Gerlache Crater. Animation of the monthly sunlight rotation."
       },
       {
