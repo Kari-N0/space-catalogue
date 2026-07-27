@@ -214,49 +214,52 @@
         ],
         "chip": "3D — Location",
         "view_angle_deg": 35,
-        "scene_file": null,
+        "scene_file": "assets/splats/de_gerlache_v001-d.sog",
+        "camera": {
+          "_note": "Prefilled from the measured auto-fit of de_gerlache_v001 — every value is yours to tune (feature-window cameras are fully hand-authored). angle min/max null = free orbit.",
+          "look_at_m": [
+            6020.7,
+            -1.0,
+            6020.7
+          ],
+          "distance_m": {
+            "min": 20000,
+            "max": 700000,
+            "start": 183600
+          },
+          "angle_around_deg": {
+            "min": null,
+            "max": null,
+            "start": -55
+          },
+          "angle_up_down_deg": {
+            "min": 5,
+            "max": 85,
+            "start": 68
+          },
+          "zoom_fov_deg": 45,
+          "move_limit_m": 80000,
+          "clip_near_m": 20.0,
+          "clip_far_m": 1500000.0
+        },
         "controls": {
           "rotate_speed": 1.0,
           "move_speed": 1.0,
           "zoom_speed": 1.0,
           "glide_after_release": 0.9
         },
-        "pins": [],
-        "_authoring_note": "OPTIONAL per-window controls (guide: content/concepts/README.md). Add a \"camera\" block (same fields as live_view.camera) to replace this window's auto-fit framing. Add POIs to \"pins\": hover shows the title, click/tap re-centers this window's camera on position_m (no popup). Copy the _camera_example / _pins_example below and rename to \"camera\" / \"pins\". Keys starting with _ are ignored.",
-        "_camera_example": {
-          "look_at_m": [
-            0,
-            0,
-            0
-          ],
-          "distance_m": {
-            "min": null,
-            "max": null,
-            "start": 100
-          },
-          "angle_around_deg": {
-            "min": null,
-            "max": null,
-            "start": 0
-          },
-          "angle_up_down_deg": {
-            "min": 5,
-            "max": 90,
-            "start": 60
-          },
-          "zoom_fov_deg": 60
-        },
-        "_pins_example": [
+        "pins": [
           {
             "position_m": [
-              0,
-              0,
-              0
+              6020.7,
+              50.0,
+              6020.7
             ],
-            "title": "Label shown on hover",
-            "text": "optional longer hover text"
+            "title": "MOON BASE",
+            "_note": "placeholder position at the splat's measured center — move position_m to the real base site; hover shows the title, click re-centers"
           }
-        ]
+        ],
+        "_authoring_note": "Per-window camera + pins guide: content/concepts/README.md. Keys starting with _ are ignored."
       },
       {
         "label": "F_02 — Landing Zone 1",
