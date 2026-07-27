@@ -1,5 +1,5 @@
 {
-  "_readme": "This file drives the whole concept page \u2014 edit text/images here, no code needed. Field guide with examples: content/concepts/README.md. View at /concept/?id=lunar-base",
+  "_readme": "This file drives the whole concept page — edit text/images here, no code needed. Field guide with examples: content/concepts/README.md. View at /concept/?id=lunar-base",
   "id": "lunar-base",
   "page_title": "Concept 001: Moon Base — de Gerlache Crater",
   "footer_label": "Concept 001",
@@ -8,14 +8,14 @@
     "status": "Proposal",
     "title_line_1": "Moon Base",
     "title_line_2": "de Gerlache Crater",
-    "era_line": "2032 \u2014 The Artemis Era",
+    "era_line": "2032 — The Artemis Era",
     "button_text": "Explore in 3D",
     "video": "assets/placeholders/rerender.mp4",
     "poster_image": "assets/placeholders/moon_site_image_placeholder.webp"
   },
   "live_view": {
     "heading": "3D View",
-    "note": "Navigation \u2014 Drag to orbit, Right-drag to pan, Scroll to zoom",
+    "note": "Navigation — Drag to orbit, Right-drag to pan, Scroll to zoom",
     "scene_file": "assets/splats/lunar_base_v005-d.sog",
     "scene_file_mobile": "assets/splats/lunar-base-hero-m.sog",
     "camera": {
@@ -130,7 +130,7 @@
         }
       },
       "_camera_generated": {
-        "note": "envelope fields generated from the capture rig \u2014 do not hand-edit look_at_m/distance min,max/angles; edit the vantage in Blender and re-export",
+        "note": "envelope fields generated from the capture rig — do not hand-edit look_at_m/distance min,max/angles; edit the vantage in Blender and re-export",
         "vantage": "capture_05",
         "rig_hash": "6531ecabafae",
         "blend_file": "\\\\wsl.localhost\\Ubuntu-24.04\\home\\karin\\dev\\space-catalogue\\assets_src\\lunar-base\\terrain\\terrain_site11_v004b_splat_area_002.blend",
@@ -158,7 +158,7 @@
           375.407
         ],
         "title": "Surface rover",
-        "text": "[sample] Unpressurized utility rover staged for a logistics run. Placeholder position \u2014 authored per scene.",
+        "text": "[sample] Unpressurized utility rover staged for a logistics run. Placeholder position — authored per scene.",
         "image": "assets/placeholders/rover_image_placeholder.webp"
       },
       {
@@ -168,7 +168,7 @@
           -1045.193
         ],
         "title": "Boulder field",
-        "text": "[sample] Ejecta boulders shield the northern perimeter. Placeholder position \u2014 authored per scene.",
+        "text": "[sample] Ejecta boulders shield the northern perimeter. Placeholder position — authored per scene.",
         "image": "assets/placeholders/satellite_orbit_image_placeholder.webp"
       }
     ]
@@ -182,7 +182,12 @@
       },
       {
         "type": "list",
-        "items": ["Oxygen", "Water", "Energy", "Access to Earth"]
+        "items": [
+          "Oxygen",
+          "Water",
+          "Energy",
+          "Access to Earth"
+        ]
       },
       {
         "type": "paragraph",
@@ -191,10 +196,23 @@
     ],
     "features": [
       {
-        "label": "F_01 \u2014 Site",
+        "label": "F_01 — Site",
         "title": "de Gerlache Crater Rim Outpost",
-        "text": "The outpost sits directly on the crater rim. The crest holds near-continuous sunlight for power, and a few hundred meters away, a small cold trap offers permanently shadowed ground for the first water-harvesting tests. Farther out, in rover range, the floor of de Gerlache itself: a vast darkness unbroken for roughly two billion years, where the large ice deposits are believed to wait.",
-        "chip": "3D \u2014 Location",
+        "text_blocks": [
+          {
+            "type": "paragraph",
+            "text": "The outpost sits directly on the crater rim. The crest holds near-continuous sunlight for power, and a few hundred meters away, a small cold trap offers permanently shadowed ground for the first water-harvesting tests."
+          },
+          {
+            "type": "paragraph",
+            "text": "Farther out, in rover range, lies the floor of de Gerlache itself: a vast darkness unbroken for roughly two billion years, where the large ice deposits are believed to wait."
+          },
+          {
+            "type": "paragraph",
+            "text": "Areas highlighted in blue indicate Permanently Shadowed Regions (PSRs) that never receive sunlight. These areas are expected to contain water ice deposits, enabling a self-sufficient outpost in the long run."
+          }
+        ],
+        "chip": "3D — Location",
         "view_angle_deg": 35,
         "scene_file": null,
         "controls": {
@@ -206,21 +224,58 @@
         "pins": [],
         "_authoring_note": "OPTIONAL per-window controls (guide: content/concepts/README.md). Add a \"camera\" block (same fields as live_view.camera) to replace this window's auto-fit framing. Add POIs to \"pins\": hover shows the title, click/tap re-centers this window's camera on position_m (no popup). Copy the _camera_example / _pins_example below and rename to \"camera\" / \"pins\". Keys starting with _ are ignored.",
         "_camera_example": {
-          "look_at_m": [0, 0, 0],
-          "distance_m": { "min": null, "max": null, "start": 100 },
-          "angle_around_deg": { "min": null, "max": null, "start": 0 },
-          "angle_up_down_deg": { "min": 5, "max": 90, "start": 60 },
+          "look_at_m": [
+            0,
+            0,
+            0
+          ],
+          "distance_m": {
+            "min": null,
+            "max": null,
+            "start": 100
+          },
+          "angle_around_deg": {
+            "min": null,
+            "max": null,
+            "start": 0
+          },
+          "angle_up_down_deg": {
+            "min": 5,
+            "max": 90,
+            "start": 60
+          },
           "zoom_fov_deg": 60
         },
         "_pins_example": [
-          { "position_m": [0, 0, 0], "title": "Label shown on hover", "text": "optional longer hover text" }
+          {
+            "position_m": [
+              0,
+              0,
+              0
+            ],
+            "title": "Label shown on hover",
+            "text": "optional longer hover text"
+          }
         ]
       },
       {
-        "label": "F_02 \u2014 Landing Zone 1",
-        "title": "The Landing Pad \u2014 ISRU Experiment",
-        "text": "This pad is built from the moon ground itself by the base's own ISRU (In-Situ Resource Utilization) machinery. An excavator grades the site, then focused solar heat sinters the regolith at around 1,100 \u00B0C, fusing loose dust into a hard ceramic surface with no water, no cement, and no imports. The result is the port's protective architecture, a solid pad that kills the dust a landing would otherwise throw at bullet-like speeds, ringed by a berm to catch what the engines kick loose. On it stands Blue Origin's Mk2, the base's routine ride for crew and cargo.",
-        "chip": "3D \u2014 Landing Zone 1",
+        "label": "F_02 — Landing Zone 1",
+        "title": "The Landing Pad — ISRU Experiment",
+        "text_blocks": [
+          {
+            "type": "paragraph",
+            "text": "This pad is built from the moon ground itself by the base's own ISRU (In-Situ Resource Utilization) machinery. An excavator grades the site, then focused solar heat sinters the regolith at around 1,100 °C, fusing loose dust into a hard ceramic surface with no water, no cement, and no imports."
+          },
+          {
+            "type": "paragraph",
+            "text": "The result is the port's protective architecture, a solid pad that kills the dust a landing would otherwise throw at bullet-like speeds, ringed by a berm to catch what the engines kick loose."
+          },
+          {
+            "type": "paragraph",
+            "text": "On it stands Blue Origin's Mk2, the base's routine ride for crew and cargo."
+          }
+        ],
+        "chip": "3D — Landing Zone 1",
         "view_angle_deg": -50,
         "scene_file": "assets/splats/starshop_hsl_v001.sog",
         "controls": {
@@ -231,17 +286,30 @@
         },
         "pins": [
           {
-            "position_m": [120, 40, 120],
+            "position_m": [
+              120,
+              40,
+              120
+            ],
             "title": "Sample POI",
             "text": "[sample] Hover shows this text; click/tap re-centers this window on the point. Replace position_m with a real coordinate (meters) from Blender."
           }
         ]
       },
       {
-        "label": "F_03 \u2014 Landing Zone 2",
+        "label": "F_03 — Landing Zone 2",
         "title": "Heavy Cargo",
-        "text": "SpaceX's Starship HLS (Human Landing System) delivers up to 100 tonnes in a single landing, entirely changing the math of building a lunar outpost. It stands two kilometers from the base on open ground, where distance itself is the safety buffer. Cargo rides an elevator down the hull from a bay about 30 meters up, making the tallest structure on the Moon also its freight terminal.",
-        "chip": "3D \u2014 Landing Zone 2",
+        "text_blocks": [
+          {
+            "type": "paragraph",
+            "text": "SpaceX's Starship HLS (Human Landing System) delivers up to 100 tonnes in a single landing, entirely changing the math of building a lunar outpost."
+          },
+          {
+            "type": "paragraph",
+            "text": "It stands two kilometers from the base on open ground, where distance itself is the safety buffer. Cargo rides an elevator down the hull from a bay about 30 meters up, making the tallest structure on the Moon also its freight terminal."
+          }
+        ],
+        "chip": "3D — Landing Zone 2",
         "view_angle_deg": 150,
         "scene_file": "assets/splats/lunar-base-hero-d.sog",
         "controls": {
@@ -253,10 +321,19 @@
         "pins": []
       },
       {
-        "label": "F_04 \u2014 Operations Hub",
+        "label": "F_04 — Operations Hub",
         "title": "Habitat, Power, and Research",
-        "text": "The habitat cluster rises at the center of the base, its vertical solar wings tracking a sun that never climbs. Daylight power is solar, while night and contingency power come from a fission unit parked a kilometer up-slope, close enough to cable, far enough to fail safely. Around the habitat, the base's working machinery spreads across the crest: the water-harvesting experiment at a nearby cold trap, and the plant that extracts oxygen from the lunar regolith.",
-        "chip": "3D \u2014 Operations Hub",
+        "text_blocks": [
+          {
+            "type": "paragraph",
+            "text": "The habitat cluster rises at the center of the base, its vertical solar wings tracking a sun that never climbs. Daylight power is solar, while night and contingency power come from a fission unit parked a kilometer up-slope, close enough to cable, far enough to fail safely."
+          },
+          {
+            "type": "paragraph",
+            "text": "Around the habitat, the base's working machinery spreads across the crest: the water-harvesting experiment at a nearby cold trap, and the plant that extracts oxygen from the lunar regolith."
+          }
+        ],
+        "chip": "3D — Operations Hub",
         "view_angle_deg": -120,
         "scene_file": "assets/splats/starshop_hsl_v001.sog",
         "controls": {
@@ -341,7 +418,7 @@
       },
       {
         "type": "paragraph",
-        "text": "\u2014 Kari N\u00f6jd \u2014"
+        "text": "— Kari Nöjd —"
       },
       {
         "type": "paragraph",
@@ -354,15 +431,15 @@
     "items": [
       {
         "label": "SRC_01",
-        "text": "[sample: agency reference architecture document \u2014 citation in production]"
+        "text": "[sample: agency reference architecture document — citation in production]"
       },
       {
         "label": "SRC_02",
-        "text": "[sample: peer-reviewed habitat shielding study \u2014 citation in production]"
+        "text": "[sample: peer-reviewed habitat shielding study — citation in production]"
       },
       {
         "label": "SRC_03",
-        "text": "[sample: polar volatiles survey data \u2014 citation in production]"
+        "text": "[sample: polar volatiles survey data — citation in production]"
       }
     ]
   },

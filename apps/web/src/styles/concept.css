@@ -566,6 +566,25 @@ a:hover { color: var(--color-text-emphasis); }
   color: var(--color-text);
   max-width: 52ch;
 }
+/* multi-paragraph cards (features[].text_blocks): spacing is scoped here —
+   the block MARKUP comes from the shared renderer, never a card-local fork */
+.feature-copy p + p,
+.feature-copy .block-list + p { margin-top: 12px; }
+.feature-copy .block-list {
+  margin: 14px 0;
+  gap: 8px;
+  font-size: var(--text-small);
+  max-width: 52ch;
+}
+/* long copy can outrun the fixed-aspect viewer: cards with text_blocks
+   top-align and keep the viewer sticky beside the text while it scrolls */
+@media (min-width: 900px) {
+  .feature--blocks { align-items: start; }
+  .feature--blocks .feature-media {
+    position: sticky;
+    top: 96px; /* clears the fixed nav */
+  }
+}
 
 /* -- specifications: blog-style article -------------------------------- */
 

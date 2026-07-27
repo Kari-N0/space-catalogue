@@ -190,7 +190,17 @@ function renderOverview(data: ConceptPage): {
     if (f.chip) media.append(el("span", "scrim-chip", f.chip)); // empty chip = no badge
     media.append(overlay);
     const copy = el("div", "feature-copy");
-    copy.append(el("span", "idx", f.label), el("h3", undefined, f.title), el("p", undefined, f.text));
+    copy.append(el("span", "idx", f.label), el("h3", undefined, f.title));
+    if (f.text_blocks.length > 0) {
+      // multi-paragraph card: shared block renderer (same as intro_blocks and
+      // the article); card-specific spacing is CSS-scoped via .feature-copy.
+      // Long copy can outrun the fixed-aspect viewer, so these cards top-align
+      // and the viewer goes sticky (see .feature--blocks in concept.css).
+      row.classList.add("feature--blocks");
+      for (const bl of f.text_blocks) copy.appendChild(renderArticleBlock(bl));
+    } else {
+      copy.append(el("p", undefined, f.text));
+    }
     row.append(media, copy);
     container.appendChild(row);
     featureCanvases.push(canvas);

@@ -87,6 +87,13 @@ export interface PageFeature {
   title: string;
   text: string;
   /**
+   * Optional multi-paragraph card body (`text_blocks` in the JSON): paragraph
+   * and list blocks, same schema as overview.intro_blocks. When present it
+   * replaces `text`; when absent the single `text` string renders as today.
+   * Other block types (chapter/image/video) are dropped inside cards.
+   */
+  text_blocks: ArticleBlock[];
+  /**
    * Small badge overlaid on the 3D window (`chip` in the JSON, displayed
    * uppercase). Absent → the default "Live — Sample Scene"; an empty string
    * hides the badge entirely.
@@ -381,6 +388,10 @@ export function parseConceptPage(raw: unknown): ConceptPage {
               label: str(feat.label),
               title: str(feat.title),
               text: str(feat.text),
+              // shared block parser; cards accept only paragraph/list
+              text_blocks: parseArticleBlocks(feat.text_blocks).filter(
+                (bl) => bl.type === "paragraph" || bl.type === "list",
+              ),
               // absent → default badge; explicit "" → hide it
               chip: typeof feat.chip === "string" ? feat.chip : "Live — Sample Scene",
               view_angle_deg: num(feat.view_angle_deg, 0),

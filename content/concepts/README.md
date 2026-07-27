@@ -144,6 +144,18 @@ text-only popups).
 - `features[].chip` *(optional)* — the small badge overlaid on that 3D window
   (shown uppercase). Each window is independent. Omit it for the default
   `"Live — Sample Scene"`; set `""` (empty) to hide the badge on that window.
+- `features[].text_blocks` *(optional)* — multi-paragraph card body: an array
+  of `paragraph` / `list` blocks (same schema as `intro_blocks`), rendered in
+  place of the single `text` string. Omit it and `text` renders exactly as
+  before. Cards with `text_blocks` top-align on desktop and the 3D window
+  stays sticky beside the text while you scroll. Example:
+  ```json
+  "text_blocks": [
+    { "type": "paragraph", "text": "First paragraph…" },
+    { "type": "list", "items": ["Point one", "Point two"] },
+    { "type": "paragraph", "text": "Closing paragraph…" }
+  ]
+  ```
 - `features[].scene_file` *(optional)* — show a **different Gaussian splat** in
   that window instead of the hero splat. Give a path like the live-view
   `scene_file` (e.g. `"assets/splats/starshop_hsl_v001.sog"`); the window loads
