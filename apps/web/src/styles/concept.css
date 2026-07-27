@@ -169,10 +169,11 @@ a:hover { color: var(--color-text-emphasis); }
 }
 .vidro-credit:hover { color: var(--color-text); }
 .vidro-credit img { height: 20px; width: auto; }
-/* narrow screens: keep the credit on one line — logo + "Visuals by Vidro";
-   the full "Kari Nöjd | …" lockup returns from 640px up */
+/* narrow screens: keep the FULL "Kari Nöjd | Visuals by Vidro" credit
+   (Kari 2026-07-27) — compacted so it fits 390px beside the lockup */
 @media (max-width: 639px) {
-  .credit-name { display: none; }
+  .vidro-credit { font-size: 9px; gap: 6px; letter-spacing: 0.06em; }
+  .vidro-credit img { height: 15px; }
 }
 
 /* -- hero (Mockup A composition: left-aligned, bottom-anchored) ------ */
