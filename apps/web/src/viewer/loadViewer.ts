@@ -204,9 +204,52 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
     const zoomK = 0.12 * ctrl.zoom_speed;
     let dragMode: "none" | "orbit" | "pan" = "none";
     let lastX = 0, lastY = 0;
+
+    // orbit application with the authored limits (a view camera driven by
+    // these handlers doesn't run Babylon's stock input clamp): distance
+    // limits are applied on the wheel, angle limits here. Shared by the live
+    // drag AND the glide so the glide can never escape the envelope.
+    const applyOrbit = (cam: GroundPanCamera, dxPx: number, dyPx: number) => {
+      cam.alpha = clampAlpha(cam.alpha - dxPx * rotK, cam.lowerAlphaLimit, cam.upperAlphaLimit);
+      const bLo = Math.max(0.02, cam.lowerBetaLimit ?? 0.02);
+      const bHi = Math.min(Math.PI - 0.02, cam.upperBetaLimit ?? Math.PI - 0.02);
+      cam.beta = Math.min(bHi, Math.max(bLo, cam.beta - dyPx * rotK));
+    };
+
+    // glide_after_release: Babylon's stock inertia lives in the input pipeline
+    // these windows bypass, so the direct controls implement it themselves —
+    // pixel-velocity is tracked during the drag (EMA over move events) and
+    // decayed per rendered frame after release, Babylon-style (v *= inertia).
+    let vX = 0, vY = 0;
+    let glideMode: "orbit" | "pan" = "orbit";
+    let glideObs: Observer<Scene> | null = null;
+    let glideScene: Scene | null = null;
+    const stopGlide = () => {
+      if (glideObs && glideScene) glideScene.onBeforeRenderObservable.remove(glideObs);
+      glideObs = null;
+      glideScene = null;
+    };
+    const startGlide = (cam: GroundPanCamera) => {
+      const inertia = ctrl.glide_after_release;
+      if (inertia <= 0 || Math.hypot(vX, vY) < 0.5) return;
+      glideScene = cam.getScene();
+      glideMode = dragMode === "pan" ? "pan" : "orbit";
+      glideObs = glideScene.onBeforeRenderObservable.add(() => {
+        const c = getCamera();
+        if (!c) return stopGlide();
+        if (glideMode === "orbit") applyOrbit(c, vX, vY);
+        else c.panByPixels(vX, vY, ctrl.move_speed);
+        vX *= inertia;
+        vY *= inertia;
+        if (Math.hypot(vX, vY) < 0.05) stopGlide();
+      });
+    };
+
     const onDown = (e: PointerEvent) => {
       const cam = getCamera();
       if (!cam) return;
+      stopGlide(); // grabbing kills any in-flight glide
+      vX = vY = 0;
       dragMode = e.button === 0 ? "orbit" : "pan"; // right(2)/middle(1) → pan
       lastX = e.clientX;
       lastY = e.clientY;
@@ -218,31 +261,61 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
       if (dragMode === "none" || !cam) return;
       const dx = e.clientX - lastX;
       const dy = e.clientY - lastY;
-      if (dragMode === "orbit") {
-        // enforce the authored angle limits directly (a view camera driven by
-        // these handlers doesn't run Babylon's stock input clamp): distance
-        // limits are applied on the wheel, angle limits here.
-        const a = cam.alpha - dx * rotK;
-        cam.alpha = clampAlpha(a, cam.lowerAlphaLimit, cam.upperAlphaLimit);
-        const bLo = Math.max(0.02, cam.lowerBetaLimit ?? 0.02);
-        const bHi = Math.min(Math.PI - 0.02, cam.upperBetaLimit ?? Math.PI - 0.02);
-        cam.beta = Math.min(bHi, Math.max(bLo, cam.beta - dy * rotK));
-      } else {
-        cam.panByPixels(dx, dy, ctrl.move_speed);
-      }
+      if (dragMode === "orbit") applyOrbit(cam, dx, dy);
+      else cam.panByPixels(dx, dy, ctrl.move_speed);
+      // release velocity ≈ recent per-event delta (EMA smooths jittery input)
+      vX = 0.6 * dx + 0.4 * vX;
+      vY = 0.6 * dy + 0.4 * vY;
       lastX = e.clientX;
       lastY = e.clientY;
       e.preventDefault();
     };
     const onUp = (e: PointerEvent) => {
+      const cam = getCamera();
+      if (dragMode !== "none" && cam) startGlide(cam);
       dragMode = "none";
       try { viewCanvas.releasePointerCapture(e.pointerId); } catch { /* already released */ }
+    };
+    // eased zoom: each tick feeds a per-frame zoom velocity that decays like
+    // the drag glide (v *= glide_after_release). The initial velocity is set
+    // so a full decay series still totals the same 12%-per-tick step:
+    // exp(v0 / (1 - inertia)) = 1 + zoomK. glide 0 => the whole step at once.
+    let vZoom = 0;
+    let zoomObs: Observer<Scene> | null = null;
+    let zoomScene: Scene | null = null;
+    const stopZoom = () => {
+      if (zoomObs && zoomScene) zoomScene.onBeforeRenderObservable.remove(zoomObs);
+      zoomObs = null;
+      zoomScene = null;
+      vZoom = 0;
+    };
+    const zoomTick = (c: GroundPanCamera) => {
+      const r = c.radius * Math.exp(vZoom);
+      const clamped = Math.min(c.upperRadiusLimit ?? r, Math.max(c.lowerRadiusLimit ?? r, r));
+      c.radius = clamped;
+      if (clamped !== r) return stopZoom(); // hit a zoom limit: stop coasting
+      vZoom *= ctrl.glide_after_release;
+      if (Math.abs(vZoom) < 1e-4) stopZoom();
     };
     const onWheel = (e: WheelEvent) => {
       const cam = getCamera();
       if (cam) {
-        const r = cam.radius * (1 + Math.sign(e.deltaY) * zoomK);
-        cam.radius = Math.min(cam.upperRadiusLimit ?? r, Math.max(cam.lowerRadiusLimit ?? r, r));
+        const inertia = ctrl.glide_after_release;
+        const step = Math.sign(e.deltaY) * Math.log(1 + zoomK);
+        if (inertia <= 0) {
+          vZoom = step;
+          zoomTick(cam); // whole step immediately, no coast
+        } else {
+          vZoom += step * (1 - inertia);
+          if (!zoomObs) {
+            zoomScene = cam.getScene();
+            zoomObs = zoomScene.onBeforeRenderObservable.add(() => {
+              const c = getCamera();
+              if (!c) return stopZoom();
+              zoomTick(c);
+            });
+          }
+        }
       }
       e.preventDefault();
     };
@@ -257,6 +330,8 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
     viewCanvas.addEventListener("wheel", onWheel, { passive: false });
     viewCanvas.addEventListener("mousedown", onMouseDown);
     return () => {
+      stopGlide();
+      stopZoom();
       viewCanvas.removeEventListener("contextmenu", preventDefault);
       viewCanvas.removeEventListener("pointerdown", onDown);
       viewCanvas.removeEventListener("pointermove", onMove);
