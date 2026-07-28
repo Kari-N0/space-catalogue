@@ -282,31 +282,31 @@
         "view_angle_deg": -50,
         "scene_file": "assets/splats/starshop_hsl_v001.sog",
         "camera": {
-          "_note": "Copied from F_01's hand-authored settings (Kari, 2026-07-28) — every value is yours to tune (feature-window cameras are fully hand-authored). angle min/max null = free orbit.",
+          "_note": "Preliminary from the measured auto-fit of starshop_hsl_v001 (median center, 90th-percentile radius r=186.3 m; ratios: start 2.6r, min 0.3r, max 10r, clips 0.01r/200r, move_limit r). Angles/fov from your F_01 template; around start = -90+view_angle so the opening view matches the old auto-framing. Every value is yours to tune.",
           "look_at_m": [
-            -2000,
+            -17.6,
             -1.0,
-            -4000
+            -17.5
           ],
           "distance_m": {
-            "min": 20000,
-            "max": 60000,
-            "start": 45000
+            "min": 56,
+            "max": 1860,
+            "start": 485
           },
           "angle_around_deg": {
             "min": null,
             "max": null,
-            "start": -80
+            "start": -140
           },
           "angle_up_down_deg": {
             "min": 5,
             "max": 80,
-            "start": 55
+            "start": 68
           },
           "zoom_fov_deg": 45,
-          "move_limit_m": 10000,
-          "clip_near_m": 1000.0,
-          "clip_far_m": 1500000.0
+          "move_limit_m": 185,
+          "clip_near_m": 2.0,
+          "clip_far_m": 37000.0
         },
         "controls": {
           "rotate_speed": 0.3,
@@ -343,31 +343,31 @@
         "view_angle_deg": 150,
         "scene_file": "assets/splats/spacex_hls_v001-d.sog",
         "camera": {
-          "_note": "Copied from F_01's hand-authored settings (Kari, 2026-07-28) — every value is yours to tune (feature-window cameras are fully hand-authored). angle min/max null = free orbit.",
+          "_note": "Preliminary from this splat's own capture envelope (pipeline/provenance/lunar-base/capture-spacex_hls.envelope.json): distance and up/down limits = the trained region (58.2-107.2 m, 2.0-92.8 deg), look_at = measured auto-fit median center (splat r90 = 95.7 m). Start distance opens at the envelope max; fov from your F_01 template (rig camera was 73.7). around start = -90+view_angle to match the old auto-framing. Every value is yours to tune.",
           "look_at_m": [
-            -2000,
+            1.0,
             -1.0,
-            -4000
+            1.0
           ],
           "distance_m": {
-            "min": 20000,
-            "max": 60000,
-            "start": 45000
+            "min": 58.2,
+            "max": 107.2,
+            "start": 107
           },
           "angle_around_deg": {
             "min": null,
             "max": null,
-            "start": -80
+            "start": 60
           },
           "angle_up_down_deg": {
-            "min": 5,
-            "max": 80,
-            "start": 55
+            "min": 2.0,
+            "max": 92.8,
+            "start": 68
           },
           "zoom_fov_deg": 45,
-          "move_limit_m": 10000,
-          "clip_near_m": 1000.0,
-          "clip_far_m": 1500000.0
+          "move_limit_m": 95,
+          "clip_near_m": 1.0,
+          "clip_far_m": 19000.0
         },
         "controls": {
           "rotate_speed": 0.3,
@@ -394,31 +394,31 @@
         "view_angle_deg": -120,
         "scene_file": "assets/splats/starshop_hsl_v001.sog",
         "camera": {
-          "_note": "Copied from F_01's hand-authored settings (Kari, 2026-07-28) — every value is yours to tune (feature-window cameras are fully hand-authored). angle min/max null = free orbit.",
+          "_note": "Preliminary from the measured auto-fit of starshop_hsl_v001 (same splat as F_02: median center, r=186.3 m; ratios: start 2.6r, min 0.3r, max 10r, clips 0.01r/200r, move_limit r). Angles/fov from your F_01 template; around start = -90+view_angle so the opening view matches the old auto-framing. Every value is yours to tune.",
           "look_at_m": [
-            -2000,
+            -17.6,
             -1.0,
-            -4000
+            -17.5
           ],
           "distance_m": {
-            "min": 20000,
-            "max": 60000,
-            "start": 45000
+            "min": 56,
+            "max": 1860,
+            "start": 485
           },
           "angle_around_deg": {
             "min": null,
             "max": null,
-            "start": -80
+            "start": 150
           },
           "angle_up_down_deg": {
             "min": 5,
             "max": 80,
-            "start": 55
+            "start": 68
           },
           "zoom_fov_deg": 45,
-          "move_limit_m": 10000,
-          "clip_near_m": 1000.0,
-          "clip_far_m": 1500000.0
+          "move_limit_m": 185,
+          "clip_near_m": 2.0,
+          "clip_far_m": 37000.0
         },
         "controls": {
           "rotate_speed": 0.3,
