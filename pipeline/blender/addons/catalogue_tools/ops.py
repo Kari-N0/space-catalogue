@@ -140,9 +140,15 @@ class CATALOGUE_OT_preview(bpy.types.Operator):
         st.last_summary = "\n".join(lines)
         # freshly rebuilt markers must respect the panel's display mode/scale
         preview_mod.set_marker_display(st.vantage, st.marker_mode, st.marker_scale)
-        self.report({"INFO"},
-                    f"rig {result['hash']} — full stats in text block "
-                    f"CAPTURE_STATS_{result['vantage']}")
+        if st.total_images == 0:
+            self.report({"WARNING"},
+                        f"rig {result['hash']}: 0 valid views — NO markers spawned; "
+                        f"every candidate was rejected. Fix the WARNINGS in the "
+                        f"summary (full stats: CAPTURE_STATS_{result['vantage']})")
+        else:
+            self.report({"INFO"},
+                        f"rig {result['hash']} — full stats in text block "
+                        f"CAPTURE_STATS_{result['vantage']}")
         return {"FINISHED"}
 
 
