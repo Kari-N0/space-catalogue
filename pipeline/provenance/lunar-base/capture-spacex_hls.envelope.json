@@ -1,0 +1,28 @@
+{
+  "concept": "lunar-base",
+  "vantage": "spacex_hls",
+  "generated": "2026-07-27T22:36:01",
+  "blend_file": "\\\\wsl.localhost\\Ubuntu-24.04\\home\\karin\\dev\\space-catalogue\\assets_src\\lunar-base\\assets\\spacex_hls\\spacex_hls_v002.blend",
+  "rig_hash": "dfcbbb8462b5",
+  "envelope": {
+    "look_at_m": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "distance_m": {
+      "min": 58.2,
+      "max": 107.2
+    },
+    "angle_up_down_deg": {
+      "min": 2.0,
+      "max": 92.8
+    },
+    "angle_around_deg": {
+      "min": null,
+      "max": null
+    },
+    "zoom_fov_deg": 73.7
+  },
+  "object_envelopes": {}
+}

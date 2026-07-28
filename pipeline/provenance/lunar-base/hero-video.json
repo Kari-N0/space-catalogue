@@ -1,0 +1,25 @@
+{
+  "asset": "hero section video (INTERIM — Kari will deliver a longer final image sequence; this encode gets superseded)",
+  "used_for": "hero.video + hero.poster_image in content/concepts/lunar-base.json (autoplay muted loop, poster = frame 0001)",
+  "stages": [
+    {
+      "stage": "render-sequence",
+      "by": "Kari",
+      "date": "2026-07-28",
+      "source": "assets_src/lunar-base/hero/hero_spacex_hls_v001.blend (Blender 5.1.2)",
+      "product": "D:\\renders\\lunar-base\\hero\\seq_spacex_hls_v001\\ — 250 PNG frames (RGBA, fully opaque), 3840x2160, scene 24 fps, frames 1-250",
+      "license": "original render — project IP; terrain DEM lineage per pipeline/provenance/lunar-base/terrain-dems.json",
+      "note": "render settings (samples etc.): Kari to record if this lineage ships beyond the interim"
+    },
+    {
+      "stage": "web-encode",
+      "by": "Claude (encode only — content untouched)",
+      "date": "2026-07-28",
+      "tool": "ffmpeg 6.1.1-3ubuntu5",
+      "settings": "scale 3840x2160 -> 1920x1080 lanczos; H.264 libx264 preset slow CRF 20 yuv420p, no audio, +faststart; 24 fps x 250 frames = 10.417 s. Poster: frame 0001, same scale, webp quality 82.",
+      "quality": "vs lossless 1080p reference: SSIM 0.9356, PSNR 35.25 dB (CRF 18/20/22 within 0.004 SSIM — render grain dominates); dark-region visual check at +0.22 brightness: no banding",
+      "products": "apps/web/public/assets/placeholders/hero_spacex_hls_v001.mp4 (6,815,653 B, sha256 ab9cb7677b262b89b2f924ef89a4945ddfc179a9136e922ebd35aef3bc1df893), hero_spacex_hls_v001_poster.webp (202,678 B, sha256 92abe74be014380472ca5a1bf94a38f97d48ccfe2bb4276860f68002780edb7b)",
+      "note": "lives in assets/placeholders/ on purpose: interim per Kari 2026-07-28; superseded rerender.mp4 left in place, uncommitted-file status unchanged"
+    }
+  ]
+}

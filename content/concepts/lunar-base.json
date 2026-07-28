@@ -10,8 +10,8 @@
     "title_line_2": "de Gerlache Crater",
     "era_line": "2032 — The Artemis Era",
     "button_text": "Explore in 3D",
-    "video": "assets/placeholders/rerender.mp4",
-    "poster_image": "assets/placeholders/moon_site_image_placeholder.webp"
+    "video": "assets/placeholders/hero_spacex_hls_v001.mp4",
+    "poster_image": "assets/placeholders/hero_spacex_hls_v001_poster.webp"
   },
   "live_view": {
     "heading": "3D View",
@@ -218,42 +218,42 @@
         "camera": {
           "_note": "Prefilled from the measured auto-fit of de_gerlache_v001 — every value is yours to tune (feature-window cameras are fully hand-authored). angle min/max null = free orbit.",
           "look_at_m": [
-            6020.7,
+            -2000,
             -1.0,
-            6020.7
+            -4000
           ],
           "distance_m": {
             "min": 20000,
-            "max": 700000,
-            "start": 183600
+            "max": 60000,
+            "start": 45000
           },
           "angle_around_deg": {
             "min": null,
             "max": null,
-            "start": -55
+            "start": -80
           },
           "angle_up_down_deg": {
             "min": 5,
-            "max": 85,
-            "start": 68
+            "max": 80,
+            "start": 55
           },
           "zoom_fov_deg": 45,
-          "move_limit_m": 80000,
-          "clip_near_m": 20.0,
+          "move_limit_m": 10000,
+          "clip_near_m": 1000.0,
           "clip_far_m": 1500000.0
         },
         "controls": {
-          "rotate_speed": 1.0,
-          "move_speed": 1.0,
-          "zoom_speed": 1.0,
-          "glide_after_release": 0.9
+          "rotate_speed": 0.3,
+          "move_speed": 0.3,
+          "zoom_speed": 0.3,
+          "glide_after_release": 0.8
         },
         "pins": [
           {
             "position_m": [
-              6020.7,
-              50.0,
-              6020.7
+              14000,
+              1900,
+              8000
             ],
             "title": "MOON BASE",
             "_note": "placeholder position at the splat's measured center — move position_m to the real base site; hover shows the title, click re-centers"
@@ -281,11 +281,38 @@
         "chip": "3D — Landing Zone 1",
         "view_angle_deg": -50,
         "scene_file": "assets/splats/starshop_hsl_v001.sog",
+        "camera": {
+          "_note": "Copied from F_01's hand-authored settings (Kari, 2026-07-28) — every value is yours to tune (feature-window cameras are fully hand-authored). angle min/max null = free orbit.",
+          "look_at_m": [
+            -2000,
+            -1.0,
+            -4000
+          ],
+          "distance_m": {
+            "min": 20000,
+            "max": 60000,
+            "start": 45000
+          },
+          "angle_around_deg": {
+            "min": null,
+            "max": null,
+            "start": -80
+          },
+          "angle_up_down_deg": {
+            "min": 5,
+            "max": 80,
+            "start": 55
+          },
+          "zoom_fov_deg": 45,
+          "move_limit_m": 10000,
+          "clip_near_m": 1000.0,
+          "clip_far_m": 1500000.0
+        },
         "controls": {
-          "rotate_speed": 1.0,
-          "move_speed": 1.0,
-          "zoom_speed": 1.0,
-          "glide_after_release": 0.9
+          "rotate_speed": 0.3,
+          "move_speed": 0.3,
+          "zoom_speed": 0.3,
+          "glide_after_release": 0.8
         },
         "pins": [
           {
@@ -314,12 +341,39 @@
         ],
         "chip": "3D — Landing Zone 2",
         "view_angle_deg": 150,
-        "scene_file": "assets/splats/lunar-base-hero-d.sog",
+        "scene_file": "assets/splats/spacex_hls_v001-d.sog",
+        "camera": {
+          "_note": "Copied from F_01's hand-authored settings (Kari, 2026-07-28) — every value is yours to tune (feature-window cameras are fully hand-authored). angle min/max null = free orbit.",
+          "look_at_m": [
+            -2000,
+            -1.0,
+            -4000
+          ],
+          "distance_m": {
+            "min": 20000,
+            "max": 60000,
+            "start": 45000
+          },
+          "angle_around_deg": {
+            "min": null,
+            "max": null,
+            "start": -80
+          },
+          "angle_up_down_deg": {
+            "min": 5,
+            "max": 80,
+            "start": 55
+          },
+          "zoom_fov_deg": 45,
+          "move_limit_m": 10000,
+          "clip_near_m": 1000.0,
+          "clip_far_m": 1500000.0
+        },
         "controls": {
-          "rotate_speed": 1.0,
-          "move_speed": 1.0,
-          "zoom_speed": 1.0,
-          "glide_after_release": 0.9
+          "rotate_speed": 0.3,
+          "move_speed": 0.3,
+          "zoom_speed": 0.3,
+          "glide_after_release": 0.8
         },
         "pins": []
       },
@@ -339,11 +393,38 @@
         "chip": "3D — Operations Hub",
         "view_angle_deg": -120,
         "scene_file": "assets/splats/starshop_hsl_v001.sog",
+        "camera": {
+          "_note": "Copied from F_01's hand-authored settings (Kari, 2026-07-28) — every value is yours to tune (feature-window cameras are fully hand-authored). angle min/max null = free orbit.",
+          "look_at_m": [
+            -2000,
+            -1.0,
+            -4000
+          ],
+          "distance_m": {
+            "min": 20000,
+            "max": 60000,
+            "start": 45000
+          },
+          "angle_around_deg": {
+            "min": null,
+            "max": null,
+            "start": -80
+          },
+          "angle_up_down_deg": {
+            "min": 5,
+            "max": 80,
+            "start": 55
+          },
+          "zoom_fov_deg": 45,
+          "move_limit_m": 10000,
+          "clip_near_m": 1000.0,
+          "clip_far_m": 1500000.0
+        },
         "controls": {
-          "rotate_speed": 1.0,
-          "move_speed": 1.0,
-          "zoom_speed": 1.0,
-          "glide_after_release": 0.9
+          "rotate_speed": 0.3,
+          "move_speed": 0.3,
+          "zoom_speed": 0.3,
+          "glide_after_release": 0.8
         },
         "pins": []
       }
