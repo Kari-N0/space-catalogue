@@ -24,11 +24,11 @@
       "tool": "LichtFeld Studio SOG export (SOG v2 bundle)",
       "by": "Kari",
       "date": "2026-07-29",
-      "source": "D:\\renders\\lunar-base\\assets\\splats\\mk2_v002.sog (exported 09:12; superseded mk2_v001.sog 09:10 stays on D:)",
-      "splats": 1944104,
-      "bytes": 26402192,
-      "md5": "aad6786181387eda7e1351ff95b356fa",
-      "shipped_as": "apps/web/public/assets/splats/mk2_v002-d.sog (desktop tier; wired to lunar-base overview feature F_02)",
+      "source": "D:\\renders\\lunar-base\\assets\\splats\\mk2_v003.sog (exported 15:41; supersedes mk2_v002.sog which shipped 2026-07-29 morning and was removed from the repo at this swap)",
+      "splats": 2000001,
+      "bytes": 28666505,
+      "md5": "45851192f2ea4c251096a9e0caa8de49",
+      "shipped_as": "apps/web/public/assets/splats/mk2_v003-d.sog (desktop tier; wired to lunar-base overview feature F_02)",
       "note": "LFS export settings: Kari to record"
     }
   ],
