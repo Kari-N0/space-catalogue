@@ -1,0 +1,28 @@
+{
+  "concept": "lunar-base",
+  "vantage": "mk2_01",
+  "generated": "2026-07-28T22:42:26",
+  "blend_file": "\\\\wsl.localhost\\Ubuntu-24.04\\home\\karin\\dev\\space-catalogue\\assets_src\\lunar-base\\assets\\mk2\\mk2_pad_v001.blend",
+  "rig_hash": "05b553e62bf4",
+  "envelope": {
+    "look_at_m": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "distance_m": {
+      "min": 63.3,
+      "max": 116.5
+    },
+    "angle_up_down_deg": {
+      "min": 2.0,
+      "max": 95.5
+    },
+    "angle_around_deg": {
+      "min": null,
+      "max": null
+    },
+    "zoom_fov_deg": 73.7
+  },
+  "object_envelopes": {}
+}

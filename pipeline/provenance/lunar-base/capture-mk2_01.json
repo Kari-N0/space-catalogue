@@ -1,0 +1,38 @@
+{
+  "asset": "capture dataset lunar-base/mk2_01",
+  "generated": "2026-07-28T22:42:26",
+  "stages": [
+    {
+      "stage": "render-dataset",
+      "tool": "Blender 5.1.2 / Cycles OptiX",
+      "script": "pipeline/blender/capture/export_dataset.py",
+      "blend_file": "\\\\wsl.localhost\\Ubuntu-24.04\\home\\karin\\dev\\space-catalogue\\assets_src\\lunar-base\\assets\\mk2\\mk2_pad_v001.blend",
+      "seed": 0,
+      "views": 524,
+      "resolution": 2000,
+      "license": "original render \u2014 project IP; terrain DEM lineage per pipeline/provenance/lunar-base/terrain-dems.json"
+    },
+    {
+      "stage": "lichtfeld-train+clean",
+      "tool": "LichtFeld Studio (GPLv3 \u2014 license checked 2026-07-14: gsplat/Apache-2.0 rasterizer lineage, no Inria code per THIRD_PARTY_LICENSES.md)",
+      "by": "Kari",
+      "date": "2026-07-29",
+      "note": "LFS version + training/clean settings: Kari to record"
+    },
+    {
+      "stage": "sog-export",
+      "tool": "LichtFeld Studio SOG export (SOG v2 bundle)",
+      "by": "Kari",
+      "date": "2026-07-29",
+      "source": "D:\\renders\\lunar-base\\assets\\splats\\mk2_v002.sog (exported 09:12; superseded mk2_v001.sog 09:10 stays on D:)",
+      "splats": 1944104,
+      "bytes": 26402192,
+      "md5": "aad6786181387eda7e1351ff95b356fa",
+      "shipped_as": "apps/web/public/assets/splats/mk2_v002-d.sog (desktop tier; wired to lunar-base overview feature F_02)",
+      "note": "LFS export settings: Kari to record"
+    }
+  ],
+  "pending_stages": [
+    "record LFS version + train/clean/export settings (Kari); confirm clean/crop-only editing rule was followed"
+  ]
+}

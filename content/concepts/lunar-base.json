@@ -280,18 +280,18 @@
         ],
         "chip": "3D — Landing Zone 1",
         "view_angle_deg": -50,
-        "scene_file": "assets/splats/starshop_hsl_v001.sog",
+        "scene_file": "assets/splats/mk2_v002-d.sog",
         "camera": {
-          "_note": "Preliminary from the measured auto-fit of starshop_hsl_v001 (median center, 90th-percentile radius r=186.3 m; ratios: start 2.6r, min 0.3r, max 10r, clips 0.01r/200r, move_limit r). Angles/fov from your F_01 template; around start = -90+view_angle so the opening view matches the old auto-framing. Every value is yours to tune.",
+          "_note": "Preliminary from this splat's own capture envelope (pipeline/provenance/lunar-base/capture-mk2_01.envelope.json): look_at = envelope origin (pad center; the measured splat median sits ~32 m off toward background terrain, so the envelope anchor is used), distance and up/down limits = the trained region (63.3-116.5 m, 2.0-95.5 deg), start at envelope max. fov from your F_01 template (rig camera was 73.7). move_limit/clips from measured r90 126.8 m (move r90, clips 0.01r/200r). around start = -90+view_angle. Every value is yours to tune.",
           "look_at_m": [
-            -17.6,
-            -1.0,
-            -17.5
+            0.0,
+            0.0,
+            0.0
           ],
           "distance_m": {
-            "min": 56,
-            "max": 1860,
-            "start": 485
+            "min": 63.3,
+            "max": 116.5,
+            "start": 116
           },
           "angle_around_deg": {
             "min": null,
@@ -299,14 +299,14 @@
             "start": -140
           },
           "angle_up_down_deg": {
-            "min": 5,
-            "max": 80,
+            "min": 2.0,
+            "max": 95.5,
             "start": 68
           },
           "zoom_fov_deg": 45,
-          "move_limit_m": 185,
-          "clip_near_m": 2.0,
-          "clip_far_m": 37000.0
+          "move_limit_m": 125,
+          "clip_near_m": 1.5,
+          "clip_far_m": 25000.0
         },
         "controls": {
           "rotate_speed": 0.3,
