@@ -1,5 +1,5 @@
 {
-  "asset": "hero section video (INTERIM — Kari will deliver a longer final image sequence; this encode gets superseded)",
+  "asset": "hero section video (FINAL hero_hq, 2026-08-04 \u2014 supersedes the interim encode)",
   "used_for": "hero.video + hero.poster_image in content/concepts/lunar-base.json (autoplay muted loop, poster = frame 0001)",
   "stages": [
     {
@@ -7,19 +7,28 @@
       "by": "Kari",
       "date": "2026-07-28",
       "source": "assets_src/lunar-base/hero/hero_spacex_hls_v001.blend (Blender 5.1.2)",
-      "product": "D:\\renders\\lunar-base\\hero\\seq_spacex_hls_v003\\ — 250 PNG frames (RGBA, fully opaque), 3840x2160, scene 24 fps, frames 1-250. v003 composition update by Kari (v001/v002 sequences superseded same day; their encodes shipped briefly and were removed from the repo at each swap)",
-      "license": "original render — project IP; terrain DEM lineage per pipeline/provenance/lunar-base/terrain-dems.json",
+      "product": "D:\\renders\\lunar-base\\hero\\seq_spacex_hls_v003\\ \u2014 250 PNG frames (RGBA, fully opaque), 3840x2160, scene 24 fps, frames 1-250. v003 composition update by Kari (v001/v002 sequences superseded same day; their encodes shipped briefly and were removed from the repo at each swap)",
+      "license": "original render \u2014 project IP; terrain DEM lineage per pipeline/provenance/lunar-base/terrain-dems.json",
       "note": "render settings (samples etc.): Kari to record if this lineage ships beyond the interim"
     },
     {
       "stage": "web-encode",
-      "by": "Claude (encode only — content untouched)",
+      "by": "Claude (encode only \u2014 content untouched)",
       "date": "2026-07-28",
       "tool": "ffmpeg 6.1.1-3ubuntu5",
       "settings": "scale 3840x2160 -> 1920x1080 lanczos; H.264 libx264 preset slow CRF 20 yuv420p, no audio, +faststart; 24 fps x 250 frames = 10.417 s. Poster: frame 0001, same scale, webp quality 82.",
-      "quality": "vs lossless 1080p reference: SSIM 0.9167 (recipe validated on v001 with a CRF 18/20/22 ladder — within 0.004 SSIM, render grain dominates); dark-region visual check at +0.22 brightness: no banding",
+      "quality": "vs lossless 1080p reference: SSIM 0.9167 (recipe validated on v001 with a CRF 18/20/22 ladder \u2014 within 0.004 SSIM, render grain dominates); dark-region visual check at +0.22 brightness: no banding",
       "products": "apps/web/public/assets/placeholders/hero_spacex_hls_v003.mp4 (8,728,687 B, sha256 0bdde5c3cb5a8c93a026dd36aa637ea53e3193ad67cb3ad99fa685d54f1df246), hero_spacex_hls_v003_poster.webp (289,870 B, sha256 ae750d29e1e54de7fa6605a900c2777920826dbbfb9cb0197d6b244d6c2e1732)",
       "note": "lives in assets/placeholders/ on purpose: interim per Kari 2026-07-28; superseded rerender.mp4 left in place, uncommitted-file status unchanged"
+    },
+    {
+      "stage": "web-encode-final",
+      "by": "Claude",
+      "date": "2026-08-04",
+      "source": "D:\\renders\\lunar-base\\hero\\hero_hq.mp4 (Kari's final render+edit: 1920x1080@24, 15.59 s, 55.4 MB h264+aac)",
+      "tool": "ffmpeg (WSL)",
+      "params": "-an (player is muted-autoplay) -c:v libx264 -preset slow -crf 23 -pix_fmt yuv420p -movflags +faststart",
+      "outputs": "apps/web/public/assets/video/hero_v001.mp4 (6.0 MiB); poster = frame 0 -> hero_v001_poster.webp (WebP q80, 190 KB)"
     }
   ]
 }
