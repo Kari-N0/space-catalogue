@@ -5,7 +5,7 @@ seeded from DNS-RUNBOOK.md when Phase 1 completed; if a private draft exists
 elsewhere, merge it in). Detailed procedures live in **DNS-RUNBOOK.md**;
 this file only tracks status.
 
-## Phase 1 — domain (farsidelab.com)
+## Phase 1 — domain (farsidelab.com) — ✅ COMPLETE 2026-08-04
 
 - [x] Cloudflare zone active, nameservers switched (neil/penny.ns.cloudflare.com) — Kari, 2026-08-04
 - [x] DNS records for GitHub Pages created (runbook §2) — Kari, 2026-08-04
@@ -19,7 +19,7 @@ this file only tracks status.
 - [x] Signup form wired to the Buttondown embed endpoint (client fetch + no-JS form fallback) and **response kept deliberately generic** for every server outcome (enumeration protection — see CLAUDE.md web rules); all four UI states verified against the endpoint's real response shapes, deployed — Claude, 2026-08-04
   - Footnote (by design, no action): **resubscribe after unsubscribe is suppressed** by Buttondown's suppression list — the form can't re-add a previously-unsubscribed address. Returning subscribers use the hosted page (buttondown.com/FarsideLab) or email us. Post-launch footnote only.
 - [x] Analytics: **Plausible** wired site-wide (landing + concept routes), cookieless default config; goals: `Signup Completed` (form success state), `Enter 3D` (first 3D-canvas interaction), pageview goal on `/concept/` (Kari adds the three goals in the dashboard); self-exclusion via `#analytics-off` URL toggle; CSP draft in runbook §4.4 amended same day (plausible.io + inline-snippet hashes + buttondown.com) — Claude, 2026-08-04
-- [ ] **Privacy page — the last remaining Phase 1 tile** (documents both Buttondown and Plausible; next session)
+- [x] **Privacy page** — `/privacy/` live in site chrome, documents Buttondown (double opt-in, no pixels, enumeration-protected form, US processor under SCC-based DPA) + Plausible (EU-hosted, cookieless, aggregate) + hosting logs + GDPR rights (Finnish DPA); footer PRIVACY link wired; Kari reviewed and signed off pre-commit — 2026-08-04. Note: Cloudflare Email Address Obfuscation rewrites the page's static mailto links (decodes in-browser; verified live).
 
 ## Phase 1.5 — hardening (deferred, own clocks — not launch-blocking)
 
