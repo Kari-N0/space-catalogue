@@ -338,3 +338,10 @@ py3.12 + rasterio + pyproj + openexr-python + pillow (all conda-forge), backing 
 **DECISION (task branch 4; license calls remain Kari's):** Comfy-Org path **NOT clean** → stay on **TRELLIS 1** and the pending **ai.meta.com application**. Nothing downloaded, nothing installed; trellis2 env stays dormant. On grant: activate per Phase 5 procedure — convert `.pth` → HF format immediately (links expire), run `pipeline/checks/check_trellis2.py`, and record in provenance **which license text was accepted** (ai.meta.com Aug 14 variant at click-through) plus its hash. Once PR #14718 ships in a ComfyUI release, ComfyUI-native TRELLIS.2 can become a second consumer of the **same Meta-granted checkpoint** (convert our own copy to the `clip_vision/` layout — do not pull Comfy-Org's file).
 
 **Logged:** PLAN.md §5 (matrix row + stack notes).
+
+## NAS backup — Synology mount + sync-nas.sh + automation — 2026-08-04
+
+- **Mount:** `/mnt/x` → `X:` (`\\192.168.50.130\Kari`, Synology, 21 TB share) via drvfs; `/etc/fstab` line added (Kari, sudo) so it survives WSL restarts: `X: /mnt/x drvfs defaults,noatime,uid=1000,gid=1000 0 0`. Target folder `X:\projects\farsidelab\{assets_src,splats,renders}`.
+- **Script:** `scripts/sync-nas.sh` (committed 25a648d). rsync `-rlt --modify-window=2` (SMB can't take perms/owner), accumulative — NO `--delete` by design; excludes `*.blend1` (~56 GB churn), Zone.Identifier, Thumbs.db, `__pycache__`. Legs: `assets_src/`, `pipeline/rehearsal/web/`→`splats/rehearsal/`, `/mnt/d/renders/`. Logs `~/.local/state/sync-nas/sync-<stamp>-<mode>.log`, `last.log` symlink. `--dry-run` flag supported.
+- **VERIFY:** dry-run gate shown to Kari (141+4+4,886 files, ~109 GB), then first real run: **109.2 GB in 1924 s (~58 MB/s), status OK**, all three folders verified on the NAS.
+- **Automation:** (1) Claude Code SessionEnd hook in `.claude/settings.local.json` (async, 1800 s timeout); (2) systemd **user** timer `sync-nas.timer` — `Mon 12:00`, `Persistent=true` (catch-up if WSL was off; chosen over cron for exactly that), enabled, first fire 2026-08-10 12:02. LAUNCH.md launch-day gate: sync fresh within 24 h.
