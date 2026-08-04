@@ -151,14 +151,19 @@ When: Hostname eq `farsidelab.com`. Set static headers:
 | `Referrer-Policy` | `strict-origin-when-cross-origin` |
 | `Permissions-Policy` | `camera=(), microphone=(), geolocation=()` |
 | `X-Frame-Options` | `DENY` |
-| `Content-Security-Policy-Report-Only` | `default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'` |
+| `Content-Security-Policy-Report-Only` | `default-src 'self'; script-src 'self' 'wasm-unsafe-eval' https://plausible.io 'sha256-NGZKiTSkpb8HhMF5Pus6Xp2oskibeW4015D/xeWIs2g=' 'sha256-AW3rhsROpK5GJqo/gqlL9tJtqMDO3J6Lu8zkg/f8hiI='; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self'; connect-src 'self' https://plausible.io https://buttondown.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://buttondown.com` |
 
 CSP ships **Report-Only on purpose**: Babylon needs wasm + blob workers and
 injects style tags; the policy above is written for that, but we verify the
 console stays clean on the live domain for a few days (Claude checks in §6),
-THEN flip the header name to `Content-Security-Policy`. When analytics/Brevo
-arrive later, `script-src`/`connect-src` grow by exactly those origins —
-amend the rule the same day the service goes live.
+THEN flip the header name to `Content-Security-Policy`. Amended 2026-08-04
+for the services that went live: `https://plausible.io` in script-src +
+connect-src and the two `sha256-…` entries for the inline Plausible init
+snippets (index.html / concept/index.html — recompute if those snippets
+change byte-for-byte), `https://buttondown.com` in connect-src (signup
+fetch) and form-action (no-JS form fallback). Any future service grows
+`script-src`/`connect-src` by exactly its origin — amend the rule the same
+day the service goes live.
 
 ## 5. What flips in the repo when the domain is live
 

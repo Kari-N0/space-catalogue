@@ -306,6 +306,13 @@ function renderContact(data: ConceptPage): HTMLElement | null {
 // states possible on a fully static site.
 const BUTTONDOWN_SUBSCRIBE_URL = "https://buttondown.com/api/emails/embed-subscribe/FarsideLab";
 
+// Plausible custom events (goals). The inline stub in <head> queues calls
+// until the async script arrives; optional chaining keeps this a no-op when
+// the script is blocked or absent (dev harnesses, ad blockers).
+function trackEvent(name: string): void {
+  (window as { plausible?: (event: string) => void }).plausible?.(name);
+}
+
 function renderSignup(data: ConceptPage): HTMLElement {
   const { signup } = data.page;
   const root = el("section", "notify");
@@ -363,6 +370,7 @@ function renderSignup(data: ConceptPage): HTMLElement {
       body: new URLSearchParams({ email }),
     })
       .then(() => {
+        trackEvent("Signup Completed");
         // Deliberately no res.ok branch (enumeration protection, CLAUDE.md):
         // membership is never echoed back, and Buttondown's embed endpoint
         // can't distinguish it anyway — duplicates and flagged addresses both
@@ -492,6 +500,20 @@ function wireViewer(
       console.error(err);
     }
   };
+
+  // analytics goal "Enter 3D": there is no enter button (the viewer
+  // auto-inits), so this fires on the first real interaction with any 3D
+  // canvas — hero stage or feature window — once per page view
+  let entered3d = false;
+  const enter3d = (): void => {
+    if (entered3d) return;
+    entered3d = true;
+    trackEvent("Enter 3D");
+  };
+  for (const c of [refs.canvas, ...featureCanvases]) {
+    c.addEventListener("pointerdown", enter3d);
+    c.addEventListener("wheel", enter3d, { passive: true });
+  }
 
   // concept pages auto-init the viewer after the page load event
   const start = () => setTimeout(() => void init3d(), 0);
