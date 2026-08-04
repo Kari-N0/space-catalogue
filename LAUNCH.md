@@ -31,5 +31,6 @@ this file only tracks status.
 
 ## Phase 2 — content & services (separate gates)
 
+- [ ] **Launch-day gate: NAS sync fresh within 24 h** — check `~/.local/state/sync-nas/last.log` (written by `scripts/sync-nas.sh`; also runs via SessionEnd hook + weekly systemd user timer)
 - [ ] `noindex` removal — **Kari's explicit launch call, its own switch** (concept/index.html)
 - [ ] robots.txt + sitemap.xml + styled 404 (optional, post-launch)
