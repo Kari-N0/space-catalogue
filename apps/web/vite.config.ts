@@ -47,6 +47,8 @@ export default defineConfig({
         mockupC2: resolve(__dirname, "mockups/c2.html"),
         // the production concept-page template (JSON-driven; /concept/?id=<x>)
         conceptPage: resolve(__dirname, "concept/index.html"),
+        // static privacy notice (site chrome + article styles, no page JS)
+        privacyPage: resolve(__dirname, "privacy/index.html"),
       },
       output: {
         // Babylon v9 materials pull shaders via per-file dynamic import();
