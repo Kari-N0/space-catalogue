@@ -1,0 +1,14 @@
+{
+  "type": "reference",
+  "used_for": "FIG_03 'From data to scene. elevation model, clay render, final light, capture rig.' (Making Of article, concept lunar-base) \u2014 replaces the rover placeholder in the article image block.",
+  "accessed": "2026-08-04",
+  "publisher": "Kari N\u00f6jd (authored composition)",
+  "usage_terms": "project-original work",
+  "entries": [
+    {
+      "source": "D:\\renders\\lunar-base\\assets\\images\\pipieline.png (2185x947 (v2, Kari 2026-08-04 11:48 \u2014 caption layout adjustments) RGBA PNG, alpha fully opaque; composed by Kari from project renders \u2014 companion pipieline.pptx alongside)",
+      "product": "FIG_03 web export",
+      "notes": "Web export 2026-08-04 (re-exported same day from the adjusted source): Pillow (terrain env) RGB flatten -> Lanczos 1500x650 -> WebP q80 method 6 -> apps/web/public/assets/figures/fig03-pipeline.webp (80 KB), referenced by content/concepts/lunar-base.json article image block. Same export recipe as FIG_01 (1500 px, WebP q80)."
+    }
+  ]
+}

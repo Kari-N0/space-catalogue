@@ -659,6 +659,15 @@ a:hover { color: var(--color-text-emphasis); }
 
 /* -- sources ------------------------------------------------------------ */
 
+/* optional intro paragraph (sources.intro) — same reading measure as the
+   Article section: centered 68ch column, body-size left-aligned text
+   (.article / .article p; Kari, 2026-08-04) */
+.sources-intro {
+  margin: 0 auto 24px;
+  max-width: 68ch;
+  color: var(--color-text);
+}
+
 .source-row {
   display: flex;
   gap: 16px;
@@ -770,13 +779,6 @@ a:hover { color: var(--color-text-emphasis); }
   text-transform: uppercase;
   letter-spacing: var(--tracking-nav);
 }
-.footer-fineprint {
-  margin-top: 32px;
-  font-size: var(--text-ref);
-  color: var(--color-text-secondary);
-  letter-spacing: var(--tracking-nav);
-}
-
 /* -- contact band (vidro.fi treatment: kicker + large mailto with arrow;
       centered per Kari 2026-07-27) -- */
 section[aria-labelledby="kicker-contact"] .container { text-align: center; }

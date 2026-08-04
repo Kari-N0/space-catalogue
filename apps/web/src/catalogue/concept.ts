@@ -148,7 +148,7 @@ export interface PageDoc {
   live_view: { heading: string; note: string };
   overview: { heading: string; intro: string; intro_blocks: ArticleBlock[]; features: PageFeature[] };
   article: { heading: string; blocks: ArticleBlock[] };
-  sources: { heading: string; items: { label: string; text: string }[] };
+  sources: { heading: string; intro: string; items: { label: string; text: string }[] };
   signup: {
     kicker: string;
     heading_line_1: string;
@@ -407,6 +407,8 @@ export function parseConceptPage(raw: unknown): ConceptPage {
     article: { heading: str(article.heading, "Specifications"), blocks: parseArticleBlocks(article.blocks) },
     sources: {
       heading: str(sources.heading, "Sources"),
+      // optional paragraph above the source rows (disclaimer/context; "" = none)
+      intro: str(sources.intro, ""),
       items: Array.isArray(sources.items)
         ? sources.items.map((s) => ({ label: str(obj(s).label), text: str(obj(s).text) }))
         : [],

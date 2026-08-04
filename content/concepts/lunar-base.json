@@ -16,28 +16,28 @@
   "live_view": {
     "heading": "3D View",
     "note": "Navigation — Drag to orbit, Right-drag to pan, Scroll to zoom",
-    "scene_file": "assets/splats/lunar_base_v005-d.sog",
+    "scene_file": "assets/splats/splat_hero_d.sog",
     "scene_file_mobile": "assets/splats/lunar-base-hero-m.sog",
     "camera": {
       "look_at_m": [
-        0.0,
-        0.0,
-        0.0
+        -700,
+        150,
+        200
       ],
       "distance_m": {
-        "min": 1500,
-        "max": 3500,
-        "start": 3500
+        "min": 200,
+        "max": 2000,
+        "start": 300
       },
       "angle_up_down_deg": {
         "min": 10,
-        "max": 80,
-        "start": 80
+        "max": 87,
+        "start": 60
       },
       "angle_around_deg": {
         "min": null,
         "max": null,
-        "start": -100
+        "start": 160
       },
       "zoom_fov_deg": 60,
       "move_limit_m": 5000,
@@ -143,12 +143,12 @@
     "pins": [
       {
         "position_m": [
-          472.055,
-          39.48,
-          -1774.754
+          -563.5,
+          0,
+          143
         ],
-        "title": "Crew EVA",
-        "text": "[sample] Two crew on surface operations near the habitat approach path. Final hotspot copy lands with the scene bible.",
+        "title": "Landing Zone 1",
+        "text": "The routine port: Blue Origin's Mk2 on a hardened pad, ringed by a dust berm, sited a safe distance down-slope from the habitat. Everything the base receives, crew, cargo, spare parts, comes through here first.",
         "image": "assets/placeholders/moon_site_image_placeholder.webp"
       },
       {
@@ -157,8 +157,8 @@
           0.567,
           375.407
         ],
-        "title": "Surface rover",
-        "text": "[sample] Unpressurized utility rover staged for a logistics run. Placeholder position — authored per scene.",
+        "title": "Operations Hub",
+        "text": "The center of the base, the habitat stack on its lander foundation, ringed by solar masts, the rover berth, and the science yard. Everything else in the scene exists to keep this place alive.",
         "image": "assets/placeholders/rover_image_placeholder.webp"
       },
       {
@@ -167,8 +167,8 @@
           71.517,
           -1045.193
         ],
-        "title": "Boulder field",
-        "text": "[sample] Ejecta boulders shield the northern perimeter. Placeholder position — authored per scene.",
+        "title": "Landing Zone 2",
+        "text": "The Starship HLS handles the base's heaviest deliveries from open ground to kilometers out, where distance itself absorbs what its engines throw.",
         "image": "assets/placeholders/satellite_orbit_image_placeholder.webp"
       }
     ]
@@ -214,13 +214,13 @@
         ],
         "chip": "3D — Location",
         "view_angle_deg": 35,
-        "scene_file": "assets/splats/de_gerlache_v001-d.sog",
+        "scene_file": "assets/splats/splat_de_gerlache_d.sog",
         "camera": {
           "_note": "Prefilled from the measured auto-fit of de_gerlache_v001 — every value is yours to tune (feature-window cameras are fully hand-authored). angle min/max null = free orbit.",
           "look_at_m": [
-            -2000,
+            -1000,
             -1.0,
-            -4000
+            -5500
           ],
           "distance_m": {
             "min": 20000,
@@ -235,7 +235,7 @@
           "angle_up_down_deg": {
             "min": 5,
             "max": 80,
-            "start": 55
+            "start": 40
           },
           "zoom_fov_deg": 45,
           "move_limit_m": 10000,
@@ -280,18 +280,18 @@
         ],
         "chip": "3D — Landing Zone 1",
         "view_angle_deg": -50,
-        "scene_file": "assets/splats/mk2_v003-d.sog",
+        "scene_file": "assets/splats/splat_mk2_d.sog",
         "camera": {
           "_note": "Preliminary from this splat's own capture envelope (pipeline/provenance/lunar-base/capture-mk2_01.envelope.json): look_at = envelope origin (pad center; the measured splat median sits ~32 m off toward background terrain, so the envelope anchor is used), distance and up/down limits = the trained region (63.3-116.5 m, 2.0-95.5 deg), start at envelope max. fov from your F_01 template (rig camera was 73.7). move_limit/clips from measured r90 126.8 m (move r90, clips 0.01r/200r). around start = -90+view_angle. Every value is yours to tune.",
           "look_at_m": [
-            0.0,
-            0.0,
-            0.0
+            0,
+            0,
+            0
           ],
           "distance_m": {
             "min": 63.3,
-            "max": 116.5,
-            "start": 116
+            "max": 90,
+            "start": 70
           },
           "angle_around_deg": {
             "min": null,
@@ -300,11 +300,11 @@
           },
           "angle_up_down_deg": {
             "min": 2.0,
-            "max": 95.5,
-            "start": 68
+            "max": 80,
+            "start": 70
           },
           "zoom_fov_deg": 45,
-          "move_limit_m": 125,
+          "move_limit_m": 20,
           "clip_near_m": 1.5,
           "clip_far_m": 25000.0
         },
@@ -313,18 +313,7 @@
           "move_speed": 0.3,
           "zoom_speed": 0.3,
           "glide_after_release": 0.8
-        },
-        "pins": [
-          {
-            "position_m": [
-              120,
-              40,
-              120
-            ],
-            "title": "Sample POI",
-            "text": "[sample] Hover shows this text; click/tap re-centers this window on the point. Replace position_m with a real coordinate (meters) from Blender."
-          }
-        ]
+        }
       },
       {
         "label": "F_03 — Landing Zone 2",
@@ -341,23 +330,23 @@
         ],
         "chip": "3D — Landing Zone 2",
         "view_angle_deg": 150,
-        "scene_file": "assets/splats/spacex_hls_v001-d.sog",
+        "scene_file": "assets/splats/splat_spacex_d.sog",
         "camera": {
           "_note": "Preliminary from this splat's own capture envelope (pipeline/provenance/lunar-base/capture-spacex_hls.envelope.json): distance and up/down limits = the trained region (58.2-107.2 m, 2.0-92.8 deg), look_at = measured auto-fit median center (splat r90 = 95.7 m). Start distance opens at the envelope max; fov from your F_01 template (rig camera was 73.7). around start = -90+view_angle to match the old auto-framing. Every value is yours to tune.",
           "look_at_m": [
             1.0,
-            -1.0,
+            20,
             1.0
           ],
           "distance_m": {
-            "min": 58.2,
-            "max": 107.2,
+            "min": 70,
+            "max": 200,
             "start": 107
           },
           "angle_around_deg": {
             "min": null,
             "max": null,
-            "start": 60
+            "start": -150
           },
           "angle_up_down_deg": {
             "min": 2.0,
@@ -365,7 +354,7 @@
             "start": 68
           },
           "zoom_fov_deg": 45,
-          "move_limit_m": 95,
+          "move_limit_m": 10,
           "clip_near_m": 1.0,
           "clip_far_m": 19000.0
         },
@@ -392,23 +381,23 @@
         ],
         "chip": "3D — Operations Hub",
         "view_angle_deg": -120,
-        "scene_file": "assets/splats/starshop_hsl_v001.sog",
+        "scene_file": "assets/splats/splat_base_d.sog",
         "camera": {
           "_note": "Preliminary from the measured auto-fit of starshop_hsl_v001 (same splat as F_02: median center, r=186.3 m; ratios: start 2.6r, min 0.3r, max 10r, clips 0.01r/200r, move_limit r). Angles/fov from your F_01 template; around start = -90+view_angle so the opening view matches the old auto-framing. Every value is yours to tune.",
           "look_at_m": [
-            -17.6,
-            -1.0,
-            -17.5
+            0,
+            10,
+            0
           ],
           "distance_m": {
             "min": 56,
-            "max": 1860,
-            "start": 485
+            "max": 200,
+            "start": 100
           },
           "angle_around_deg": {
             "min": null,
             "max": null,
-            "start": 150
+            "start": 200
           },
           "angle_up_down_deg": {
             "min": 5,
@@ -416,7 +405,7 @@
             "start": 68
           },
           "zoom_fov_deg": 45,
-          "move_limit_m": 185,
+          "move_limit_m": 50,
           "clip_near_m": 2.0,
           "clip_far_m": 37000.0
         },
@@ -485,7 +474,7 @@
       },
       {
         "type": "image",
-        "file": "assets/placeholders/rover_image_placeholder.webp",
+        "file": "assets/figures/fig03-pipeline.webp",
         "caption": "From data to scene. elevation model, clay render, final light, capture rig."
       },
       {
@@ -512,18 +501,47 @@
   },
   "sources": {
     "heading": "Sources",
+    "intro": "FarsideLab is an independent visualization project. It is not affiliated with, endorsed by, or sponsored by NASA, SpaceX, Blue Origin, or any organization mentioned. All names and trademarks belong to their respective owners.",
     "items": [
       {
         "label": "SRC_01",
-        "text": "[sample: agency reference architecture document — citation in production]"
+        "text": "Terrain data. NASA Lunar Orbiter Laser Altimeter (LOLA) elevation model of the de Gerlache rim area, five meters per pixel, from NASA's Planetary Geodesy Data Archive."
       },
       {
         "label": "SRC_02",
-        "text": "[sample: peer-reviewed habitat shielding study — citation in production]"
+        "text": "Regional elevation data. LOLA south polar mosaics at coarser resolution, used for the site map and for casting long-range shadows in the illumination animation."
       },
       {
         "label": "SRC_03",
-        "text": "[sample: polar volatiles survey data — citation in production]"
+        "text": "Site illumination analysis. Sun-visibility computed on the real terrain across the full circle of sun azimuths, following published south-pole illumination studies. The basis for site selection, the shadow animation, and the cold-trap placement."
+      },
+      {
+        "label": "SRC_04",
+        "text": "Artemis program context. NASA Artemis campaign and Moon-to-Mars architecture documentation, program state as of mid-2026. Era framing, landing architecture, and the cargo buildout schedule."
+      },
+      {
+        "label": "SRC_05",
+        "text": "Foundation Surface Habitat. NASA surface-habitat delivery concept documentation: the habitat remains on its delivery lander, inflatable volume over a metallic core, accessed by stairs."
+      },
+      {
+        "label": "SRC_06",
+        "text": "Starship HLS (Human Landing System). NASA and SpaceX published materials: roughly 52-meter height, mid-mounted landing thrusters, hull-riding cargo elevator, up to 100 tonnes per landing, no heat shield by design."
+      },
+      {
+        "label": "SRC_07",
+        "text": "Blue Moon Mk2. Blue Origin and NASA published materials: the 16-meter crew-and-cargo lander depicted on the pad."
+      },
+      {
+        "label": "SRC_08",
+        "text": "Tools. Modeled, lit, and path-traced in Blender (Cycles), with camera datasets exported in COLMAP format from Blender. Gaussian splats trained in LichtFeld Studio and rendered in the browser with Babylon.js."
+      },
+      {
+        "label": "SRC_09",
+        "text": "AI assistance. Pipeline automation and site-analysis tooling built with Claude Code and a Blender MCP connection. Some secondary props were drafted with generative 3D tools."
+      },
+      {
+        "label": "SRC_10",
+        "text": "Concept and execution. Concept, models, scene, and text: Kari Nöjd"
       }
     ]
   },

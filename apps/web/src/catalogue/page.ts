@@ -270,9 +270,11 @@ function renderArticleBlock(block: ArticleBlock): HTMLElement {
 function renderSources(data: ConceptPage): HTMLElement {
   const { sources } = data.page;
   const { root, container } = section("kicker-sources", sources.heading);
+  if (sources.intro) container.appendChild(el("p", "sources-intro", sources.intro));
   const list = el("div");
   list.setAttribute("role", "list");
-  list.setAttribute("aria-label", "Source references");
+  // mirror the authored heading ("Sources", "Sources and credits", …)
+  list.setAttribute("aria-label", sources.heading);
   for (const s of sources.items) {
     const row = el("div", "source-row");
     row.setAttribute("role", "listitem");
@@ -296,6 +298,14 @@ function renderContact(data: ConceptPage): HTMLElement | null {
   return root;
 }
 
+// Buttondown embed-subscribe endpoint (double opt-in configured account-side).
+// Chosen over the authenticated API: it is the documented public-form path, so
+// no secret ever ships to the client, and it serves CORS `*` with readable
+// status codes (probed 2026-08-04: OPTIONS 200 + POST 400 both carry
+// access-control-allow-origin), which is what makes in-page success/error
+// states possible on a fully static site.
+const BUTTONDOWN_SUBSCRIBE_URL = "https://buttondown.com/api/emails/embed-subscribe/FarsideLab";
+
 function renderSignup(data: ConceptPage): HTMLElement {
   const { signup } = data.page;
   const root = el("section", "notify");
@@ -309,9 +319,9 @@ function renderSignup(data: ConceptPage): HTMLElement {
     el("span", "tone-2", signup.heading_line_2),
   );
   const form = el("form", "notify-form");
-  form.action = "#";
+  form.action = BUTTONDOWN_SUBSCRIBE_URL; // no-JS fallback: plain POST to Buttondown's hosted page
+  form.method = "post";
   const fieldset = el("fieldset");
-  fieldset.disabled = true;
   const label = el("label", undefined, signup.label);
   label.htmlFor = "notify-email";
   const row = el("div", "field-row");
@@ -321,12 +331,58 @@ function renderSignup(data: ConceptPage): HTMLElement {
   input.name = "email";
   input.placeholder = signup.placeholder;
   input.autocomplete = "email";
+  input.required = true;
   const button = el("button", "pill-primary", signup.button);
   button.type = "submit";
   row.append(input, button);
   fieldset.append(label, row);
   form.appendChild(fieldset);
-  container.append(kicker, title, form, el("p", "notify-note", signup.note));
+
+  // status line: same visual treatment as the note; announced to screen readers
+  const status = el("p", "notify-note notify-status", "");
+  status.setAttribute("aria-live", "polite");
+  status.hidden = true;
+  const say = (msg: string): void => {
+    status.textContent = msg;
+    status.hidden = msg === "";
+  };
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const email = input.value.trim();
+    // input[type=email] validity + a basic shape check; server re-validates
+    if (email === "" || !input.checkValidity() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      say("That doesn't look like a valid email address — please check it.");
+      return;
+    }
+    fieldset.disabled = true;
+    say("Sending…");
+    void fetch(BUTTONDOWN_SUBSCRIBE_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ email }),
+    })
+      .then(async (res) => {
+        if (res.ok) {
+          // double opt-in: Buttondown has sent the confirmation email
+          say("Check your inbox to confirm your subscription — one click and you're on the list.");
+          return; // fieldset stays disabled: prevents duplicate submits
+        }
+        const text = await res.text().catch(() => "");
+        if (/already\s+(subscribed|signed|on)/i.test(text)) {
+          say("This address is already subscribed.");
+        } else {
+          say("That email address was not accepted — please check it and try again.");
+        }
+        fieldset.disabled = false;
+      })
+      .catch(() => {
+        say("Network error — nothing was sent. Please try again.");
+        fieldset.disabled = false;
+      });
+  });
+
+  container.append(kicker, title, form, status, el("p", "notify-note", signup.note));
   root.appendChild(container);
   return root;
 }
