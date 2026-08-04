@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "compare": "vite --config vite.compare.config.ts",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint src",

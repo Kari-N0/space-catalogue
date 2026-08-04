@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>Splat quality compare — local tool</title>
+  <!-- concept.css on purpose: the compare windows reuse the production
+       .feature-media/.feature-canvas rules so size and look match the page -->
+  <link rel="stylesheet" href="../src/styles/fonts.css">
+  <link rel="stylesheet" href="../src/styles/tokens.css">
+  <link rel="stylesheet" href="../src/styles/concept.css">
+  <link rel="stylesheet" href="../src/styles/compare.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="container nav-inner">
+      <span class="nav-lockup">Splat<span>Compare</span></span>
+      <span class="footer-meta">local quality-comparison tool — dev only, never deployed</span>
+    </div>
+  </header>
+
+  <main>
+    <div class="container" id="app">
+      <p class="stage-note" id="status" role="status">loading…</p>
+    </div>
+  </main>
+
+  <script type="module" src="../src/compare/main.ts"></script>
+</body>
+</html>

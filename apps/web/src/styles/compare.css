@@ -1,0 +1,196 @@
+/* Splat-compare tool (dev-only; compare/index.html) — layout only. The
+   windows themselves are styled by the production concept.css rules
+   (.feature-media / canvas / .scrim-chip) so they match the concept page;
+   the 2×2 grid mirrors .feature's two-column split (same 48px gap inside
+   the same .container), so each window's CSS width — and therefore its
+   render resolution — equals a production Overview window's exactly. */
+
+/* concept.css's .nav is position:fixed (the concept page slides the full-bleed
+   hero under it); this page starts with content, so clear the bar's height */
+main {
+  padding-top: 72px;
+}
+
+.compare-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 24px;
+  padding-block: 24px 8px;
+}
+.compare-toolbar label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--color-text-dim, #98a0a8);
+}
+.compare-toolbar .compare-readout {
+  margin-left: auto;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-dim, #98a0a8);
+}
+
+.compare-select,
+.compare-btn {
+  background: var(--color-surface, #0b0b0d);
+  color: inherit;
+  border: 1px solid var(--hairline, rgba(255, 255, 255, 0.1));
+  border-radius: 6px;
+  padding: 6px 10px;
+  font: inherit;
+  font-size: 13px;
+  max-width: 100%;
+}
+.compare-btn {
+  border-radius: 999px;
+  padding-inline: 14px;
+  cursor: pointer;
+}
+
+/* ---- live camera panel (compare/cameraPanel.ts) ------------------------- */
+.compare-camera {
+  border: 1px solid var(--hairline, rgba(255, 255, 255, 0.1));
+  border-radius: 8px;
+  padding: 8px 14px 14px;
+  margin-block: 8px;
+}
+.compare-camera > summary {
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--color-text-dim, #98a0a8);
+  padding-block: 4px;
+}
+.compare-camera-body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  padding-top: 8px;
+}
+.compare-camera-group {
+  min-width: 168px;
+}
+.compare-camera-group h4 {
+  margin: 0 0 4px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-dim, #98a0a8);
+}
+.compare-camera-row {
+  display: grid;
+  grid-template-columns: 62px 92px; /* fits "clip near" / "move limit" unwrapped */
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+.compare-camera-row:has(.compare-camera-slider) {
+  grid-template-columns: 62px 92px 1fr;
+}
+.compare-camera-label {
+  color: var(--color-text-dim, #98a0a8);
+}
+.compare-camera-num {
+  background: var(--color-surface, #0b0b0d);
+  color: inherit;
+  border: 1px solid var(--hairline, rgba(255, 255, 255, 0.1));
+  border-radius: 4px;
+  padding: 3px 6px;
+  font: inherit;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  width: 100%;
+  min-width: 0;
+}
+.compare-camera-num:focus {
+  outline: 1px solid var(--color-accent, #4d9dff);
+}
+.compare-camera-slider {
+  width: 100%;
+  min-width: 80px;
+  accent-color: var(--color-accent, #4d9dff);
+}
+.compare-camera-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  flex-basis: 100%;
+  padding-top: 4px;
+}
+.compare-camera-status {
+  font-size: 12px;
+  color: var(--color-accent, #4d9dff);
+}
+.compare-camera-live {
+  margin-left: auto;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-dim, #98a0a8);
+}
+.compare-camera-json {
+  flex-basis: 100%;
+  font-size: 12px;
+  color: var(--color-text-dim, #98a0a8);
+}
+.compare-camera-json > summary {
+  cursor: pointer;
+  padding-block: 4px;
+}
+.compare-camera-hint {
+  margin: 4px 0 0;
+  max-width: 78ch;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--color-text-dim, #98a0a8);
+}
+.compare-camera-json pre {
+  max-height: 240px;
+  overflow: auto;
+  margin: 4px 0 0;
+  padding: 8px 10px;
+  background: var(--color-surface, #0b0b0d);
+  border: 1px solid var(--hairline, rgba(255, 255, 255, 0.1));
+  border-radius: 6px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--color-text, #e7e9ec);
+  user-select: text;
+}
+
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px 48px; /* same gap as .feature so window width matches production */
+  padding-block: 8px 64px;
+}
+@media (min-width: 900px) {
+  .compare-grid { grid-template-columns: 1fr 1fr; }
+}
+.compare-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* hidden reference canvas: loadViewer needs a main display canvas; the tool
+   only uses the four feature-view windows. 2×2px keeps the views extension's
+   size math non-zero without spending GPU on a fifth visible view. */
+.compare-hero-host {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 2px;
+  height: 2px;
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.compare-hero-host canvas {
+  width: 2px;
+  height: 2px;
+  display: block;
+}
