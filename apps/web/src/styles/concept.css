@@ -297,8 +297,9 @@ a:hover { color: var(--color-text-emphasis); }
   z-index: 3;
 }
 .stage-status:empty { display: none; }
-/* status-chip twin in the neutral palette (Kari 2026-07-13): pulsing dot
-   when idle, brighten + steady dot on hover; same in both fs states */
+/* status-chip twin in the blue accent triad (Kari 2026-08-04): pulsing dot
+   with ping halo when idle, brighten + steady dot on hover; same in both
+   fs states */
 .stage-fs {
   position: absolute;
   top: 12px;
@@ -311,27 +312,42 @@ a:hover { color: var(--color-text-emphasis); }
   font-size: var(--text-ref);
   text-transform: uppercase;
   letter-spacing: var(--tracking-label);
-  color: var(--color-text);
+  color: var(--chip-blue-text);
   background: var(--scrim-chip-bg);
   backdrop-filter: blur(var(--scrim-chip-blur));
-  border: 1px solid var(--hairline);
+  border: 1px solid var(--chip-blue-border);
   border-radius: var(--radius-chip);
   padding: 2px 8px;
   transition: border-color var(--dur-base) var(--ease-brand),
               color var(--dur-base) var(--ease-brand);
 }
 .stage-fs .dot {
+  position: relative;
   width: 6px;
   height: 6px;
   border-radius: var(--radius-pill);
-  background: var(--color-text-emphasis);
+  background: var(--chip-blue-text);
   animation: pulse-dot calc(var(--dur-base) * 6) var(--ease-brand) infinite;
 }
+.stage-fs .dot::after {
+  /* ping halo (Kari 2026-08-04): makes the control readable as "live" at a
+     glance over bright splat footage */
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--chip-blue-text);
+  animation: fs-ping calc(var(--dur-base) * 6) var(--ease-brand) infinite;
+}
+@keyframes fs-ping {
+  0%   { transform: scale(1); opacity: 0.8; }
+  70%, 100% { transform: scale(3); opacity: 0; }
+}
 .stage-fs:hover {
-  border-color: var(--hairline-strong);
-  color: var(--color-text-emphasis);
+  border-color: var(--chip-blue-text);
 }
 .stage-fs:hover .dot { animation: none; }
+.stage-fs:hover .dot::after { animation: none; opacity: 0; }
 .stage-note {
   margin-top: 14px;
   font-family: var(--font-mono);
@@ -376,15 +392,15 @@ a:hover { color: var(--color-text-emphasis); }
   position: absolute;
   inset: 4px;
   border-radius: var(--radius-pill);
-  background: var(--color-text-emphasis);
+  background: var(--chip-blue-text);
 }
 .viewer-hotspot__pin::before {
-  /* pulsing ring (Kari 2026-07-13) */
+  /* pulsing ring (Kari 2026-07-13; blue accent 2026-08-04) */
   content: "";
   position: absolute;
   inset: -1px;
   border-radius: var(--radius-pill);
-  border: 1px solid var(--color-text-emphasis);
+  border: 1px solid var(--chip-blue-text);
   animation: pin-ping calc(var(--dur-base) * 6) var(--ease-brand) infinite;
 }
 @keyframes pin-ping {
@@ -420,7 +436,7 @@ a:hover { color: var(--color-text-emphasis); }
 }
 .viewer-hotspot:hover .viewer-hotspot__pin,
 .viewer-hotspot:focus-visible .viewer-hotspot__pin {
-  border-color: var(--color-text-emphasis);
+  border-color: var(--chip-blue-text);
 }
 .viewer-hotspot:hover .viewer-hotspot__label,
 .viewer-hotspot:focus-visible .viewer-hotspot__label {
@@ -815,6 +831,7 @@ section[aria-labelledby="kicker-contact"] .container { text-align: center; }
   .status-chip .dot { animation: none; }
   .viewer-hotspot__pin::before { animation: none; opacity: 0; }
   .stage-fs .dot { animation: none; }
+  .stage-fs .dot::after { animation: none; opacity: 0; }
   * { transition: none !important; }
 }
 /* keyboard focus on a near-black page needs an explicit ring */
