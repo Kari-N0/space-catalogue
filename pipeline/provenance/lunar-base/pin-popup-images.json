@@ -1,0 +1,14 @@
+{
+  "type": "reference",
+  "used_for": "Hero pin popup images (live_view.pins[].image, concept lunar-base): Landing Zone 1, Operations Hub, Landing Zone 2 — replace the three placeholder popup images.",
+  "accessed": "2026-08-04",
+  "publisher": "Kari Nöjd (authored renders/compositions)",
+  "usage_terms": "project-original work",
+  "entries": [
+    {
+      "source": "D:\\renders\\lunar-base\\assets\\images\\popup_landing_zone_1.png, popup_base.png, popup_landing_zone_2.png (each 1120x630 RGBA, composed by Kari 2026-08-04)",
+      "product": "web exports",
+      "notes": "Pillow (terrain env) RGB flatten -> Lanczos 720x405 (2x the popup card's 360px max width, 16:9 matches .hotspot-popup img) -> WebP q80 method 6 -> apps/web/public/assets/pins/{popup_landing_zone_1,popup_base,popup_landing_zone_2}.webp (20/17/17 KB). Mapping: popup_landing_zone_1 -> pin 'Landing Zone 1' (Mk2 pad), popup_base -> pin 'Operations Hub', popup_landing_zone_2 -> pin 'Landing Zone 2' (Starship HLS)."
+    }
+  ]
+}

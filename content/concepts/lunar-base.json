@@ -149,7 +149,7 @@
         ],
         "title": "Landing Zone 1",
         "text": "The routine port: Blue Origin's Mk2 on a hardened pad, ringed by a dust berm, sited a safe distance down-slope from the habitat. Everything the base receives, crew, cargo, spare parts, comes through here first.",
-        "image": "assets/placeholders/moon_site_image_placeholder.webp"
+        "image": "assets/pins/popup_landing_zone_1.webp"
       },
       {
         "position_m": [
@@ -159,7 +159,7 @@
         ],
         "title": "Operations Hub",
         "text": "The center of the base, the habitat stack on its lander foundation, ringed by solar masts, the rover berth, and the science yard. Everything else in the scene exists to keep this place alive.",
-        "image": "assets/placeholders/rover_image_placeholder.webp"
+        "image": "assets/pins/popup_base.webp"
       },
       {
         "position_m": [
@@ -169,7 +169,7 @@
         ],
         "title": "Landing Zone 2",
         "text": "The Starship HLS handles the base's heaviest deliveries from open ground to kilometers out, where distance itself absorbs what its engines throw.",
-        "image": "assets/placeholders/satellite_orbit_image_placeholder.webp"
+        "image": "assets/pins/popup_landing_zone_2.webp"
       }
     ]
   },
