@@ -362,19 +362,15 @@ function renderSignup(data: ConceptPage): HTMLElement {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({ email }),
     })
-      .then(async (res) => {
-        if (res.ok) {
-          // double opt-in: Buttondown has sent the confirmation email
-          say("Check your inbox to confirm your subscription — one click and you're on the list.");
-          return; // fieldset stays disabled: prevents duplicate submits
-        }
-        const text = await res.text().catch(() => "");
-        if (/already\s+(subscribed|signed|on)/i.test(text)) {
-          say("This address is already subscribed.");
-        } else {
-          say("That email address was not accepted — please check it and try again.");
-        }
-        fieldset.disabled = false;
+      .then(() => {
+        // Deliberately no res.ok branch (enumeration protection, CLAUDE.md):
+        // membership is never echoed back, and Buttondown's embed endpoint
+        // can't distinguish it anyway — duplicates and flagged addresses both
+        // return the same 400 + CAPTCHA page (verified 2026-08-04). Fieldset
+        // stays disabled so the terminal state is identical for every outcome.
+        say(
+          "Thanks — if this address isn't already on the list, a confirmation email is on its way. One click and you're in.",
+        );
       })
       .catch(() => {
         say("Network error — nothing was sent. Please try again.");

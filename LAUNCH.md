@@ -24,6 +24,8 @@ this file only tracks status.
 ## Phase 2 — content & services (separate gates)
 
 - [ ] `noindex` removal — **Kari's explicit launch call, its own switch** (concept/index.html)
-- [ ] Email service account (Brevo recommended) — gated on Kari's go; then SPF/DKIM/DMARC per runbook §7
+- [x] Email service: **Buttondown** (buttondown.com/FarsideLab), sending domain `mail.farsidelab.com` — Kari set up account/domain/double-opt-in (tracking pixels off, UTM on); DMARC + return-path CNAME verified externally, DKIM shows Present in dashboard (selector not externally known, so no independent dig) — Kari + Claude, 2026-08-04
+- [x] Signup form wired to the Buttondown embed endpoint (client fetch + no-JS form fallback) and **response kept deliberately generic** for every server outcome (enumeration protection — see CLAUDE.md web rules); all four UI states verified against the endpoint's real response shapes, deployed — Claude, 2026-08-04
+  - Footnote (by design, no action): **resubscribe after unsubscribe is suppressed** by Buttondown's suppression list — the form can't re-add a previously-unsubscribed address. Returning subscribers use the hosted page (buttondown.com/FarsideLab) or email us. Post-launch footnote only.
 - [ ] Analytics (Plausible or Simple Analytics) — gated on Kari's go; CSP rule amended same day
 - [ ] robots.txt + sitemap.xml + styled 404 (optional, post-launch)
