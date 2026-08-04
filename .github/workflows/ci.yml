@@ -9,9 +9,9 @@ jobs:
   checks:
     runs-on: ubuntu-latest
     env:
-      # GitHub Pages project sites serve at /<repo>/; build and budget check
-      # must agree on the base path. Other hosts: drop this or set to /
-      BASE_PATH: /${{ github.event.repository.name }}/
+      # Custom domain farsidelab.com serves at the root (since 2026-08-04;
+      # DNS-RUNBOOK.md §5). Build and budget check must agree on the base path.
+      BASE_PATH: /
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

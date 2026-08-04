@@ -6,7 +6,7 @@ signup, footer. **You never touch HTML/CSS/TS** — if something can't be done
 from the JSON, that's a template gap: ask for it.
 
 - **View a page:** `/concept/?id=<filename>` — e.g. `/concept/?id=lunar-base`
-  → https://kari-n0.github.io/space-catalogue/concept/?id=lunar-base
+  → https://farsidelab.com/concept/?id=lunar-base
 - **Edit a page:** change the JSON, commit, push → live in ~1 min.
 - **New page:** copy `lunar-base.json` → `my-concept.json`, change `"id"`
   to `"my-concept"` (must match the filename), edit content, push.
@@ -205,6 +205,8 @@ under 5 MB.
 
 ### `sources`
 `items`: list of `{ "label": "SRC_01", "text": "citation…" }` rows.
+`intro` (optional): a paragraph shown above the rows in small dim text —
+disclaimer/context; omit or `""` for none.
 
 ### `signup` — the email band
 `kicker`, `heading_line_1`/`heading_line_2` (two-tone headline), `label`,
