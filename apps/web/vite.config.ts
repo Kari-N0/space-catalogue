@@ -42,10 +42,8 @@ export default defineConfig({
         main: resolve(__dirname, "index.html"),
         // unlinked M1 dev harness; not referenced from index.html
         devViewer: resolve(__dirname, "dev/viewer.html"),
-        // unlinked structure mockups for Kari's pick (plan Part C)
-        mockupA: resolve(__dirname, "mockups/a.html"),
-        mockupB: resolve(__dirname, "mockups/b.html"),
-        mockupC: resolve(__dirname, "mockups/c.html"),
+        // c2 = the frozen visual reference for the locked concept template
+        // (a/b/c retired + deleted at the 2026-08-04 cleanup)
         mockupC2: resolve(__dirname, "mockups/c2.html"),
         // the production concept-page template (JSON-driven; /concept/?id=<x>)
         conceptPage: resolve(__dirname, "concept/index.html"),

@@ -158,7 +158,7 @@ text-only popups).
   ```
 - `features[].scene_file` *(optional)* — show a **different Gaussian splat** in
   that window instead of the hero splat. Give a path like the live-view
-  `scene_file` (e.g. `"assets/splats/starshop_hsl_v001.sog"`); the window loads
+  `scene_file` (e.g. `"assets/splats/splat_mk2_d.sog"`); the window loads
   that splat in its own view and auto-fits the camera to it, rotated by
   `view_angle_deg`. Add `scene_file_mobile` for a lighter tier (falls back to
   `scene_file`). Omit or set `null` to keep the default: a view of the hero
