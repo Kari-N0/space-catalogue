@@ -1,5 +1,5 @@
 // Concept-page template renderer — the LOCKED base template (Kari 2026-07-13).
-// Reads content/concepts/<id>.json (?id= query, default lunar-base), builds
+// Reads content/concepts/<id>.json (?id= query, default moon-base), builds
 // every section from it, and wires the live viewer. Zero per-concept code:
 // a new concept page is a new JSON file only.
 
@@ -530,7 +530,7 @@ function wireViewer(
 async function boot(): Promise<void> {
   const pageStatus = document.getElementById("page-status");
   try {
-    const id = new URLSearchParams(location.search).get("id") ?? "lunar-base";
+    const id = new URLSearchParams(location.search).get("id") ?? "moon-base";
     if (!/^[a-z0-9-]+$/i.test(id)) throw new Error(`invalid concept id "${id}"`);
     const data = await loadConceptPage(`${import.meta.env.BASE_URL}content/concepts/${id}.json`);
 

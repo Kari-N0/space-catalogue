@@ -45,7 +45,7 @@ Stack (per PLAN.md): Vite + TypeScript + Babylon.js (v9, WebGPU→WebGL2 fallbac
 ## Web workstream rules (Kari in Blender in parallel — 2026-07-12)
 
 - **All stand-in media comes from `apps/web/public/assets/placeholders/` exclusively; never generate or fetch other media. Go-live = JSON path swap + folder deletion.**
-- Integration points only: `content/concepts/lunar-base.json`, Kari's drops into `assets/placeholders/`, and later final assets in `apps/web/public/assets/`. Never touch `assets_src/` or any `.blend` in this workstream.
+- Integration points only: `content/concepts/moon-base.json`, Kari's drops into `assets/placeholders/`, and later final assets in `apps/web/public/assets/`. Never touch `assets_src/` or any `.blend` in this workstream.
 - Commit often; push to `main` = continuous deploy to the dev URL (GitHub Pages) for Kari's phone review.
 - Any placeholder file >20 MB: flag and STOP for Kari's compress-vs-LFS call before committing. (2026-07-12 round resolved: SOG renamed `-d` by Kari, video replaced by `rerender.mp4` 8.4 MiB; superseded `loop_video_placeholder.mp4` stays uncommitted.)
 - **TEMPLATE LOCKED (Kari, 2026-07-13):** the production concept page is `apps/web/concept/` (`/concept/?id=<x>`), rendered 100 % from `content/concepts/<id>.json` by `src/catalogue/page.ts` + `src/styles/concept.css`. Kari edits JSON only (guide: `content/concepts/README.md`); new concept = new JSON file, zero code. `mockups/c2.html` is the frozen visual reference — visual changes must keep template and reference in agreement or retire the mockup with Kari's ok.

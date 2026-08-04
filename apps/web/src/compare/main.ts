@@ -108,7 +108,7 @@ async function boot(): Promise<void> {
   const listing = (await listingRes.json()) as { dir: string; files: SplatFile[] };
   listing.files.sort((a, b) => a.name.localeCompare(b.name));
 
-  const conceptId = params.get("concept") ?? "lunar-base";
+  const conceptId = params.get("concept") ?? "moon-base";
   if (!/^[a-z0-9-]+$/i.test(conceptId)) throw new Error(`invalid concept id "${conceptId}"`);
   const page = await loadConceptPage(`/content/concepts/${conceptId}.json`);
   const features = page.page.overview.features;

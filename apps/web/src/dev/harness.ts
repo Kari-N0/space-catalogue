@@ -18,7 +18,7 @@ async function enter3d(): Promise<void> {
   status.textContent = "loading concept…";
   try {
     const search = new URLSearchParams(location.search);
-    const conceptId = search.get("concept") ?? "lunar-base";
+    const conceptId = search.get("concept") ?? "moon-base";
     const concept = await loadConcept(`${import.meta.env.BASE_URL}content/concepts/${conceptId}.json`);
     const profile = pickTier(search);
 

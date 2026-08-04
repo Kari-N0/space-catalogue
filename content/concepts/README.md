@@ -5,14 +5,14 @@ file and builds everything: hero, 3D view, pins, overview, article, sources,
 signup, footer. **You never touch HTML/CSS/TS** — if something can't be done
 from the JSON, that's a template gap: ask for it.
 
-- **View a page:** `/concept/?id=<filename>` — e.g. `/concept/?id=lunar-base`
-  → https://farsidelab.com/concept/?id=lunar-base
+- **View a page:** `/concept/?id=<filename>` — e.g. `/concept/?id=moon-base`
+  → https://farsidelab.com/concept/?id=moon-base
 - **Edit a page:** change the JSON, commit, push → live in ~1 min.
-- **New page:** copy `lunar-base.json` → `my-concept.json`, change `"id"`
+- **New page:** copy `moon-base.json` → `my-concept.json`, change `"id"`
   to `"my-concept"` (must match the filename), edit content, push.
   It's immediately available at `/concept/?id=my-concept`.
 - **Images/videos/3D files:** put files in `apps/web/public/assets/…` and
-  reference them by that path, e.g. `"assets/lunar-base/photo.webp"`.
+  reference them by that path, e.g. `"assets/moon-base/photo.webp"`.
   (During the placeholder phase everything lives in `assets/placeholders/`.)
 
 ## Field guide (top to bottom = page order)
@@ -178,7 +178,7 @@ text-only popups).
   `[x,y,z]` (meters, hand-authored) and `title`; `text` is optional extra
   hover text. `image` is ignored here (no pop-up). Default is `[]` (no POIs).
 
-`lunar-base.json`'s first Overview feature carries `_camera_example` and
+`moon-base.json`'s first Overview feature carries `_camera_example` and
 `_pins_example` blocks (keys starting with `_` are ignored) — copy either and
 rename to `camera` / `pins` to start authoring. The auto-fit is a neutral
 utility framing; the `camera` block is yours to set.

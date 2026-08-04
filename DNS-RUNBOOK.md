@@ -176,7 +176,7 @@ Claude prepares all of these as one commit **on your word** (after §6 pass B):
 3. Add to `concept/index.html` head (and the landing page):
    `<link rel="canonical" href="https://farsidelab.com/…">` + `og:url` —
    exact URLs proposed for your approval at flip time (concept pages are
-   query-string routes; canonical should be `?id=lunar-base` explicitly).
+   query-string routes; canonical should be `?id=moon-base` explicitly).
 4. `content/concepts/README.md`: view-URL doc line.
 5. **NOT automatic — your separate launch call:** removing
    `<meta name="robots" content="noindex">`. That single line is what keeps
@@ -204,7 +204,7 @@ Pass A (after §3.2): `dig NS farsidelab.com` shows the two Cloudflare NS;
 Pass B (after the §5 flip deploys): built HTML references `/assets/…` not
 `/space-catalogue/assets/…`; budgets green in CI; og:image/canonical point at
 farsidelab.com; splats and viewer load on the live domain (headless browser
-run against https://farsidelab.com/concept/?id=lunar-base).
+run against https://farsidelab.com/concept/?id=moon-base).
 
 Pass C (after §4): `cf-ray` + `content-encoding: br` present;
 `cf-cache-status: HIT` on a second `.sog` fetch; security headers present;

@@ -71,7 +71,7 @@ if (stage.requestFullscreen) {
 async function init3d(): Promise<void> {
   try {
     const search = new URLSearchParams(location.search);
-    const concept = await loadConcept(`${import.meta.env.BASE_URL}content/concepts/lunar-base.json`);
+    const concept = await loadConcept(`${import.meta.env.BASE_URL}content/concepts/moon-base.json`);
     const profile = pickTier(search);
 
     // the lazy boundary — the first Babylon bytes cross the network here
