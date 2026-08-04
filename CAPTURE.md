@@ -177,6 +177,36 @@ object_envelopes, an audit note) and preserves everything Kari authored
 `--set-fov`), warning about stranded pins, out-of-arc feature angles, and
 pan reach vs. the trained region.
 
+### Out-of-GPU-memory renders (diagnosed hero_3d_01, 2026-08-03)
+
+`ERROR System is out of GPU and shared host memory` on frame 1 means the scene
+does not fit VRAM: Cycles can spill **textures** to system RAM, but the OptiX
+BVH and its build scratch cannot — a subdivided+displaced terrain tile is the
+dominant BVH cost (site11 at Subdivision render level 5 ≈ 135 M triangles).
+Levers, biggest first:
+
+1. Lower the terrain Subdivision modifier's **Render** level by 1 (4× fewer
+   triangles). Modifier levels are not part of the rig hash — the approved
+   hash stays valid; save the file (Execute requires a saved file) and re-run.
+2. Close other GPU apps for the duration: the interactive Blender window
+   holding the same scene is usually the biggest co-tenant, then LichtFeld
+   Studio and browsers. Both launchers log a VRAM preflight
+   (`preflight: GPU memory free X / Y MiB` — the add-on writes it to
+   render.log, run_capture.py to the console + job log) and warn under
+   16 GiB free (multi-GPU: tightest device).
+3. Purge duplicate `.001/.002` image datablocks (each copy uploads
+   separately), or — command-line runs only — `--texture-limit 2048`
+   (run_capture.py and export_dataset.py): a render-time-only texture cap,
+   default OFF, recorded in capture-meta (`render_overrides`) and provenance
+   when active — it changes rendered pixels, so it is always Kari's per-run,
+   opt-in call. Mechanics: Cycles honors the cap only with Simplify enabled,
+   so the exporter enables Simplify and pins every other Simplify-gated knob
+   to its no-effect value (subdiv cap → max, particles/volumes → 1.0, AO
+   bounces → 0, camera/distance cull → off); with the flag OFF it forces
+   Simplify off, so a .blend saved with Simplify on can never silently cap a
+   capture that records no override. The add-on panel has no texture-limit
+   control (levers 1–2 apply there).
+
 ## 6. Nested child rigs & assembly
 
 `create_child_rig(vantage, object)` builds `CAPTURE_<vantage>__<object>`: a

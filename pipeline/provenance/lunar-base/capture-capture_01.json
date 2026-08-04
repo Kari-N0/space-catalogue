@@ -1,0 +1,20 @@
+{
+  "asset": "capture dataset lunar-base/capture_01",
+  "generated": "2026-07-14T14:59:18",
+  "stages": [
+    {
+      "stage": "render-dataset",
+      "tool": "Blender 5.1.2 / Cycles OptiX",
+      "script": "pipeline/blender/capture/export_dataset.py",
+      "blend_file": "\\\\wsl.localhost\\Ubuntu-24.04\\home\\karin\\dev\\space-catalogue\\assets_src\\lunar-base\\terrain\\terrain_site11_v004b_material_test.blend",
+      "seed": 0,
+      "views": 262,
+      "resolution": 2000,
+      "license": "original render \u2014 project IP; terrain DEM lineage per pipeline/provenance/lunar-base/terrain-dems.json"
+    }
+  ],
+  "pending_stages": [
+    "lichtfeld-train+clean (Kari, LichtFeld Studio GPLv3 \u2014 license checked 2026-07-14: gsplat/Apache-2.0 rasterizer lineage, Inria listed as research citation only in THIRD_PARTY_LICENSES.md; no non-commercial deps found. Editing rule: clean/crop ONLY \u2014 never rotate/translate/set-pivot)",
+    "sog-export (LichtFeld Studio; record LFS version + export settings here; VERIFY first export: meter-true scale + orientation in the web viewer \u2014 no world normalization may be baked in)"
+  ]
+}

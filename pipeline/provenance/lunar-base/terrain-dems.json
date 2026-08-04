@@ -4,8 +4,8 @@
   "accessed": "2026-07-11",
   "publisher": "NASA GSFC Planetary Geodynamics Lab (PGDA)",
   "usage_terms": "US Government work / public domain (NASA PDS policy: free, unrestricted); attribution requested",
-  "citation": "Barker, M.K. et al. (2021), 'Improved LOLA elevation maps for south pole landing sites', Planetary and Space Science 203, doi:10.1016/j.pss.2020.105119",
-  "product_page": "https://pgda.gsfc.nasa.gov/products/78",
+  "citation": "Barker, M.K. et al. (2021), 'Improved LOLA elevation maps for south pole landing sites', Planetary and Space Science 203, doi:10.1016/j.pss.2020.105119; coarse regional context: Barker, M.K. et al. (2023), 'A New View of the Lunar South Pole from LOLA', Planetary Science Journal 4, 183, doi:10.3847/PSJ/acf3e1",
+  "product_page": "https://pgda.gsfc.nasa.gov/products/78 (5 m site tiles); https://pgda.gsfc.nasa.gov/products/90 (coarse regional LDEM cap products)",
   "entries": [
     {
       "source": "https://pgda.gsfc.nasa.gov/data/LOLA_5mpp/Site01/Site01_final_adj_5mpp_surf.tif",
@@ -26,6 +26,12 @@
       "source": "https://pgda.gsfc.nasa.gov/data/LOLA_5mpp/Site11/Site11_final_adj_5mpp_slp.tif",
       "sha256": "c7f3eca389cf323e276955ed8e77b3eb870c576f4adf6b481014a1de6a403e23",
       "notes": "Site11 slope companion (deg); used by select_base_site.py for the layout blockout; local: assets_src/lunar-base/terrain/"
+    },
+    {
+      "source": "https://pgda.gsfc.nasa.gov/data/LOLA_20mpp/LDEM_80S_20MPP_ADJ.TIF",
+      "sha256": "[whole-file not retained; crop hash recorded in site11_regional_20mpp / site11_regional.meta.json]",
+      "product": "PGDA product 90 'A New View of the Lunar South Pole from LOLA' (Barker et al. 2023), 80S-90S cap COG @ 20 m/px",
+      "notes": "Coarse REGIONAL context DEM for the v003 general-terrain skirt covering the CAM_top blue-circle extent (~79x98 km around de Gerlache Rim 2). Fetched 2026-07-13; whole COG is 2.70 GB, cropped to the target window projwin -87500 54200 -8600 -44100 (projected m, S polar stereographic sphere 1737400 — same CRS as the 5 m Site11 tile) -> site11_regional_20mpp.tif -> dem_to_displacement.py. The 5 m Site11 tile is kept as the high-detail core inset; this 20 m DEM is background/skyline only. Whole-file deleted after crop; only the crop persists. Windowed /vsicurl read was unreliable against the PGDA server (produced all-nodata), so the whole file was fetched with aria2c and cropped locally."
     }
   ]
 }

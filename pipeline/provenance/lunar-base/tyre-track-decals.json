@@ -1,0 +1,23 @@
+{
+  "asset": "tyre-track decal variants 02-06 (rover track GN tool, concept lunar-base)",
+  "generated": "2026-07-29",
+  "stages": [
+    {
+      "stage": "source-decal",
+      "by": "Kari",
+      "product": "D:\\renders\\rover_trace_gn\\Rover_trace_decal\\ — 8-map set (GREY/RED color, alpha, mask, height jpg+exr, normal, rough), 2048x8192, single chevron wheel line on disturbed regolith",
+      "license": "original asset — project IP",
+      "note": "creation method (photo/paint/bake): Kari to record if this ships"
+    },
+    {
+      "stage": "variant-generation",
+      "by": "Claude (procedural derivation, no external sources)",
+      "date": "2026-07-29",
+      "tool": "pipeline/textures/gen_tyre_track_decals.py (terrain conda env: numpy + pillow + OpenEXR)",
+      "method": "Original regolith background kept on every map; the source chevron tread band was located (dark-lug detection), patched with neighbouring ground texture, and a new procedural tread pattern stamped along a periodic meander (tiles along V like the source). All 8 maps re-derived consistently: height delta -> color shading, roughness, normal (gradient re-injection), alpha coverage; mask passed through unchanged. Seeds 20/30/40/50/60/70/80. 07_perseverance mimics the Mars 2020 wheel imprint: 48 grousers/wheel -> ~34 mm pitch (26 px), thin bars with a gentle S-curve across the tread. 08_curiosity mimics the MSL imprint: 24 shallow-chevron grousers per ~1.56 m revolution plus the JPL Morse odometry cutouts (.--- .--. .-..) as raised tabs between grousers, one repeat per revolution (period = canvas/7 so it tiles). Rover patterns are from public mission imagery knowledge; no source images used. 09_hakkapeliitta (seed 90) is a STYLISED studded-winter-tyre imprint (directional V-blocks, siping, zigzag center groove, tiling stud dents at passenger-tyre width) drawn from generic winter-tyre knowledge — NOT a reproduction of Nokian Tyres tread geometry, and no manufacturer material was used. TRADEMARK NOTE: the folder/material name references Nokian's brand for internal identification only; if this asset ships publicly, do not use the Hakkapeliitta name in public-facing content without Kari's license review.",
+      "products": "D:\\renders\\rover_trace_gn\\Rover_trace_decal_{02_ladder,03_blocks,04_zigzag,05_ribs,06_worn,07_perseverance,08_curiosity,09_hakkapeliitta}\\ — 8 files each, same naming scheme and resolution as the source. TWIN (_2x) versions of all nine (incl. the original chevron as Rover_trace_decal_2x, generated 2026-07-30, --twins flag): two wheel lines of one vehicle at gauge 0.55x canvas width sharing one meander; pattern layout identical per wheel; alpha bell rebuilt as twin coverage; the original's twin extracts the real tread band along its detected meander and re-composites it twice onto the patched background.",
+      "blender_materials": "Rover_trace_DECAL_GREY_{02_ladder,...,09_hakkapeliitta} — duplicates of Kari's Rover_trace_DECAL_GREY with images swapped (colorspaces matched), created in test_terrain_and_rover.blend session 2026-07-29, fake-user set",
+      "license": "derivative of Kari's project-IP source; generator script is project code"
+    }
+  ]
+}

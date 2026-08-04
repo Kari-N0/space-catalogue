@@ -112,15 +112,16 @@ def dem_to_displacement(dem_path: str, out_dir: str, stem: str | None = None,
             top=bounds.top - r0 * px_, bottom=bounds.top - r1 * px_,
         )
 
-        # meters/pixel from the affine transform; geographic (degrees) CRS is
-        # converted at the Moon's mean radius but flagged — polar work should
-        # always arrive in a projected (meters) CRS.
-        px_x, px_y = abs(transform.a), abs(transform.e)
-        geographic = bool(crs and crs.is_geographic)
-        if geographic:
-            deg_to_m = np.pi / 180.0 * MOON_RADIUS_M
-            px_x *= deg_to_m
-            px_y *= deg_to_m
+    # meters/pixel from the affine transform (needed whether or not we cropped
+    # here — a pre-cropped DEM arrives with crop_center=None); geographic
+    # (degrees) CRS is converted at the Moon's mean radius but flagged — polar
+    # work should always arrive in a projected (meters) CRS.
+    px_x, px_y = abs(transform.a), abs(transform.e)
+    geographic = bool(crs and crs.is_geographic)
+    if geographic:
+        deg_to_m = np.pi / 180.0 * MOON_RADIUS_M
+        px_x *= deg_to_m
+        px_y *= deg_to_m
 
     mask = ~np.isfinite(elev)
     if nodata is not None:

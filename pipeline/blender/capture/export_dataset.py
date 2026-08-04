@@ -77,8 +77,18 @@ def _assert_capture_hidden():
                     "it would render into the dataset; unlink it first")
 
 
-def _setup_cycles(scene):
-    """Repo-standard OptiX block (build_terrain_audition.py convention)."""
+TEXTURE_LIMITS = ("OFF", "128", "256", "512", "1024", "2048", "4096", "8192")
+
+
+def _setup_cycles(scene, texture_limit="OFF"):
+    """Repo-standard OptiX block (build_terrain_audition.py convention).
+
+    texture_limit: Cycles texture_limit_render — an EXPLICIT per-run VRAM
+    knob (never a default): "2048" caps every texture at 2048px for this
+    render only, without touching the .blend. Recorded in capture-meta and
+    provenance whenever active — it changes rendered pixels, so using it is
+    Kari's call, made per run on the command line.
+    """
     scene.render.engine = "CYCLES"
     prefs = bpy.context.preferences.addons["cycles"].preferences
     prefs.compute_device_type = "OPTIX"
@@ -90,6 +100,54 @@ def _setup_cycles(scene):
     scene.render.use_persistent_data = True  # camera-only changes: keep device scene
     scene.render.image_settings.file_format = "PNG"
     scene.render.resolution_percentage = 100
+    rd = scene.render
+    if texture_limit != "OFF":
+        if texture_limit not in TEXTURE_LIMITS:
+            raise RuntimeError(f"--texture-limit {texture_limit!r} not one of {TEXTURE_LIMITS}")
+        # Cycles honors texture_limit_render ONLY while Simplify is enabled
+        # (proven on this Blender 5.1.2: limit without use_simplify renders
+        # pixel-identical to OFF). Enable Simplify and pin every other
+        # Simplify-gated knob to its no-effect value, so the texture cap is
+        # the ONLY thing that changes the render.
+        rd.use_simplify = True
+        rd.simplify_subdivision_render = int(
+            rd.bl_rna.properties["simplify_subdivision_render"].hard_max)  # never cap subsurf
+        for attr, neutral in (("simplify_child_particles_render", 1.0),
+                              ("simplify_volumes", 1.0),
+                              ("simplify_gpencil", False)):
+            if hasattr(rd, attr):
+                setattr(rd, attr, neutral)
+        if hasattr(scene.cycles, "ao_bounces_render"):
+            scene.cycles.ao_bounces_render = 0  # 0 = off (full light paths)
+        # per-view culling would poison a multi-view splat dataset
+        scene.cycles.use_camera_cull = False
+        scene.cycles.use_distance_cull = False
+        scene.cycles.texture_limit_render = texture_limit
+    else:
+        # a .blend saved with Simplify ON must not silently cap textures or
+        # subdivision while capture-meta records no override
+        rd.use_simplify = False
+
+
+# What actually runs out on km-scale terrain captures (diagnosed hero_3d_01,
+# 2026-08-03): Cycles can spill TEXTURES to system RAM, but the OptiX BVH and
+# its build scratch must live in VRAM. A subdivided+displaced terrain tile is
+# the dominant BVH cost; other GPU apps shrink what is free.
+_OOM_HELP = """\
+CAPTURE OOM: Cycles ran out of GPU memory (the OptiX BVH cannot spill to system RAM).
+Levers, biggest first:
+  1. Lower the terrain Subdivision modifier's RENDER level by 1 (4x fewer
+     triangles - the BVH is usually the terrain's).
+  2. Close other GPU apps for the duration of the render: the interactive
+     Blender window holding this same scene is typically the largest, then
+     LichtFeld Studio, browsers.
+  3. Purge duplicate .001/.002 image datablocks (each copy uploads separately).
+     From a COMMAND LINE re-run you can also cap texture resolution for one
+     render: run_capture.py --texture-limit 2048 (or export_dataset.py
+     directly) - render-time-only, recorded in capture-meta; changes pixels,
+     so explicit opt-in only. The add-on panel has no texture-limit control
+     yet: from the panel, use levers 1-2.
+"""
 
 
 def _material_color(ob):
@@ -155,7 +213,7 @@ def _init_points(result):
 
 
 def export_dataset(vantage, out_dir, approved_rig=None, concept="lunar-base",
-                   limit=0, dry_run=False):
+                   limit=0, dry_run=False, texture_limit="OFF"):
     if os.name == "nt" and out_dir.startswith("/"):
         raise RuntimeError(
             f"--out reached Windows Blender unconverted: {out_dir!r}. The caller must "
@@ -204,7 +262,7 @@ def export_dataset(vantage, out_dir, approved_rig=None, concept="lunar-base",
     # ---- render ----------------------------------------------------------
     render_s = 0.0
     if not dry_run:
-        _setup_cycles(scene)
+        _setup_cycles(scene, texture_limit)
         cam_data = bpy.data.cameras.new("capture_cam")
         cam_ob = bpy.data.objects.new("capture_cam", cam_data)
         scene.collection.objects.link(cam_ob)
@@ -222,7 +280,15 @@ def export_dataset(vantage, out_dir, approved_rig=None, concept="lunar-base",
             m.translation = Vector(s["pos"])
             cam_ob.matrix_world = m
             scene.render.filepath = os.path.join(img_dir, s["name"])
-            bpy.ops.render.render(write_still=True)
+            try:
+                bpy.ops.render.render(write_still=True)
+            except RuntimeError as err:
+                if "memory" in str(err).lower():
+                    # the bare Cycles error tells nobody what to do — put the
+                    # diagnosis in render.log right where the traceback lands
+                    print(f"\n{_OOM_HELP}\n(failed at view {i + 1}/{len(samples)}, "
+                          f"texture_limit={texture_limit})", flush=True)
+                raise
             print(f"CAPTURE RENDER {i + 1}/{len(samples)} {s['name']}", flush=True)
         render_s = time.perf_counter() - t_render
 
@@ -269,6 +335,8 @@ def export_dataset(vantage, out_dir, approved_rig=None, concept="lunar-base",
         "warnings": result["warnings"],
         "images": len(samples),
         "init_points": len(points),
+        # render-time-only overrides (never part of the rig hash; "OFF" = none)
+        "render_overrides": {"texture_limit_render": texture_limit},
         "trainer": {
             "max_steps": result["config"]["max_steps"],
             "cap_max": result["config"]["cap_max"],
@@ -290,6 +358,7 @@ def export_dataset(vantage, out_dir, approved_rig=None, concept="lunar-base",
             "seed": result["config"]["seed"],
             "views": len(samples),
             "resolution": result["config"]["resolution"],
+            "texture_limit_render": texture_limit,
             "license": "original render — project IP; terrain DEM lineage per "
                        "pipeline/provenance/lunar-base/terrain-dems.json",
         }],
@@ -311,9 +380,13 @@ def main(argv):
     ap.add_argument("--concept", default="lunar-base")
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--texture-limit", default="OFF", choices=TEXTURE_LIMITS,
+                    help="cap texture resolution for THIS render only (VRAM rescue; "
+                         "recorded in capture-meta + provenance). Kari's per-run call.")
     args = ap.parse_args(argv)
     export_dataset(args.vantage, args.out, approved_rig=args.approved_rig,
-                   concept=args.concept, limit=args.limit, dry_run=args.dry_run)
+                   concept=args.concept, limit=args.limit, dry_run=args.dry_run,
+                   texture_limit=args.texture_limit)
 
 
 if __name__ == "__main__":

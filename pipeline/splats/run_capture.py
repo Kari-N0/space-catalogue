@@ -178,9 +178,32 @@ def _wsl_to_win(path):
     return r"\\wsl.localhost\Ubuntu-24.04" + path.replace("/", "\\")
 
 
+def _gpu_free_mib():
+    """(free, total) VRAM in MiB via nvidia-smi (WSL sees the Windows GPU), or
+    None. The render must fit VRAM: Cycles spills textures to system RAM but
+    the OptiX BVH cannot spill (diagnosed on hero_3d_01, 2026-08-03)."""
+    try:
+        out = subprocess.run(
+            ["nvidia-smi", "--query-gpu=memory.free,memory.total",
+             "--format=csv,noheader,nounits"],
+            capture_output=True, text=True, timeout=5)
+        rows = []
+        for line in out.stdout.strip().splitlines():
+            try:
+                free, total = (int(v) for v in line.split(","))
+            except ValueError:
+                continue
+            rows.append((free, total))
+        # multi-GPU: the render enables every OptiX device — report the
+        # tightest one (min free), since that is the one that OOMs first
+        return min(rows) if rows else None
+    except Exception:
+        return None
+
+
 def run_capture(blend, vantage, approved_rig, concept="lunar-base", out=None,
                 skip_render=False, skip_sync=False, skip_train=False,
-                train_gsplat=False, dry_run=False):
+                train_gsplat=False, dry_run=False, texture_limit="OFF"):
     if not approved_rig:
         raise SystemExit(
             "refusing to start: --approved-rig <hash> is required (run preview in "
@@ -226,6 +249,20 @@ def run_capture(blend, vantage, approved_rig, concept="lunar-base", out=None,
 
     # ---- render-dataset ---------------------------------------------------
     if not skip_render:
+        vram = _gpu_free_mib()
+        if vram:
+            free, total = vram
+            lines = [f"preflight: GPU memory free {free} / {total} MiB"]
+            if free < 16384:
+                lines.append(
+                    f"WARNING: only {free / 1024:.1f} GiB VRAM free — other GPU apps "
+                    "(interactive Blender with this scene, LichtFeld Studio, browsers) "
+                    "shrink what Cycles can use; heavy scenes OOM. Consider closing them.")
+            for ln in lines:
+                print(ln)
+            # console output is gone after a headless run — keep it in the job log
+            with open(job.log_path, "a") as fh:
+                fh.write("\n".join(lines) + "\n")
         # blender-win.sh only wslpath-converts absolute args whose path exists:
         # the out dir MUST exist before the call (contract with export_dataset.py)
         os.makedirs(stage_dir, exist_ok=True)
@@ -242,6 +279,7 @@ def run_capture(blend, vantage, approved_rig, concept="lunar-base", out=None,
             "--python", os.path.join(REPO, "pipeline/blender/capture/export_dataset.py"),
             "--", "--vantage", vantage, "--out", stage_dir,
             "--approved-rig", approved_rig, "--concept", concept,
+            "--texture-limit", texture_limit,
         ])
     meta_path = os.path.join(stage_dir, "capture-meta.json")
     if not os.path.isfile(meta_path):
@@ -437,11 +475,16 @@ def main():
     ap.add_argument("--skip-sync", action="store_true")
     ap.add_argument("--skip-train", action="store_true")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--texture-limit", default="OFF",
+                    choices=("OFF", "128", "256", "512", "1024", "2048", "4096", "8192"),
+                    help="VRAM rescue: cap texture resolution for this render only "
+                         "(recorded in capture-meta + provenance; changes pixels — "
+                         "explicit opt-in, never a default)")
     args = ap.parse_args()
     run_capture(args.blend, args.vantage, args.approved_rig, concept=args.concept,
                 out=args.out, skip_render=args.skip_render, skip_sync=args.skip_sync,
                 skip_train=args.skip_train, train_gsplat=args.train_gsplat,
-                dry_run=args.dry_run)
+                dry_run=args.dry_run, texture_limit=args.texture_limit)
 
 
 if __name__ == "__main__":

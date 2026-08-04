@@ -1,0 +1,28 @@
+{
+  "concept": "lunar-base",
+  "vantage": "capture_01",
+  "generated": "2026-07-14T14:59:18",
+  "blend_file": "\\\\wsl.localhost\\Ubuntu-24.04\\home\\karin\\dev\\space-catalogue\\assets_src\\lunar-base\\terrain\\terrain_site11_v004b_material_test.blend",
+  "rig_hash": "c1d47a1e7c25",
+  "envelope": {
+    "look_at_m": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "distance_m": {
+      "min": 2555.0,
+      "max": 4701.2
+    },
+    "angle_up_down_deg": {
+      "min": 2.8,
+      "max": 96.5
+    },
+    "angle_around_deg": {
+      "min": null,
+      "max": null
+    },
+    "zoom_fov_deg": 48.5
+  },
+  "object_envelopes": {}
+}

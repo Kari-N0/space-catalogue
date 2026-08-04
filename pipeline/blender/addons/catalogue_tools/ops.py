@@ -34,6 +34,31 @@ def capture_modules():
     return convention, preview, export_envelope, presets, _reload
 
 
+def gpu_free_mib():
+    """(free, total) VRAM in MiB via nvidia-smi, or None (non-NVIDIA, no tool).
+    Preflight only — the render must fit VRAM (Cycles spills textures to system
+    RAM but the OptiX BVH cannot spill), and THIS interactive Blender is
+    usually the biggest co-tenant. Diagnosed on hero_3d_01, 2026-08-03."""
+    try:
+        out = subprocess.run(
+            ["nvidia-smi", "--query-gpu=memory.free,memory.total",
+             "--format=csv,noheader,nounits"],
+            capture_output=True, text=True, timeout=5,
+            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
+        rows = []
+        for line in out.stdout.strip().splitlines():
+            try:
+                free, total = (int(v) for v in line.split(","))
+            except ValueError:
+                continue
+            rows.append((free, total))
+        # multi-GPU: the render enables every OptiX device — report the
+        # tightest one (min free), since that is the one that OOMs first
+        return min(rows) if rows else None
+    except Exception:
+        return None
+
+
 def export_script_path():
     """export_dataset.py for headless rendering — vendored copy if this is an
     installed extension, else the repo copy."""
@@ -213,6 +238,20 @@ class CATALOGUE_OT_execute_capture(bpy.types.Operator):
         except OSError as err:
             self.report({"ERROR"}, f"cannot create output folder: {err}")
             return {"CANCELLED"}
+        # VRAM preflight: warn while the launch can still be aborted cheaply,
+        # and leave the numbers in render.log for post-mortems either way
+        vram = gpu_free_mib()
+        if vram:
+            free, total = vram
+            log.write(f"preflight: GPU memory free {free} / {total} MiB "
+                      f"(this Blender + other apps hold the rest)\n")
+            log.flush()
+            if free < 16384:
+                self.report({"WARNING"},
+                            f"only {free / 1024:.1f} GiB VRAM free of {total / 1024:.0f} — the "
+                            "headless render competes with this Blender window and every "
+                            "other GPU app. Heavy scenes OOM here: consider closing GPU "
+                            "apps (or this file) while it renders.")
         proc = subprocess.Popen(
             [bpy.app.binary_path, "--factory-startup", "-b", bpy.data.filepath,
              "--python-exit-code", "1", "--python", script, "--",
@@ -352,7 +391,12 @@ class CATALOGUE_OT_test_render(bpy.types.Operator):
         except ValueError as err:
             self.report({"ERROR"}, str(err))
             return {"CANCELLED"}
-        from pipeline.blender.capture.export_dataset import _setup_cycles
+        # repo copy on the dev machine, vendored copy on an installed-only
+        # extension (same fallback pattern as capture_modules)
+        try:
+            from pipeline.blender.capture.export_dataset import _setup_cycles  # noqa: PLC0415
+        except ImportError:
+            from .capture.export_dataset import _setup_cycles  # noqa: PLC0415
         scene = context.scene
         _setup_cycles(scene)
         # persistent data is for the headless batch loop ONLY: interactively it

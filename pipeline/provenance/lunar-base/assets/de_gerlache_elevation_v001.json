@@ -1,0 +1,9 @@
+{
+  "type": "generated",
+  "asset": "D:\\renders\\lunar-base\\assets\\images\\de_gerlache_elevation_v001.jpg",
+  "tool": "rasterio + pyproj + Pillow (terrain conda env); script kept for the session only — parameters fully recorded here",
+  "prompt_or_input": "assets_src/lunar-base/terrain/site11_regional_20mpp.tif (LOLA 20 m/px south-polar crop, see terrain-dems.json entry 5)",
+  "date": "2026-08-04",
+  "license_at_generation": "NASA LOLA / PGDA product 90 — US Government work, public domain; attribution requested: 'NASA/GSFC LOLA (Barker et al. 2023)'",
+  "notes": "Visual elevation image ONLY (Kari 2026-08-04) — not calibrated for terrain generation. 45x45 km window centered on de Gerlache (IAU 88.5S 87.1W -> map (-45429, 2301) m, south polar stereographic sphere 1737400): bounds x [-67929, -22929] y [-20199, 24801] m, 2250x2250 px @ 20 m/px, 100% valid. Grayscale = linear elevation stretch -2297..1503 m (P1..P99 inside the window; full range -2355..1815 m), black=low, white=high, nodata none. Lanczos resample to 1500x1500, JPG q95. Orientation: raster/native (0E up, same as site map)."
+}
