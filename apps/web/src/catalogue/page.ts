@@ -529,7 +529,7 @@ async function boot(): Promise<void> {
     const contact = renderContact(data);
 
     app.replaceChildren(
-      ...[hero, live.root, overview.root, article, sources, signup, contact].filter(
+      ...[hero, live.root, overview.root, article, signup, contact, sources].filter(
         (n): n is HTMLElement => n !== null,
       ),
     );
