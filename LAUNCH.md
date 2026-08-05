@@ -43,5 +43,5 @@ this file only tracks status.
 - [x] **C9 accessibility**: reduced-motion → posters (hero + FIG_02), canvases tabbable (arrows orbit, +/- zoom, envelope-clamped), pins already buttons, focus rings, alt sweep clean — Lighthouse a11y 100
 - [x] **C10 landing**: CTA pill → /concept/?id=moon-base (M3.5 blocker closed); M0 debug footer line removed; email slot not specified in M3.5 (signup lives on the concept page)
 - [x] **C11 Lighthouse (live)**: landing 99/100/100/100; concept a11y 100 · best-practices 100 · SEO 69 (noindex by design) · perf not measurable headless (software GL) → real-device numbers are Phase 3
-- [ ] **GATE (Kari) → cache rule**: `.sog` is `cf-cache-status: DYNAMIC` (video/js already HIT) — create runbook §4.3 Rule 1 (+ optional Rule 2); Claude verifies HIT after
+- [x] **Cache rule live** (Kari created runbook §4.3 Rule 1, 2026-08-05) — verified: all ten splats + both hero videos `cf-cache-status: HIT` at the edge, browser TTL respects origin (600 s) so in-place asset swaps stay safe. **Reminder: purge cache after any deploy that swaps a .sog/video in place** (runbook §4.3 note).
 - [ ] **GATE (Kari) → security headers**: create the runbook §4.4 Transform Rule (headers + CSP Report-Only; hashes current incl. 404 page); Claude verifies live, then RO→enforce after a clean window; HSTS separately after a clean week (Phase 1.5)
