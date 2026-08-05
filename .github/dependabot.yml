@@ -1,0 +1,23 @@
+# Dependabot version updates (Phase 2 security audit, 2026-08-05).
+# Security alerts + automated security fixes are enabled repo-side; this file
+# adds weekly version-update PRs. CI (lint/typecheck/build/budgets) gates every
+# PR, so a bad bump can't reach the deployed site.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      # Babylon deps are exact-pinned and move together (CLAUDE.md viewer
+      # rules) — one grouped PR instead of a burst of individual ones.
+      babylon:
+        patterns:
+          - "@babylonjs/*"
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
