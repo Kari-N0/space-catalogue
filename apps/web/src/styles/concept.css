@@ -467,7 +467,7 @@ a:hover { color: var(--color-text-emphasis); }
   border: 1px solid var(--hairline-card);
   margin-bottom: 12px;
 }
-.hotspot-popup h3 {
+.hotspot-popup h2 {
   font-family: var(--font-display);
   font-size: var(--text-h2);
   font-weight: var(--weight-display);
@@ -569,7 +569,7 @@ a:hover { color: var(--color-text-emphasis); }
   color: var(--color-text-secondary);
   margin-bottom: 12px;
 }
-.feature-copy h3 {
+.feature-copy h2 {
   font-family: var(--font-display);
   font-size: var(--text-h2);
   font-weight: var(--weight-display);
@@ -611,7 +611,7 @@ a:hover { color: var(--color-text-emphasis); }
   max-width: 68ch;
   margin-inline: auto;
 }
-.article h3 {
+.article h2 {
   font-family: var(--font-display);
   font-size: var(--text-h2);
   font-weight: var(--weight-display);
@@ -620,7 +620,7 @@ a:hover { color: var(--color-text-emphasis); }
   color: var(--color-text-emphasis);
   margin: 48px 0 16px;
 }
-.article h3:first-child { margin-top: 0; }
+.article h2:first-child { margin-top: 0; }
 .article p {
   margin-bottom: 16px;
   color: var(--color-text);

@@ -156,7 +156,7 @@ function renderLiveView(data: ConceptPage): { root: HTMLElement; refs: StageRefs
   popupClose.type = "button";
   const popupImage = el("img");
   popupImage.hidden = true;
-  const popupTitle = el("h3");
+  const popupTitle = el("h2");
   const popupBody = el("p");
   popup.append(popupClose, popupImage, popupTitle, popupBody);
   stage.appendChild(popup);
@@ -200,7 +200,7 @@ function renderOverview(data: ConceptPage): {
     if (f.chip) media.append(el("span", "scrim-chip", f.chip)); // empty chip = no badge
     media.append(overlay);
     const copy = el("div", "feature-copy");
-    copy.append(el("span", "idx", f.label), el("h3", undefined, f.title));
+    copy.append(el("span", "idx", f.label), el("h2", undefined, f.title));
     if (f.text_blocks.length > 0) {
       // multi-paragraph card: shared block renderer (same as intro_blocks and
       // the article); card-specific spacing is CSS-scoped via .feature-copy.
@@ -231,7 +231,7 @@ function renderArticle(data: ConceptPage): HTMLElement {
 }
 
 function renderArticleBlock(block: ArticleBlock): HTMLElement {
-  if (block.type === "chapter") return el("h3", undefined, block.text);
+  if (block.type === "chapter") return el("h2", undefined, block.text);
   if (block.type === "paragraph") return el("p", undefined, block.text);
   if (block.type === "list") {
     const ul = el("ul", "block-list");
