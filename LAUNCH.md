@@ -29,10 +29,11 @@ this file only tracks status.
 - [ ] CSP enforced after a clean Report-Only window (Claude verifies console)
 - [ ] HSTS (only after a clean week; start max-age=86400)
 
-## Phase 2 — content & services (separate gates)
+## Phase 2 — content & services — ✅ COMPLETE 2026-08-05
+(the two launch-day switches below stay open by design until launch day)
 
-- [ ] **Launch-day gate: NAS sync fresh within 24 h** — check `~/.local/state/sync-nas/last.log` (written by `scripts/sync-nas.sh`; also runs via SessionEnd hook + weekly systemd user timer)
-- [ ] `noindex` removal — **Kari's explicit launch call, its own switch** (concept/index.html)
+- [ ] **Launch-day switch: NAS sync fresh within 24 h** — check `~/.local/state/sync-nas/last.log` (written by `scripts/sync-nas.sh`; also runs via SessionEnd hook + weekly systemd user timer)
+- [ ] **Launch-day switch: `noindex` removal** — Kari's explicit launch call (concept/index.html)
 - [x] robots.txt + sitemap.xml + styled 404 — live and verified 2026-08-05 (sitemap lists /concept/ while noindex holds; meta governs until the flip)
 
 ### Phase 2 audit — security & quality (Claude, 2026-08-05)
@@ -44,4 +45,21 @@ this file only tracks status.
 - [x] **C10 landing**: CTA pill → /concept/?id=moon-base (M3.5 blocker closed); M0 debug footer line removed; email slot not specified in M3.5 (signup lives on the concept page)
 - [x] **C11 Lighthouse (live)**: landing 99/100/100/100; concept a11y 100 · best-practices 100 · SEO 69 (noindex by design) · perf not measurable headless (software GL) → real-device numbers are Phase 3
 - [x] **Cache rule live** (Kari created runbook §4.3 Rule 1, 2026-08-05) — verified: all ten splats + both hero videos `cf-cache-status: HIT` at the edge, browser TTL respects origin (600 s) so in-place asset swaps stay safe. **Reminder: purge cache after any deploy that swaps a .sog/video in place** (runbook §4.3 note).
-- [ ] **GATE (Kari) → security headers**: create the runbook §4.4 Transform Rule (headers + CSP Report-Only; hashes current incl. 404 page); Claude verifies live, then RO→enforce after a clean window; HSTS separately after a clean week (Phase 1.5)
+- [x] **Security headers live** (Kari created the runbook §4.4 Transform Rule 2026-08-05; first paste dropped 3 chars mid-CSP — `default-src 'selfscript-src` — caught in verification, re-pasted, now **byte-identical to the runbook**). Verified live on all routes; full E2E under Report-Only (viewer + splats, pins, FIG videos, signup fetch to Buttondown, 4 Plausible beacons) = **zero violation reports, clean console**. Next clocks (Phase 1.5): RO→enforce after a clean Report-Only window; HSTS after a clean week.
+
+## Phase 3 — device testing (Kari on hardware, Claude analyzes results)
+
+The full step-by-step script was printed in the 2026-08-05 session; condensed
+tracker (order matters — goals test BEFORE self-exclusion):
+
+- [ ] Plausible goals fire from a real phone (pageview `/concept/`, `Enter 3D`, `Signup Completed` via a `+alias` test address; delete the pending subscriber in Buttondown afterward). Requires the three goals added in the Plausible dashboard first (pending since Phase 1).
+- [ ] Then self-exclude every test browser: visit `https://farsidelab.com/#analytics-off` once per browser.
+- [ ] Performance per device (phone + laptop, cellular AND Wi-Fi): cold-load time to hero video / to 3D splat; `?hud=1` → fps, tier, engine. Expect tier=mobile + steady ≥30 fps on the phone.
+- [ ] Mobile splat quality verdicts (Kari's call, per card): `?tier=mobile` vs `?tier=desktop` A/B on the same device — hero, de_gerlache (6.5 MB), spacex (7.0 MB), mk2, base → ship / poster-only / decimate per card.
+- [ ] 720p hero video on the phone panel (banding in sky, blocking in terrain pan) vs 1080p via `?tier=desktop`.
+- [ ] Touch controls in EVERY 3D window: one-finger orbit, pinch zoom, two-finger/right pan, glide feel, envelope limits hold. **Known risk: pinch-zoom in the four feature windows (custom pointer controls) — hero uses Babylon stock pinch, feature windows may not pinch; report.**
+- [ ] iOS Safari (if available): inline autoplay, 3D loads, fullscreen chip auto-hidden on iPhone (guard, not bug), Add-to-Home-Screen icon, Reduce Motion → posters.
+- [ ] Android: Remove-animations → posters; Add-to-Home-Screen icon.
+- [ ] Keyboard on laptop: Tab → pins (Enter opens, Esc closes, focus returns), canvas ring + arrows/+/-, signup form.
+- [ ] Social preview: paste the concept URL in a chat draft → FIG_02 poster + title render.
+- [ ] Optional: laptop on phone hotspot → `cf-cache-status: HIT` from a second network.
