@@ -33,4 +33,15 @@ this file only tracks status.
 
 - [ ] **Launch-day gate: NAS sync fresh within 24 h** — check `~/.local/state/sync-nas/last.log` (written by `scripts/sync-nas.sh`; also runs via SessionEnd hook + weekly systemd user timer)
 - [ ] `noindex` removal — **Kari's explicit launch call, its own switch** (concept/index.html)
-- [ ] robots.txt + sitemap.xml + styled 404 (optional, post-launch)
+- [x] robots.txt + sitemap.xml + styled 404 — live and verified 2026-08-05 (sitemap lists /concept/ while noindex holds; meta governs until the flip)
+
+### Phase 2 audit — security & quality (Claude, 2026-08-05)
+
+- [x] **A1 secret scan**: gitleaks 8.30.1 + trufflehog 3.96.0 over full history, all branches — **zero findings**
+- [x] **A2 dependencies & repo settings**: `npm audit` clean after fix (2 high dev-time advisories, lockfile-only); Dependabot alerts + automated security fixes enabled + `dependabot.yml` (weekly, babylon grouped); branch protection on main (force-push/deletion blocked — direct pushes still allowed, push-to-deploy flow intact; requiring PRs+checks would break it → Kari's call if ever wanted); Actions default perms read-only + explicit `contents: read` in ci.yml; no secrets in workflows (deploy uses OIDC)
+- [x] **B5–B7 mobile tiers**: five `_m` splats (`-H 0` from current `_d` sources) + 720p hero video (`hero_v001_m.mp4`, 3.0 MB) wired via `scene_file_mobile`/`video_mobile`; stale July mobile hero deleted; budget checker tier regex accepts `_d`/`_m`
+- [x] **C9 accessibility**: reduced-motion → posters (hero + FIG_02), canvases tabbable (arrows orbit, +/- zoom, envelope-clamped), pins already buttons, focus rings, alt sweep clean — Lighthouse a11y 100
+- [x] **C10 landing**: CTA pill → /concept/?id=moon-base (M3.5 blocker closed); M0 debug footer line removed; email slot not specified in M3.5 (signup lives on the concept page)
+- [x] **C11 Lighthouse (live)**: landing 99/100/100/100; concept a11y 100 · best-practices 100 · SEO 69 (noindex by design) · perf not measurable headless (software GL) → real-device numbers are Phase 3
+- [ ] **GATE (Kari) → cache rule**: `.sog` is `cf-cache-status: DYNAMIC` (video/js already HIT) — create runbook §4.3 Rule 1 (+ optional Rule 2); Claude verifies HIT after
+- [ ] **GATE (Kari) → security headers**: create the runbook §4.4 Transform Rule (headers + CSP Report-Only; hashes current incl. 404 page); Claude verifies live, then RO→enforce after a clean window; HSTS separately after a clean week (Phase 1.5)
