@@ -24,8 +24,8 @@ this file only tracks status.
 ## Phase 1.5 — hardening (deferred, own clocks — not launch-blocking)
 
 - [ ] ACME passthrough rule (`/.well-known/acme-challenge/*` exempt from Always-Use-HTTPS) — runbook §4.1.4; **needed before GitHub's first cert renewal (~90 days, early November 2026)**
-- [ ] Cloudflare cache rules for .sog/video + hashed bundles (runbook §4.3)
-- [ ] Security headers transform rule, CSP in Report-Only (runbook §4.4)
+- [x] Cloudflare cache rules for .sog/video (runbook §4.3 Rule 1) — done + verified 2026-08-05 (Phase 2 audit); Rule 2 (hashed-bundles 30-day edge TTL) still optional
+- [x] Security headers transform rule, CSP in Report-Only (runbook §4.4) — done + verified 2026-08-05 (Phase 2 audit)
 - [ ] CSP enforced after a clean Report-Only window (Claude verifies console)
 - [ ] HSTS (only after a clean week; start max-age=86400)
 
