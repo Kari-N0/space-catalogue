@@ -3,23 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Not found · FarsideLab</title>
   <meta name="robots" content="noindex">
-  <title>Concept 001: Moon Base — de Gerlache Crater · FarsideLab</title>
-  <meta name="description" content="A photoreal, explorable visualization of a 2032 Moon base on the de Gerlache crater rim — real LOLA terrain, path-traced light, running in your browser.">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="FarsideLab">
-  <meta property="og:title" content="Concept 001: Moon Base — de Gerlache Crater · FarsideLab">
-  <meta property="og:description" content="A photoreal, explorable visualization of a 2032 Moon base on the de Gerlache crater rim — real LOLA terrain, path-traced light, running in your browser.">
-  <meta property="og:image" content="https://farsidelab.com/assets/figures/fig02-shadow-clock-poster.webp">
-  <meta property="og:url" content="https://farsidelab.com/concept/?id=moon-base">
-  <meta name="twitter:card" content="summary_large_image">
-  <link rel="canonical" href="https://farsidelab.com/concept/?id=moon-base">
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-  <link rel="stylesheet" href="../src/styles/fonts.css">
-  <link rel="stylesheet" href="../src/styles/tokens.css">
-  <link rel="stylesheet" href="../src/styles/concept.css">
+  <link rel="stylesheet" href="./src/styles/fonts.css">
+  <link rel="stylesheet" href="./src/styles/tokens.css">
+  <link rel="stylesheet" href="./src/styles/concept.css">
+  <style>
+    /* 404-page only: in-copy links must be visible inside paragraphs */
+    .article a { color: var(--color-text-emphasis); text-decoration: underline; text-underline-offset: 2px; }
+  </style>
   <!-- Privacy-friendly analytics by Plausible -->
   <script async src="https://plausible.io/js/pa-nPT0-M9mN-BvccCx2-J8a.js"></script>
   <script>
@@ -33,34 +28,43 @@
 </head>
 <body>
 
-  <!-- site chrome (constant across concepts; content sections render from JSON) -->
+  <!-- site chrome (same as concept pages; lockup links home from this standalone page) -->
   <header class="nav">
     <div class="container nav-inner">
-      <a href="#" class="nav-lockup">Farside<span>Lab</span></a>
+      <a href="/" class="nav-lockup">Farside<span>Lab</span></a>
       <a href="https://www.vidro.fi" class="vidro-credit" rel="noopener">
-        <img src="../assets/brand/vidro-logo.png" alt="Vidro logo">
+        <img src="/assets/brand/vidro-logo.png" alt="Vidro logo">
         <span class="credit-name">Kari Nöjd</span><span class="credit-name credit-sep">|</span>Visuals by Vidro
       </a>
     </div>
   </header>
 
-  <main id="app">
-    <p class="stage-note container" id="page-status" role="status" style="padding-block: 120px">loading…</p>
+  <main>
+    <section class="section" aria-labelledby="kicker-404">
+      <div class="container">
+        <div class="section-head">
+          <span class="kicker" id="kicker-404">404 — Not found</span>
+        </div>
+        <div class="article">
+          <p>This page doesn't exist — or it's on the far side, where we can't see it.</p>
+          <p><a href="/">Back to FarsideLab</a> · <a href="/concept/?id=moon-base">Concept 001: Moon Base</a></p>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer class="footer">
     <div class="container footer-inner">
       <a href="https://www.vidro.fi" class="vidro-credit" rel="noopener">
-        <img src="../assets/brand/vidro-logo.png" alt="Vidro logo">
+        <img src="/assets/brand/vidro-logo.png" alt="Vidro logo">
         <span class="credit-name">Kari Nöjd</span><span class="credit-name credit-sep">|</span>Visuals by Vidro
       </a>
       <nav class="footer-links" aria-label="Footer">
         <a href="/privacy/">Privacy</a>
       </nav>
-      <span class="footer-meta" id="footer-label"></span>
+      <span class="footer-meta">FarsideLab</span>
     </div>
   </footer>
 
-  <script type="module" src="../src/catalogue/page.ts"></script>
 </body>
 </html>

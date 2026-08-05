@@ -50,9 +50,24 @@ h1 {
   line-height: 1.6;
 }
 
-.status {
-  color: var(--muted);
-  font-size: 0.75rem;
-  margin-top: 3rem;
-  font-variant-numeric: tabular-nums;
+/* white pill CTA — mirrors the concept hero's pill-primary */
+.cta {
+  display: inline-block;
+  margin-top: 2.5rem;
+  padding: 0.8rem 1.6rem;
+  border-radius: 999px;
+  background: var(--fg);
+  color: var(--bg);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.cta:hover,
+.cta:focus-visible {
+  background: #ffffff;
+}
+
+.cta:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }

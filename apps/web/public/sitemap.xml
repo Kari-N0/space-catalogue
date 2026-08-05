@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- /concept/ is listed while still carrying meta noindex (Kari's launch
+     switch, LAUNCH.md Phase 2) — crawlers respect the meta tag until it is
+     removed, at which point the sitemap is already in place. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://farsidelab.com/</loc>
+    <lastmod>2026-08-05</lastmod>
+  </url>
+  <url>
+    <loc>https://farsidelab.com/concept/?id=moon-base</loc>
+    <lastmod>2026-08-05</lastmod>
+  </url>
+  <url>
+    <loc>https://farsidelab.com/privacy/</loc>
+    <lastmod>2026-08-04</lastmod>
+  </url>
+</urlset>

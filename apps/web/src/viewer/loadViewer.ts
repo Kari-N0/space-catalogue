@@ -133,6 +133,17 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
     }
   };
   canvas.addEventListener("pointerenter", onMainEnter);
+  // keyboard access (a11y): the canvas is tabbable; focusing it claims the
+  // input routing exactly like hovering does, so Babylon's stock keyboard
+  // input (arrow keys orbit, envelope limits enforced by the camera) works
+  // for keyboard-only users. The keydown guard stops the page from scrolling
+  // on the same arrow keys.
+  canvas.tabIndex = 0;
+  canvas.addEventListener("focus", onMainEnter);
+  const onMainKeyDown = (e: KeyboardEvent) => {
+    if (e.key.startsWith("Arrow")) e.preventDefault();
+  };
+  canvas.addEventListener("keydown", onMainKeyDown);
 
   let mode: ViewerMode = "hero";
   let activeScene: Scene | null = null;
@@ -319,6 +330,24 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
       }
       e.preventDefault();
     };
+    // keyboard access (a11y): arrows orbit, +/- zoom — through the SAME
+    // clamped paths as the pointer/wheel handlers, so the envelope holds.
+    // Fires only when the (tabbable) canvas has focus.
+    const onKeyDown = (e: KeyboardEvent) => {
+      const cam = getCamera();
+      if (!cam) return;
+      const ARROW_PX = 18; // one keypress ≈ a short drag
+      if (e.key === "ArrowLeft") applyOrbit(cam, -ARROW_PX, 0);
+      else if (e.key === "ArrowRight") applyOrbit(cam, ARROW_PX, 0);
+      else if (e.key === "ArrowUp") applyOrbit(cam, 0, -ARROW_PX);
+      else if (e.key === "ArrowDown") applyOrbit(cam, 0, ARROW_PX);
+      else if (e.key === "+" || e.key === "=") onWheel(new WheelEvent("wheel", { deltaY: -1 }));
+      else if (e.key === "-" || e.key === "_") onWheel(new WheelEvent("wheel", { deltaY: 1 }));
+      else return;
+      e.preventDefault();
+    };
+    viewCanvas.tabIndex = 0;
+    viewCanvas.addEventListener("keydown", onKeyDown);
     // kill Chrome middle-click autoscroll before it starts (pointerdown's
     // preventDefault doesn't cover it)
     const onMouseDown = (e: MouseEvent) => { if (e.button === 1) e.preventDefault(); };
@@ -339,6 +368,7 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
       viewCanvas.removeEventListener("pointercancel", onUp);
       viewCanvas.removeEventListener("wheel", onWheel);
       viewCanvas.removeEventListener("mousedown", onMouseDown);
+      viewCanvas.removeEventListener("keydown", onKeyDown);
     };
   };
 
@@ -723,6 +753,8 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
       canvas.removeEventListener("contextmenu", preventDefault);
       canvas.removeEventListener("mousedown", onMainMouseDown);
       canvas.removeEventListener("pointerenter", onMainEnter);
+      canvas.removeEventListener("focus", onMainEnter);
+      canvas.removeEventListener("keydown", onMainKeyDown);
       stopSceneExtras();
       hud?.dispose();
       engine.stopRenderLoop();

@@ -35,6 +35,11 @@ function section(labelId: string, kicker: string): { root: HTMLElement; containe
   return { root, container };
 }
 
+/** a11y: autoplaying media falls back to posters for reduced-motion visitors. */
+function prefersReducedMotion(): boolean {
+  return matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
 function statusChip(text: string): HTMLElement {
   const chip = el("span", "status-chip");
   const dot = el("span", "dot");
@@ -51,7 +56,9 @@ function renderHero(data: ConceptPage): HTMLElement {
   const root = el("section", "hero");
   root.setAttribute("aria-label", "Concept hero");
 
-  if (assets.hero_video) {
+  // reduced motion: skip the autoplaying background video when the poster
+  // can stand in for it (the hero-poster img below always renders)
+  if (assets.hero_video && !(assets.poster && prefersReducedMotion())) {
     // mobile tier gets the 720p encode when the JSON provides one
     const mobile = pickTier(new URLSearchParams(location.search)).tier === "mobile";
     const heroSrc = (mobile ? assets.hero_video_mobile : null) ?? assets.hero_video;
@@ -235,6 +242,16 @@ function renderArticleBlock(block: ArticleBlock): HTMLElement {
     // looping figure animation: autoplay muted loop playsinline, no controls,
     // poster + preload=metadata (spec: FIG_02). Tiered like the splats —
     // mobile gets the *_mobile files when present.
+    // a11y: reduced-motion visitors get the poster as a still figure instead
+    // of an autoplaying loop.
+    if (block.poster && prefersReducedMotion()) {
+      const figure = el("figure");
+      const img = el("img");
+      img.src = assetUrl(block.poster);
+      img.alt = block.caption;
+      figure.append(img, el("figcaption", undefined, block.caption));
+      return figure;
+    }
     const figure = el("figure");
     const video = el("video");
     video.autoplay = true;

@@ -834,8 +834,9 @@ section[aria-labelledby="kicker-contact"] .container { text-align: center; }
   .stage-fs .dot::after { animation: none; opacity: 0; }
   * { transition: none !important; }
 }
-/* keyboard focus on a near-black page needs an explicit ring */
-a:focus-visible, button:focus-visible, input:focus-visible {
+/* keyboard focus on a near-black page needs an explicit ring
+   (canvas: the 3D windows are tabbable — arrows orbit, +/- zoom) */
+a:focus-visible, button:focus-visible, input:focus-visible, canvas:focus-visible {
   outline: 2px solid var(--hairline-strong);
   outline-offset: 2px;
 }

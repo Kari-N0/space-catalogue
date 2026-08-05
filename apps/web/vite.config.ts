@@ -49,6 +49,8 @@ export default defineConfig({
         conceptPage: resolve(__dirname, "concept/index.html"),
         // static privacy notice (site chrome + article styles, no page JS)
         privacyPage: resolve(__dirname, "privacy/index.html"),
+        // GitHub Pages serves dist/404.html for any unknown path
+        notFoundPage: resolve(__dirname, "404.html"),
       },
       output: {
         // Babylon v9 materials pull shaders via per-file dynamic import();
