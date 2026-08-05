@@ -29,7 +29,7 @@ jobs:
       - run: npm run typecheck
       - run: npm run build
       - run: npm run budgets
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         if: github.ref == 'refs/heads/main'
         with:
           path: apps/web/dist
