@@ -254,6 +254,7 @@ async function boot(): Promise<void> {
     assets: {
       poster: null,
       hero_video: null,
+      hero_video_mobile: null,
       hero_sog: { mobile: sogUrl(heroFile.name), desktop: sogUrl(heroFile.name) },
       inspect_glb: null,
       env: null,

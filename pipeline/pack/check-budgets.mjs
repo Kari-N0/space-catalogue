@@ -94,7 +94,9 @@ for (const path of walk(dist)) {
 
   const tiered = (ext, mobileBudget, desktopBudget) => {
     if (!name.endsWith(ext)) return;
-    const desktop = /-d\.[a-z]+$/.test(name);
+    // tier by filename suffix: -d/_d = desktop, anything else = mobile
+    // (production splats use underscores: splat_hero_d.sog / splat_hero_m.sog)
+    const desktop = /[-_]d\.[a-z]+$/.test(name);
     const budget = desktop ? desktopBudget : mobileBudget;
     const size = statSync(path).size;
     report(size <= budget, `${rel} (${desktop ? "desktop" : "mobile"} tier)`, size, budget);

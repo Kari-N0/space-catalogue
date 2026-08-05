@@ -52,6 +52,9 @@ function renderHero(data: ConceptPage): HTMLElement {
   root.setAttribute("aria-label", "Concept hero");
 
   if (assets.hero_video) {
+    // mobile tier gets the 720p encode when the JSON provides one
+    const mobile = pickTier(new URLSearchParams(location.search)).tier === "mobile";
+    const heroSrc = (mobile ? assets.hero_video_mobile : null) ?? assets.hero_video;
     const video = el("video", "hero-media");
     video.autoplay = true;
     video.muted = true;
@@ -60,7 +63,7 @@ function renderHero(data: ConceptPage): HTMLElement {
     if (assets.poster) video.poster = assetUrl(assets.poster);
     video.setAttribute("aria-hidden", "true");
     const source = el("source");
-    source.src = assetUrl(assets.hero_video);
+    source.src = assetUrl(heroSrc);
     source.type = "video/mp4";
     video.appendChild(source);
     root.appendChild(video);

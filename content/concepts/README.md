@@ -26,6 +26,7 @@ from the JSON, that's a template gap: ask for it.
 | `era_line` | the mono line under the title |
 | `button_text` | the white pill (scrolls to the 3D view) |
 | `video` | looping background video (muted, autoplays) |
+| `video_mobile` | optional smaller encode (720p) served to phones; omit to serve `video` everywhere |
 | `poster_image` | still image shown while the video loads / for reduced-motion visitors |
 
 ### `live_view` — the 3D gaussian-splat section

@@ -52,6 +52,8 @@ export interface Hotspot {
 export interface ConceptAssets {
   poster: string | null;
   hero_video: string | null;
+  /** Smaller encode served to the mobile tier (falls back to hero_video). */
+  hero_video_mobile: string | null;
   hero_sog: { mobile: string | null; desktop: string | null };
   inspect_glb: string | null;
   env: string | null;
@@ -435,6 +437,7 @@ export function parseConceptPage(raw: unknown): ConceptPage {
     assets: {
       poster: str(hero.poster_image) || null,
       hero_video: str(hero.video) || null,
+      hero_video_mobile: str(hero.video_mobile) || null,
       hero_sog: { mobile: sceneFileMobile, desktop: sceneFile },
       inspect_glb: null,
       env: null,
