@@ -215,6 +215,10 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
     const zoomK = 0.12 * ctrl.zoom_speed;
     let dragMode: "none" | "orbit" | "pan" = "none";
     let lastX = 0, lastY = 0;
+    // touch: all active pointers; two fingers = pinch-zoom + two-finger pan
+    // (touch-action:none in CSS delivers every pointer here uninterpreted)
+    const pointers = new Map<number, { x: number; y: number }>();
+    let pinchDist = 0, pinchMidX = 0, pinchMidY = 0;
 
     // orbit application with the authored limits (a view camera driven by
     // these handlers doesn't run Babylon's stock input clamp): distance
@@ -261,15 +265,51 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
       if (!cam) return;
       stopGlide(); // grabbing kills any in-flight glide
       vX = vY = 0;
-      dragMode = e.button === 0 ? "orbit" : "pan"; // right(2)/middle(1) → pan
-      lastX = e.clientX;
-      lastY = e.clientY;
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pointers.size === 2) {
+        // second finger: single-drag becomes pinch (zoom + two-finger pan)
+        stopZoom();
+        dragMode = "none";
+        const [a, b] = [...pointers.values()];
+        pinchDist = Math.hypot(a.x - b.x, a.y - b.y);
+        pinchMidX = (a.x + b.x) / 2;
+        pinchMidY = (a.y + b.y) / 2;
+      } else if (pointers.size === 1) {
+        dragMode = e.button === 0 ? "orbit" : "pan"; // right(2)/middle(1) → pan
+        lastX = e.clientX;
+        lastY = e.clientY;
+      }
+      // 3+ fingers: extras are tracked but drive nothing
       try { viewCanvas.setPointerCapture(e.pointerId); } catch { /* headless */ }
       e.preventDefault();
     };
     const onMove = (e: PointerEvent) => {
       const cam = getCamera();
-      if (dragMode === "none" || !cam) return;
+      if (!cam) return;
+      const p = pointers.get(e.pointerId);
+      if (pointers.size === 2 && p) {
+        p.x = e.clientX;
+        p.y = e.clientY;
+        const [a, b] = [...pointers.values()];
+        const d = Math.hypot(a.x - b.x, a.y - b.y);
+        const mx = (a.x + b.x) / 2;
+        const my = (a.y + b.y) / 2;
+        // pinch scale → radius, through the same envelope limits as the wheel
+        if (pinchDist > 0 && d > 0) {
+          const r = cam.radius * (pinchDist / d);
+          cam.radius = Math.min(cam.upperRadiusLimit ?? r, Math.max(cam.lowerRadiusLimit ?? r, r));
+        }
+        // midpoint travel → pan, same clamped path as right-drag
+        cam.panByPixels(mx - pinchMidX, my - pinchMidY, ctrl.move_speed);
+        pinchDist = d;
+        pinchMidX = mx;
+        pinchMidY = my;
+        e.preventDefault();
+        return;
+      }
+      if (dragMode === "none" || !p) return;
+      p.x = e.clientX;
+      p.y = e.clientY;
       const dx = e.clientX - lastX;
       const dy = e.clientY - lastY;
       if (dragMode === "orbit") applyOrbit(cam, dx, dy);
@@ -282,9 +322,21 @@ export async function loadViewer(opts: ViewerOptions): Promise<ViewerHandle> {
       e.preventDefault();
     };
     const onUp = (e: PointerEvent) => {
+      pointers.delete(e.pointerId);
       const cam = getCamera();
-      if (dragMode !== "none" && cam) startGlide(cam);
-      dragMode = "none";
+      if (pointers.size === 1) {
+        // pinch → single drag: re-baseline on the remaining finger, no glide
+        const [rest] = [...pointers.values()];
+        dragMode = "orbit";
+        lastX = rest.x;
+        lastY = rest.y;
+        vX = vY = 0;
+        pinchDist = 0;
+      } else if (pointers.size === 0) {
+        if (dragMode !== "none" && cam) startGlide(cam);
+        dragMode = "none";
+        pinchDist = 0;
+      }
       try { viewCanvas.releasePointerCapture(e.pointerId); } catch { /* already released */ }
     };
     // eased zoom: each tick feeds a per-frame zoom velocity that decays like

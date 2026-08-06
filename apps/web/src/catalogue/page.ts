@@ -74,6 +74,17 @@ function renderHero(data: ConceptPage): HTMLElement {
     source.type = "video/mp4";
     video.appendChild(source);
     root.appendChild(video);
+    // autoplay can be denied (iOS Low Power Mode, data saver) — the video
+    // then sits paused under the hero text as a dead play glyph. Fall back
+    // to the poster instead, same as the reduced-motion path.
+    const posterFallback = () => {
+      video.remove();
+      root.classList.add("no-video");
+    };
+    source.addEventListener("error", posterFallback);
+    requestAnimationFrame(() => {
+      void video.play().catch(posterFallback);
+    });
   } else {
     root.classList.add("no-video");
   }
