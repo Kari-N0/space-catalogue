@@ -328,7 +328,7 @@
           },
           {
             "type": "paragraph",
-            "text": "It stands two kilometers from the base on open ground, where distance itself is the safety buffer. Cargo rides an elevator down the hull from a bay about 30 meters up, making the tallest structure on the Moon also its freight terminal."
+            "text": "It stands far from the main base on open ground, where distance itself is the safety buffer. Cargo rides an elevator down the hull from a bay about 30 meters up, making the tallest structure on the Moon also its freight terminal."
           }
         ],
         "chip": "3D — Landing Zone 2",
@@ -500,7 +500,7 @@
       },
       {
         "type": "paragraph",
-        "text": "Dated: 2026-08-15"
+        "text": "Dated: 2026-08-06"
       }
     ]
   },
