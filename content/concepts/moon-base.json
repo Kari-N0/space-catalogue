@@ -12,7 +12,7 @@
     "button_text": "Explore in 3D",
     "video": "assets/video/hero_v001.mp4",
     "video_mobile": "assets/video/hero_v001_m.mp4",
-    "poster_image": "assets/video/hero_v001_poster.webp"
+    "poster_image": "assets/video/hero_poster_v002.webp"
   },
   "live_view": {
     "heading": "3D View",
@@ -479,7 +479,7 @@
       },
       {
         "type": "image",
-        "file": "assets/figures/fig03-pipeline.webp",
+        "file": "assets/figures/fig03-pipeline-v002.webp",
         "caption": "From data to scene. elevation model, clay render, final light, capture rig."
       },
       {
