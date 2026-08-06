@@ -455,11 +455,22 @@ export function assetUrl(path: string): string {
   return new URL(path, new URL(import.meta.env.BASE_URL, document.baseURI)).href;
 }
 
+/** The concept id has no JSON behind it: a 404 on the live site, or the dev
+ *  server's HTML fallback (unknown paths return index.html, not JSON). */
+export class ConceptNotFoundError extends Error {
+  constructor(url: string) {
+    super(`no concept JSON at ${url}`);
+    this.name = "ConceptNotFoundError";
+  }
+}
+
 export async function loadConceptPage(url: string): Promise<ConceptPage> {
   // always revalidate: GitHub Pages caches JSON for up to 10 min, which would
   // make freshly-pushed content edits invisible on a plain refresh
   const res = await fetch(url, { cache: "no-cache" });
+  if (res.status === 404) throw new ConceptNotFoundError(url);
   if (!res.ok) throw new Error(`failed to load concept ${url}: HTTP ${res.status}`);
+  if (!(res.headers.get("content-type") ?? "").includes("json")) throw new ConceptNotFoundError(url);
   return parseConceptPage(await res.json());
 }
 

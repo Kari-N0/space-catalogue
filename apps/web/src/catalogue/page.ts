@@ -3,7 +3,7 @@
 // every section from it, and wires the live viewer. Zero per-concept code:
 // a new concept page is a new JSON file only.
 
-import { assetUrl, loadConceptPage, type ArticleBlock, type ConceptPage, type Hotspot } from "./concept";
+import { assetUrl, ConceptNotFoundError, loadConceptPage, type ArticleBlock, type ConceptPage, type Hotspot } from "./concept";
 import { pickTier, pickSogUrl } from "../viewer/tiering";
 import type { FeatureViewHandle, TierProfile, ViewerHandle } from "../viewer/types";
 
@@ -549,8 +549,8 @@ function wireViewer(
 
 async function boot(): Promise<void> {
   const pageStatus = document.getElementById("page-status");
+  const id = new URLSearchParams(location.search).get("id") ?? "moon-base";
   try {
-    const id = new URLSearchParams(location.search).get("id") ?? "moon-base";
     if (!/^[a-z0-9-]+$/i.test(id)) throw new Error(`invalid concept id "${id}"`);
     const data = await loadConceptPage(`${import.meta.env.BASE_URL}content/concepts/${id}.json`);
 
@@ -573,7 +573,12 @@ async function boot(): Promise<void> {
     );
     wireViewer(data, live.refs, overview.featureCanvases, overview.featureOverlays);
   } catch (err) {
-    if (pageStatus) pageStatus.textContent = "could not load this concept — check the JSON (see content/concepts/README.md)";
+    if (pageStatus) {
+      pageStatus.textContent =
+        err instanceof ConceptNotFoundError
+          ? `no concept named "${id}" — check the ?id= in the page address`
+          : "could not load this concept — check the JSON (see content/concepts/README.md)";
+    }
     console.error(err);
     throw err;
   }
