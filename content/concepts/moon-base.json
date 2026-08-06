@@ -21,14 +21,14 @@
     "scene_file_mobile": "assets/splats/splat_hero_m.sog",
     "camera": {
       "look_at_m": [
-        -700,
+        -600,
         150,
-        200
+        300
       ],
       "distance_m": {
         "min": 200,
-        "max": 2000,
-        "start": 300
+        "max": 3000,
+        "start": 1000
       },
       "angle_up_down_deg": {
         "min": 10,
@@ -38,10 +38,10 @@
       "angle_around_deg": {
         "min": null,
         "max": null,
-        "start": 160
+        "start": 140
       },
       "zoom_fov_deg": 60,
-      "move_limit_m": 5000,
+      "move_limit_m": 2000,
       "controls": {
         "rotate_speed": 1.0,
         "move_speed": 1.0,
@@ -144,9 +144,9 @@
     "pins": [
       {
         "position_m": [
-          -563.5,
-          0,
-          143
+          -563,
+          5,
+          142
         ],
         "title": "Landing Zone 1",
         "text": "The routine port: Blue Origin's Mk2 on a hardened pad, ringed by a dust berm, sited a safe distance down-slope from the habitat. Everything the base receives, crew, cargo, spare parts, comes through here first.",
@@ -154,9 +154,9 @@
       },
       {
         "position_m": [
-          173.031,
-          0.567,
-          375.407
+          152,
+          40,
+          460
         ],
         "title": "Operations Hub",
         "text": "The center of the base, the habitat stack on its lander foundation, ringed by solar masts, the rover berth, and the science yard. Everything else in the scene exists to keep this place alive.",
@@ -164,9 +164,9 @@
       },
       {
         "position_m": [
-          532.93,
-          71.517,
-          -1045.193
+          562,
+          140,
+          -1014
         ],
         "title": "Landing Zone 2",
         "text": "The Starship HLS handles the base's heaviest deliveries from open ground to kilometers out, where distance itself absorbs what its engines throw.",
