@@ -49,6 +49,12 @@ this file only tracks status.
 
 ## Phase 3 — device testing (Kari on hardware, Claude analyzes results)
 
+**Soft test opened 2026-08-06 (friends round) — every item below is
+NON-BLOCKING: the site is live-ready as deployed; these are observations to
+collect from the friends round, not gates.** Kari's own phone pass is done:
+touch fixes shipped 2026-08-06 (pinch/two-finger pan in feature windows,
+hero autoplay→poster fallback — commit 7908f86), main window confirmed good.
+
 The full step-by-step script was printed in the 2026-08-05 session; condensed
 tracker (order matters — goals test BEFORE self-exclusion):
 
@@ -57,7 +63,7 @@ tracker (order matters — goals test BEFORE self-exclusion):
 - [ ] Performance per device (phone + laptop, cellular AND Wi-Fi): cold-load time to hero video / to 3D splat; `?hud=1` → fps, tier, engine. Expect tier=mobile + steady ≥30 fps on the phone.
 - [ ] Mobile splat quality verdicts (Kari's call, per card): `?tier=mobile` vs `?tier=desktop` A/B on the same device — hero, de_gerlache (6.5 MB), spacex (7.0 MB), mk2, base → ship / poster-only / decimate per card.
 - [ ] 720p hero video on the phone panel (banding in sky, blocking in terrain pan) vs 1080p via `?tier=desktop`.
-- [ ] Touch controls in EVERY 3D window: one-finger orbit, pinch zoom, two-finger/right pan, glide feel, envelope limits hold. **Known risk: pinch-zoom in the four feature windows (custom pointer controls) — hero uses Babylon stock pinch, feature windows may not pinch; report.**
+- [x] Touch controls in EVERY 3D window — the known risk was real: feature windows had no multi-touch path. Fixed + verified on Kari's phone 2026-08-06 (pinch zoom + two-finger pan added to the direct controls, same envelope-clamped paths; hero was already good via Babylon stock). Friends round double-checks on more devices.
 - [ ] iOS Safari (if available): inline autoplay, 3D loads, fullscreen chip auto-hidden on iPhone (guard, not bug), Add-to-Home-Screen icon, Reduce Motion → posters.
 - [ ] Android: Remove-animations → posters; Add-to-Home-Screen icon.
 - [ ] Keyboard on laptop: Tab → pins (Enter opens, Esc closes, focus returns), canvas ring + arrows/+/-, signup form.
