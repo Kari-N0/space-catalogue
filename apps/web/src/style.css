@@ -64,6 +64,7 @@ img { max-width: 100%; display: block; }
 @media (prefers-reduced-motion: reduce) {
   .hero-media { display: none; }
   .hero-poster { display: block; }
+  .status-chip .dot { animation: none; }
 }
 .hero::after {
   content: ""; position: absolute; inset: 0; z-index: 1;
@@ -91,9 +92,25 @@ img { max-width: 100%; display: block; }
 }
 
 .cta-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 48px; }
-.ref-label {
+/* same chip treatment as the concept page's status chip (concept.css) */
+.status-chip {
+  display: inline-flex; align-items: center; gap: 6px;
   font-family: var(--font-mono); font-size: var(--text-ref);
-  text-transform: uppercase; letter-spacing: 1px; color: var(--color-text-secondary);
+  text-transform: uppercase; letter-spacing: var(--tracking-label);
+  color: var(--chip-blue-text);
+  background: var(--chip-blue-bg);
+  border: 1px solid var(--chip-blue-border);
+  border-radius: var(--radius-chip);
+  padding: 2px 8px;
+}
+.status-chip .dot {
+  width: 6px; height: 6px; border-radius: var(--radius-pill);
+  background: var(--chip-blue-text);
+  animation: pulse-dot calc(var(--dur-base) * 6) var(--ease-brand) infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
 }
 .pill-primary {
   display: inline-block; padding: 14px 28px; border-radius: 999px;
