@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>FarsideLab — Landing mockup (launched state)</title>
+  <link rel="stylesheet" href="../src/styles/fonts.css">
+  <link rel="stylesheet" href="../src/styles/tokens.css">
+  <style>
+    /* ================================================================
+       LANDING MOCKUP — launched state (2026-08-06), for Kari's pick.
+       Proposes: brand-token pass on the landing (same system as the
+       concept page), hero video loop behind the CTA, three headline
+       options (toggle chips top-right — CSS-only, no JS), and the
+       OPTIONAL email-capture slot (dashed marker = remove on request).
+       All brand values via tokens.css; literals are pure layout only.
+       ================================================================ */
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-body);
+      font-size: var(--text-body);
+      font-weight: var(--weight-body);
+      line-height: var(--leading-body);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img { max-width: 100%; display: block; }
+
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+
+    /* -- mockup-only option picker (not part of the proposal) -------- */
+    input[name="copyopt"] { position: fixed; opacity: 0; pointer-events: none; }
+    .opt-picker {
+      position: fixed; top: 72px; right: 16px; z-index: 50;
+      display: flex; gap: 8px;
+    }
+    .opt-picker label {
+      font-family: var(--font-mono); font-size: var(--text-ref);
+      text-transform: uppercase; letter-spacing: 1px;
+      padding: 6px 10px; border-radius: 4px;
+      background: var(--color-surface);
+      border: 1px solid var(--hairline); color: var(--color-text-secondary);
+    }
+    #optA:checked ~ .page label[for="optA"],
+    #optB:checked ~ .page label[for="optB"],
+    #optC:checked ~ .page label[for="optC"] {
+      color: var(--chip-blue-text); border-color: var(--chip-blue-border); background: var(--chip-blue-bg);
+    }
+    .copy-a, .copy-b, .copy-c { display: none; }
+    #optA:checked ~ .page .copy-a { display: block; }
+    #optB:checked ~ .page .copy-b { display: block; }
+    #optC:checked ~ .page .copy-c { display: block; }
+
+    /* -- nav (same glass chrome as the concept page) ------------------ */
+    .nav {
+      position: fixed; inset: 0 0 auto 0; z-index: 40;
+      background: var(--glass-nav-bg); backdrop-filter: blur(var(--glass-nav-blur));
+      border-bottom: 1px solid var(--hairline-faint);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 56px; }
+    .nav-lockup {
+      font-family: var(--font-display); font-weight: var(--weight-display);
+      font-size: 18px; letter-spacing: -0.025em; color: var(--color-text-emphasis);
+      text-decoration: none;
+    }
+    .nav-lockup span { color: var(--color-text-secondary); }
+    .vidro-credit {
+      display: flex; align-items: center; gap: 8px; text-decoration: none;
+      font-family: var(--font-mono); font-size: var(--text-ref);
+      text-transform: uppercase; letter-spacing: 1px; color: var(--color-text-secondary);
+    }
+    .vidro-credit img { width: 28px; height: 28px; }
+    .credit-name { color: var(--color-text); }
+    .credit-sep { opacity: 0.4; }
+
+    /* -- hero: full viewport, video behind, bottom-left content ------- */
+    .hero { position: relative; min-height: 100vh; min-height: 100svh; display: flex; align-items: flex-end; overflow: hidden; }
+    .hero-media {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; z-index: 0;
+    }
+    .hero::after {
+      content: ""; position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(to top, var(--color-bg) 0%, rgba(3,3,4,0.60) 30%, rgba(3,3,4,0.35) 60%, transparent 80%);
+    }
+    .hero-content { position: relative; z-index: 2; width: 100%; padding: 0 0 96px; }
+
+    .kicker {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--font-mono); font-size: var(--text-kicker);
+      text-transform: uppercase; letter-spacing: 1.2px; color: var(--color-text-secondary);
+      margin-bottom: 20px;
+    }
+    .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent-live); }
+
+    .display {
+      font-family: var(--font-display); font-weight: var(--weight-display);
+      font-size: clamp(44px, 9vw, 112px); line-height: 1.0;
+      letter-spacing: -0.05em; text-transform: uppercase;
+      color: var(--color-text-emphasis); margin-bottom: 28px;
+    }
+    .display .tone-2 { display: block; color: var(--color-text-secondary); }
+
+    .tagline {
+      max-width: 560px; font-size: var(--text-lead); font-weight: var(--weight-light);
+      line-height: 1.5; color: var(--color-text-secondary); margin-bottom: 40px;
+    }
+
+    .cta-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 48px; }
+    .ref-label {
+      font-family: var(--font-mono); font-size: var(--text-ref);
+      text-transform: uppercase; letter-spacing: 1px; color: var(--color-text-secondary);
+    }
+    .pill-primary {
+      display: inline-block; padding: 14px 28px; border-radius: 999px;
+      background: var(--color-text-emphasis); color: var(--color-on-emphasis);
+      font-weight: var(--weight-medium); text-decoration: none; border: 0;
+      font-size: var(--text-body);
+      transition: opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .pill-primary:hover { opacity: 0.9; }
+
+    /* -- OPTIONAL email slot (dashed marker = mockup annotation) ------ */
+    .email-slot { position: relative; max-width: 460px; padding: 16px; border: 1px dashed var(--hairline-strong); border-radius: 12px; }
+    .email-slot-tag {
+      position: absolute; top: -9px; left: 12px; padding: 0 8px;
+      font-family: var(--font-mono); font-size: var(--text-ref);
+      text-transform: uppercase; letter-spacing: 1px;
+      color: var(--chip-orange-text); background: var(--color-bg);
+    }
+    .notify-form { display: flex; gap: 10px; }
+    .notify-form input {
+      flex: 1; min-width: 0; padding: 12px 16px; border-radius: 999px;
+      background: var(--color-surface); border: 1px solid var(--hairline);
+      color: var(--color-text); font: inherit;
+    }
+    .notify-form input::placeholder { color: var(--color-text-secondary); }
+    .notify-form .pill-primary { padding: 12px 22px; }
+    .notify-note {
+      margin-top: 10px; font-family: var(--font-mono); font-size: var(--text-ref);
+      text-transform: uppercase; letter-spacing: 1px; color: var(--color-text-secondary);
+    }
+
+    /* -- footer (concept-page sibling) --------------------------------- */
+    .footer { border-top: 1px solid var(--hairline-faint); padding: 48px 0; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .footer-links a {
+      font-family: var(--font-mono); font-size: var(--text-ref); text-transform: uppercase;
+      letter-spacing: 1px; color: var(--color-text-secondary); text-decoration: none;
+    }
+    .footer-meta { font-family: var(--font-mono); font-size: var(--text-ref); text-transform: uppercase; letter-spacing: 1px; color: var(--color-text-secondary); }
+
+    @media (max-width: 640px) {
+      .hero-content { padding-bottom: 64px; }
+      .opt-picker { top: 64px; }
+      .notify-form { flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      /* production version swaps the loop for the poster (same pattern as
+         the concept hero); the mockup just hides the video element */
+      .hero-media video { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <input type="radio" name="copyopt" id="optA" checked>
+  <input type="radio" name="copyopt" id="optB">
+  <input type="radio" name="copyopt" id="optC">
+
+  <div class="page">
+
+    <div class="opt-picker" aria-label="Mockup copy options">
+      <label for="optA">Option A</label>
+      <label for="optB">Option B</label>
+      <label for="optC">Option C</label>
+    </div>
+
+    <header class="nav">
+      <div class="container nav-inner">
+        <a href="/" class="nav-lockup">Farside<span>Lab</span></a>
+        <a href="https://www.vidro.fi" class="vidro-credit" rel="noopener">
+          <img src="/assets/brand/vidro-logo.png" alt="Vidro logo" width="300" height="300">
+          <span class="credit-name">Kari Nöjd</span><span class="credit-name credit-sep">|</span>Visuals by Vidro
+        </a>
+      </div>
+    </header>
+
+    <main class="hero">
+      <video class="hero-media" autoplay muted loop playsinline poster="/assets/video/hero_poster_v002.webp" aria-hidden="true">
+        <source src="/assets/video/hero_v001.mp4" type="video/mp4">
+      </video>
+
+      <div class="hero-content">
+        <div class="container">
+
+          <div class="copy-a">
+            <p class="kicker">A visual catalogue of space engineering</p>
+            <h1 class="display">The future,<span class="tone-2">drawn to scale.</span></h1>
+          </div>
+
+          <div class="copy-b">
+            <p class="kicker">FarsideLab — concept series</p>
+            <h1 class="display">Real dimensions.<span class="tone-2">Real light.</span></h1>
+          </div>
+
+          <div class="copy-c">
+            <p class="kicker"><span class="live-dot" aria-hidden="true"></span>Concept 001 — now live</p>
+            <h1 class="display">Explore what<span class="tone-2">isn't built yet.</span></h1>
+          </div>
+
+          <p class="tagline">
+            Lunar bases, orbital habitats, megastructures — real published
+            dimensions, path-traced light, running in your browser.
+          </p>
+
+          <div class="cta-row">
+            <a class="pill-primary" href="/concept/?id=moon-base">Concept 001: Moon Base — de Gerlache Crater</a>
+            <span class="ref-label">Concept 001</span>
+          </div>
+
+          <div class="email-slot">
+            <span class="email-slot-tag">Optional — your call</span>
+            <form class="notify-form" onsubmit="return false">
+              <input type="email" placeholder="you@example.com" aria-label="Email Address">
+              <button class="pill-primary" type="submit">Notify Me</button>
+            </form>
+            <p class="notify-note">New concepts, a few times a year. No tracking.</p>
+          </div>
+
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-inner">
+        <a href="https://www.vidro.fi" class="vidro-credit" rel="noopener">
+          <img src="/assets/brand/vidro-logo.png" alt="Vidro logo" width="300" height="300">
+          <span class="credit-name">Kari Nöjd</span><span class="credit-name credit-sep">|</span>Visuals by Vidro
+        </a>
+        <nav class="footer-links" aria-label="Footer">
+          <a href="/privacy/">Privacy</a>
+        </nav>
+        <span class="footer-meta">FarsideLab</span>
+      </div>
+    </footer>
+
+  </div>
+
+</body>
+</html>

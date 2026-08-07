@@ -45,6 +45,7 @@ export default defineConfig({
         // c2 = the frozen visual reference for the locked concept template
         // (a/b/c retired + deleted at the 2026-08-04 cleanup)
         mockupC2: resolve(__dirname, "mockups/c2.html"),
+        mockupLanding: resolve(__dirname, "mockups/landing.html"),
         // the production concept-page template (JSON-driven; /concept/?id=<x>)
         conceptPage: resolve(__dirname, "concept/index.html"),
         // static privacy notice (site chrome + article styles, no page JS)
