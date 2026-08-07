@@ -159,13 +159,14 @@
       justify-content: space-between;
       height: 64px;
     }
+    /* same lockup treatment as the landing page (src/style.css) */
     .nav-lockup {
-      font-family: var(--font-body);
-      font-size: var(--text-kicker);
-      font-weight: var(--weight-medium);
-      text-transform: uppercase;
-      letter-spacing: var(--tracking-nav);
-      color: var(--color-text);
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: var(--weight-display);
+      letter-spacing: -0.025em;
+      color: var(--color-text-emphasis);
+      text-decoration: none;
     }
     .nav-lockup span { color: var(--color-text-secondary); }
 
@@ -745,7 +746,7 @@
   <!-- ============ fixed glass nav ============ -->
   <header class="nav">
     <div class="container nav-inner">
-      <a href="#" class="nav-lockup">Farside<span>Lab</span></a>
+      <a href="/" class="nav-lockup">Farside<span>Lab</span></a>
       <a href="#" class="vidro-credit">
         <img src="../assets/placeholders/logo_vidro_placeholder.png" alt="Vidro logo">
         Visuals by Vidro
