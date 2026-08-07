@@ -6,6 +6,13 @@
     <meta name="description" content="FarsideLab — a visual catalogue of space and future engineering concepts — lunar bases, orbital habitats, megastructures — rendered photoreal in your browser." />
     <title>FarsideLab</title>
     <link rel="canonical" href="https://farsidelab.com/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="FarsideLab" />
+    <meta property="og:title" content="FarsideLab — Explore the future" />
+    <meta property="og:description" content="A visual catalogue of space engineering — lunar bases, orbital habitats, megastructures — real published dimensions, path-traced light, running in your browser." />
+    <meta property="og:image" content="https://farsidelab.com/assets/video/hero_poster_v002.webp" />
+    <meta property="og:url" content="https://farsidelab.com/" />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
@@ -22,15 +29,66 @@
     </script>
   </head>
   <body>
+
+    <header class="nav">
+      <div class="container nav-inner">
+        <a href="/" class="nav-lockup">Farside<span>Lab</span></a>
+        <a href="https://www.vidro.fi" class="vidro-credit" rel="noopener">
+          <img src="/assets/brand/vidro-logo.png" alt="Vidro logo" width="300" height="300">
+          <span class="credit-name">Kari Nöjd</span><span class="credit-name credit-sep">|</span>Visuals by Vidro
+        </a>
+      </div>
+    </header>
+
     <main class="hero">
-      <p class="kicker">Under construction</p>
-      <h1>FarsideLab</h1>
-      <p class="tagline">
-        Lunar bases, orbital habitats, megastructures — real published
-        dimensions, path-traced light, running in your browser.
-      </p>
-      <a class="cta" href="/concept/?id=moon-base">Concept 001: Moon Base — de Gerlache Crater</a>
+      <!-- src is set by main.ts (tier pick + autoplay fallback); without JS
+           the poster img below stands in -->
+      <video class="hero-media" muted loop playsinline preload="none"
+             poster="/assets/video/hero_poster_v002.webp" aria-hidden="true"></video>
+      <img class="hero-poster" src="/assets/video/hero_poster_v002.webp" alt="" aria-hidden="true">
+
+      <div class="hero-content">
+        <div class="container">
+          <p class="kicker">A visual catalogue of space engineering</p>
+          <h1 class="display">Explore<span class="tone-2">the future</span></h1>
+          <p class="tagline">
+            Lunar bases, orbital habitats, megastructures — real published
+            dimensions, path-traced light, running in your browser.
+          </p>
+          <div class="cta-row">
+            <a class="pill-primary" href="/concept/?id=moon-base">Concept 001: Moon Base — de Gerlache Crater</a>
+            <span class="ref-label">Concept 001</span>
+          </div>
+          <div class="email-slot">
+            <form class="notify-form" action="https://buttondown.com/api/emails/embed-subscribe/FarsideLab" method="post">
+              <fieldset>
+                <label class="visually-hidden" for="notify-email">Email Address</label>
+                <div class="field-row">
+                  <input type="email" id="notify-email" name="email" placeholder="you@example.com" autocomplete="email" required>
+                  <button class="pill-primary" type="submit">Notify Me</button>
+                </div>
+              </fieldset>
+            </form>
+            <p class="notify-note notify-status" aria-live="polite" hidden></p>
+            <p class="notify-note">New concepts, a few times a year. No tracking.</p>
+          </div>
+        </div>
+      </div>
     </main>
+
+    <footer class="footer">
+      <div class="container footer-inner">
+        <a href="https://www.vidro.fi" class="vidro-credit" rel="noopener">
+          <img src="/assets/brand/vidro-logo.png" alt="Vidro logo" width="300" height="300">
+          <span class="credit-name">Kari Nöjd</span><span class="credit-name credit-sep">|</span>Visuals by Vidro
+        </a>
+        <nav class="footer-links" aria-label="Footer">
+          <a href="/privacy/">Privacy</a>
+        </nav>
+        <span class="footer-meta">FarsideLab</span>
+      </div>
+    </footer>
+
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
