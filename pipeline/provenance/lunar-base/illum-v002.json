@@ -1,0 +1,41 @@
+{
+  "asset": "polar illumination simulation v002 — PSR + annual-illumination layers for the two map figures",
+  "date": "2026-08-11",
+  "tool": "Blender 5.1.2 Cycles/OptiX (Windows) via pipeline/blender/{build_illum_sim,run_illum_sweep}.py; classification rasterio/numpy/scipy in the terrain conda env via pipeline/terrain/{illum_composite,illum_classify}.py",
+  "supersedes": "fig02-shadow-clock.json entry 2 (v001 PSR mask, fixed 1.0 deg sun, frame-registered to the old 65x65 km crop)",
+  "frames": {
+    "wide": "Kari's fig01_south_pole_map.blend camera verbatim: ortho 230000 AUTO-fit on 2048x2560 -> 184x230 km at (-25020, 5010) m",
+    "closeup": "Kari's fig02_shadow_clock_image_4_5_ratio.blend camera verbatim: ortho 58252.2 AUTO-fit on 2048x2560 -> 46.6x58.25 km at (-4321.5, -15461.1) m; approved by Kari 2026-08-08 knowing the strip east of x=-8.6 km rests on 60 m data"
+  },
+  "terrain": {
+    "grids": "illum_A_dem.exr (LOLA LDEM_75S_60M fig01 crop, 60 m, absolute meters vs the 1737.4 km sphere) + illum_B_dem.exr (LDEM_80S_20MPP_ADJ regional crop, 20 m, nodata none; outer 800 m feathered to the 60 m surface so inset and band planes meet without a step; inter-product datum agreement 0.30 m mean / 12.8 m std over full overlap)",
+    "scene": "5 planes (20 m inset + four 60 m bands, exact tiling, no overlap), Cycles true displacement, adaptive subdivision (dicing 1.0 final), white Lambert, black world, zero bounces (direct-light classification), sun energy 1361 W/m2",
+    "curvature": "z -= (x^2+y^2)/2R, R 1737.4 km, POLE-referenced (v001 FIG_02 was frame-center-referenced); map-vs-arc distance error <= 19 m at 168 km, <= 23 arcsec equivalent"
+  },
+  "sun_model": {
+    "convention": "sun defined in the pole's local frame; constant pole-datum elevation per sweep; the pole-referenced curvature yields each pixel's local geometry (verified against the exact spherical formula: residual <= 0.009 deg over the whole domain vs the 0.266 deg solar semi-diameter)",
+    "subsolar_oscillation_deg": 1.54,
+    "solar_semidiameter_deg": 0.266,
+    "azimuth_steps": 150,
+    "psr_criterion": "best season +1.54 deg + top limb +0.266 = +1.806 deg pole elevation, point sun; PSR = never lit in any of 150 azimuth steps (conservative toward shadow claims)",
+    "annual_criterion": "disk-CENTER visibility (conservative toward lit claims; published maps count partial-disk visibility, so our percentages read ~5-10 points lower at these geometries), integrated as 12 equal-time season samples (subsolar lat 1.54*sin(theta_k), theta_k = -82.5..+82.5 step 15) x 150 hour-angle steps = 1800 sun positions",
+    "worst_season_bracket": "-1.54 deg point-sun sweep retained as a separate reported stat (max lit share 57%/52% wide/closeup)"
+  },
+  "products": {
+    "dir": "assets_src/lunar-base/figures/illum_v002/products/ (masters also at D:/renders/illum_v002/final/products)",
+    "per_figure": "illum_v002_{wide,closeup}_{psr_mask_full,psr_mask_major,psr_sdf,annual_pct}.png + _stats.json + _final_preview.png, pixel-registered 1:1 to the 2048x2560 figure cameras",
+    "sdf": "8-bit, 0.5 = PSR boundary, +-32 px linear range, positive inside (px = 89.84 m wide / 22.76 m closeup)",
+    "annual_pct": "16-bit gray, 0..65535 = 0..100% of the year in direct sun (disk-center)",
+    "major_mask": "components >= 0.05 km2, v001 convention"
+  },
+  "results": {
+    "wide": {"psr_km2": 5672, "de_gerlache_circle_psr_km2": 254, "annual_max": 0.844, "annual_km2_ge60pct": 5.1, "annual_km2_ge70pct": 0.7},
+    "closeup": {"psr_km2": 539, "annual_max": 0.790, "annual_km2_ge50pct": 3.6, "annual_km2_ge60pct": 0.3},
+    "consistency": "PSR within the shared footprint: 519 km2 (wide product) vs 539 km2 (closeup product) — 4% across a 4x resolution ratio; annual values scale-dependent by ~3-10 points (finer sampling resolves more micro-shadow), the 22.8 m closeup being the more faithful",
+    "cross_check": "annual maxima 84.4%/79.0% vs published de Gerlache rim ~84% average and Shackleton-de Gerlache ridge up to ~90% (LROC/Mazarico-era results; our disk-center criterion biases low by design); no true 100% anywhere, matching literature; PSR pattern qualitatively matches published LOLA PSR maps (Shackleton/de Gerlache/Sverdrup/Cabeus floors); exact published de Gerlache PSR km2 not retrievable without the Mazarico 2011 table (open item)"
+  },
+  "diff_vs_v001": "PSR criterion moved from fixed 1.0 deg sun to best-season+limb (+1.806 deg): de Gerlache circle PSR 254 km2 vs v001's 381-396 km2 — the stricter (higher) sun melts marginal shadow; v001 number reproduced under its own convention. NEW annual-illumination layer (no v001 counterpart). Classification from float EXRs (exact zeros) instead of graded PNG histogram valleys.",
+  "sources": "DEMs + hashes already recorded in terrain-dems.json and fig01-south-pole-map.json (NASA/GSFC/MIT LOLA; Barker et al. 2021/2023) — US Gov public domain, credit 'NASA/GSFC/MIT LOLA'",
+  "license": "derived products of US Gov public-domain data; provenance chain unchanged",
+  "environment_change": "scipy 1.18.0 added to the terrain conda env (conda-forge) for distance transforms + connected components — logged in setup-log.md"
+}

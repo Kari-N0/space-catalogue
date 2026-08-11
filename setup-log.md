@@ -345,3 +345,11 @@ py3.12 + rasterio + pyproj + openexr-python + pillow (all conda-forge), backing 
 - **Script:** `scripts/sync-nas.sh` (committed 25a648d). rsync `-rlt --modify-window=2` (SMB can't take perms/owner), accumulative — NO `--delete` by design; excludes `*.blend1` (~56 GB churn), Zone.Identifier, Thumbs.db, `__pycache__`. Legs: `assets_src/`, `pipeline/rehearsal/web/`→`splats/rehearsal/`, `/mnt/d/renders/`. Logs `~/.local/state/sync-nas/sync-<stamp>-<mode>.log`, `last.log` symlink. `--dry-run` flag supported.
 - **VERIFY:** dry-run gate shown to Kari (141+4+4,886 files, ~109 GB), then first real run: **109.2 GB in 1924 s (~58 MB/s), status OK**, all three folders verified on the NAS.
 - **Automation:** (1) Claude Code SessionEnd hook in `.claude/settings.local.json` (async, 1800 s timeout); (2) systemd **user** timer `sync-nas.timer` — `Mon 12:00`, `Persistent=true` (catch-up if WSL was off; chosen over cron for exactly that), enabled, first fire 2026-08-10 12:02. LAUNCH.md launch-day gate: sync fresh within 24 h.
+
+## 2026-08-11 — scipy added to `terrain` env (illumination sim v002)
+
+`conda install -n terrain -c conda-forge scipy` → scipy 1.18.0. Needed by
+`pipeline/terrain/illum_classify.py --final` (distance_transform_edt for the
+PSR SDF, ndimage.label for the >=0.05 km2 major-components mask). conda-forge
+only, per the standing channel rule. VERIFY: `~/miniconda3/envs/terrain/bin/python
+-c "from scipy import ndimage"` → ok.
