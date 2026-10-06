@@ -1,0 +1,227 @@
+{
+  "id": "solid",
+  "title": "Solid rocket motor",
+  "description": "Fuel and oxidizer are cast together as one solid grain inside the case. There are no tanks, pumps, valves or injector: the case is the combustion chamber. Simple and storable for years, but once lit it burns until the propellant is gone.",
+  "thrust_axis": "+Z in Blender, +Y in glTF",
+  "reference": {
+    "engine": "Star 48B (Thiokol, now Northrop Grumman), the motor of the PAM-D upper stage",
+    "published": {
+      "thrust_vac_kN": 68.6,
+      "propellants": "HTPB composite, solid",
+      "length_m": 2.08,
+      "max_diameter_m": 1.24,
+      "extra": [
+        [
+          "Peak thrust",
+          "77.8 kN"
+        ],
+        [
+          "Burn time",
+          "87 s"
+        ],
+        [
+          "Propellant mass",
+          "2,010 kg"
+        ],
+        [
+          "Loaded mass",
+          "2,165 kg"
+        ]
+      ]
+    },
+    "derived": {
+      "note": "throat and exit diameters, grain shape and internal details are representative"
+    },
+    "note": "Case diameter and overall length match the published figures. The thrust shown is the average over the burn. Grain shape, nozzle proportions and internal details are representative.",
+    "sources": [
+      "https://spaceflight101.com/re-entry-payload-assist-module-34662/",
+      "https://en.wikipedia.org/wiki/Star_48"
+    ]
+  },
+  "flow_model": {
+    "note": "Streak speed follows local flow speed on a compressed scale. Gas speed in the bore is a nominal value.",
+    "hot_gas": {
+      "model": "1-D isentropic expansion",
+      "assumed_gamma": 1.18,
+      "assumed_chamber_temp_K": 3400.0,
+      "assumed_molar_mass_g_mol": 28.0,
+      "throat_speed_ms": 1045,
+      "exit_speed_ms": 2865,
+      "exit_mach": 4.26,
+      "exit_temp_K": 1291
+    }
+  },
+  "parts": [
+    {
+      "node": "SM_Grain",
+      "role": "part",
+      "title": "Propellant grain",
+      "description": "Fuel and oxidizer mixed into one rubbery solid and cast inside the case. It burns on the surface of the star-shaped bore, from the inside outward. The shape of the bore sets how much surface burns, and so how the thrust changes over the burn.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explode_order": 0,
+      "materials": [
+        "M_Propellant"
+      ]
+    },
+    {
+      "node": "SM_Insulation",
+      "role": "part",
+      "title": "Insulation",
+      "description": "Rubber lining that protects the case from the flame once the propellant in front of it has burned away.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        1.3
+      ],
+      "explode_order": 1,
+      "materials": [
+        "M_Insulation"
+      ]
+    },
+    {
+      "node": "SM_Case",
+      "role": "part",
+      "title": "Motor case",
+      "description": "Titanium pressure vessel. The whole case is the combustion chamber, so it holds the full chamber pressure and all of the propellant.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        2.6
+      ],
+      "explode_order": 2,
+      "materials": [
+        "M_Titanium"
+      ]
+    },
+    {
+      "node": "SM_AttachRing",
+      "role": "part",
+      "title": "Attach ring",
+      "description": "Skirt that bolts the motor to the stage or spacecraft above it. This motor has no gimbal: the stage is spun for stability instead.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        3.15
+      ],
+      "explode_order": 3,
+      "materials": [
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "SM_Igniter",
+      "role": "part",
+      "title": "Igniter",
+      "description": "A small rocket motor of its own. It fires hot gas down the bore to light the whole inner surface of the grain at once.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        3.9
+      ],
+      "explode_order": 4,
+      "materials": [
+        "M_Steel",
+        "M_Steel_Dark"
+      ]
+    },
+    {
+      "node": "SM_IgniterBolts",
+      "role": "part",
+      "title": "Igniter bolts",
+      "description": "Fasten the igniter into the forward opening of the case.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        4.2
+      ],
+      "explode_order": 5,
+      "cut": false,
+      "materials": [
+        "M_Fastener"
+      ]
+    },
+    {
+      "node": "SM_SafeArm",
+      "role": "part",
+      "title": "Safe-and-arm device",
+      "description": "Keeps the igniter's firing circuit physically interrupted until launch. Once a solid motor is lit it cannot be shut down or throttled.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        4.4
+      ],
+      "explode_order": 6,
+      "cut": false,
+      "materials": [
+        "M_SafetyRed",
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "SM_NozzleBolts",
+      "role": "part",
+      "title": "Nozzle bolts",
+      "description": "Fasten the nozzle to the aft opening of the case.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.25
+      ],
+      "explode_order": 7,
+      "cut": false,
+      "materials": [
+        "M_Fastener"
+      ]
+    },
+    {
+      "node": "SM_Throat",
+      "role": "part",
+      "title": "Nozzle throat assembly",
+      "description": "The throat is partly sunk into the chamber to save length. It is uncooled: it is made of carbon material that survives the flame for the length of the burn.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.5
+      ],
+      "explode_order": 8,
+      "materials": [
+        "M_CarbonCarbon"
+      ]
+    },
+    {
+      "node": "SM_ExitCone",
+      "role": "part",
+      "title": "Exit cone",
+      "description": "Carbon-composite cone that expands the exhaust to high speed.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.95
+      ],
+      "explode_order": 9,
+      "materials": [
+        "M_Composite"
+      ]
+    }
+  ],
+  "flows": [
+    {
+      "node": "SM_FLOW_HotGas",
+      "medium": "hot_gas",
+      "color": [
+        1.0,
+        0.75,
+        0.3
+      ],
+      "length_m": 2.158,
+      "label": null,
+      "style": "streamlines",
+      "period_s": 0.32,
+      "lines": 42
+    }
+  ]
+}

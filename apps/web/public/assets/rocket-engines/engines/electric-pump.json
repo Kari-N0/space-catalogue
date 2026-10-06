@@ -1,0 +1,635 @@
+{
+  "id": "electric-pump",
+  "title": "Electric pump-fed engine",
+  "description": "Two battery-powered electric motors spin the pumps. There is no turbine and no hot gas in the pump drive, which makes the engine simple to build and easy to control. The price is the battery, which stays heavy even when empty, so the cycle suits small engines.",
+  "thrust_axis": "+Z in Blender, +Y in glTF",
+  "reference": {
+    "engine": "Rocket Lab Rutherford, sea-level version (Electron)",
+    "published": {
+      "thrust_sl_kN": 24.9,
+      "isp_sl_s": 311,
+      "propellants": "LOX / RP-1",
+      "dry_mass_kg": 35,
+      "max_diameter_m": 0.25,
+      "extra": [
+        [
+          "Pump motors",
+          "2 x 37 kW"
+        ],
+        [
+          "Motor speed",
+          "40,000 rpm"
+        ]
+      ],
+      "cooling": "fuel regenerative chamber and nozzle"
+    },
+    "derived": {
+      "model_length_m": 0.529,
+      "assumed_expansion_ratio": 12,
+      "note": "length and expansion ratio are not published"
+    },
+    "note": "Only the 0.25 m diameter and the mass are published. Length, expansion ratio and the internal layout are representative, and the battery is not to scale.",
+    "sources": [
+      "https://en.wikipedia.org/wiki/Rutherford_(rocket_engine)",
+      "https://rocketlabcorp.com/updates/rocket-lab-increases-electron-payload-capacity-enabling-interplanetary-missions-and-reusability/"
+    ]
+  },
+  "flow_model": {
+    "note": "Streak speed follows local flow speed on a compressed scale. The electric power streaks are symbolic.",
+    "hot_gas": {
+      "model": "1-D isentropic expansion",
+      "assumed_gamma": 1.2,
+      "assumed_chamber_temp_K": 3500.0,
+      "assumed_molar_mass_g_mol": 23.0,
+      "assumed_expansion_ratio": 12,
+      "chamber_speed_ms": 287,
+      "throat_speed_ms": 1175,
+      "exit_speed_ms": 2855,
+      "exit_mach": 3.41,
+      "exit_temp_K": 1621
+    },
+    "liquids_ms": {
+      "tank": 0.05,
+      "feed_line": 5,
+      "pump_discharge": 35,
+      "high_pressure_line": 25,
+      "coolant_passages": 12,
+      "note": "nominal values, not from engine data"
+    }
+  },
+  "parts": [
+    {
+      "node": "EP_ThrustMount",
+      "role": "part",
+      "title": "Thrust mount",
+      "description": "Bolts the engine to the vehicle and carries the thrust load into the structure.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explode_order": 0,
+      "materials": [
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "EP_Gimbal",
+      "role": "part",
+      "title": "Gimbal joint",
+      "description": "Two-axis universal joint. Lets the whole engine swivel a few degrees to steer the vehicle.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.04058
+      ],
+      "explode_order": 1,
+      "materials": [
+        "M_Steel",
+        "M_Steel_Dark"
+      ]
+    },
+    {
+      "node": "EP_ThrustAdapter",
+      "role": "part",
+      "title": "Thrust adapter",
+      "description": "Short cone that transfers thrust from the injector head up into the gimbal.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.08117
+      ],
+      "explode_order": 2,
+      "materials": [
+        "M_Titanium"
+      ]
+    },
+    {
+      "node": "EP_InjectorBolts",
+      "role": "part",
+      "title": "Injector bolts",
+      "description": "Clamp the dome, injector plate and chamber flange into one sealed stack.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.12175
+      ],
+      "explode_order": 3,
+      "materials": [
+        "M_Fastener"
+      ]
+    },
+    {
+      "node": "EP_OxidizerDome",
+      "role": "part",
+      "title": "Oxidizer dome",
+      "description": "Spreads the liquid oxygen from its pump evenly across the back of the injector.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.16234
+      ],
+      "explode_order": 4,
+      "materials": [
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "EP_InjectorPlate",
+      "role": "part",
+      "title": "Injector plate",
+      "description": "Sprays fuel and oxidizer through many small orifices so they atomise and mix. On the real engine it is 3D-printed.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.22727
+      ],
+      "explode_order": 5,
+      "materials": [
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "EP_ChamberLiner",
+      "role": "part",
+      "title": "Chamber liner",
+      "description": "Inner wall of the chamber. Fuel runs through the channels on its outside and carries the heat away before it is burned.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.32468
+      ],
+      "explode_order": 6,
+      "materials": [
+        "M_Copper"
+      ]
+    },
+    {
+      "node": "EP_ChamberJacket",
+      "role": "part",
+      "title": "Chamber jacket",
+      "description": "Outer shell that closes the coolant channels and holds the chamber pressure.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.5276
+      ],
+      "explode_order": 7,
+      "materials": [
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "EP_NozzleBolts",
+      "role": "part",
+      "title": "Nozzle joint bolts",
+      "description": "Fasten the nozzle to the chamber exit flange.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.58442
+      ],
+      "explode_order": 8,
+      "materials": [
+        "M_Fastener"
+      ]
+    },
+    {
+      "node": "EP_FuelManifold",
+      "role": "part",
+      "title": "Fuel inlet manifold",
+      "description": "Ring low on the nozzle. High-pressure fuel from the pump enters the cooling passages here.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.60877
+      ],
+      "explode_order": 9,
+      "materials": [
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "EP_Nozzle",
+      "role": "part",
+      "title": "Nozzle",
+      "description": "Expands the exhaust to high speed. Its wall is cooled by the fuel on its way up to the chamber.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.64123
+      ],
+      "explode_order": 10,
+      "materials": [
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "EP_MotorFuel",
+      "role": "part",
+      "title": "Fuel pump motor",
+      "description": "Brushless electric motor for the fuel pump. Each pump has its own motor, so the mixture ratio can be set by motor speed alone.",
+      "explode_offset": [
+        -0.18263,
+        0.0,
+        0.06088
+      ],
+      "explode_order": 11,
+      "cut": true,
+      "materials": [
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "EP_MotorOxidizer",
+      "role": "part",
+      "title": "Oxidizer pump motor",
+      "description": "Brushless electric motor. It replaces the turbine and the gas generator: there is no hot gas anywhere in the pump drive. On the Rutherford each motor delivers 37 kW at 40,000 rpm.",
+      "explode_offset": [
+        0.18263,
+        0.0,
+        0.06088
+      ],
+      "explode_order": 11,
+      "cut": true,
+      "materials": [
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "EP_PumpFuel",
+      "role": "part",
+      "title": "Fuel pump",
+      "description": "Centrifugal pump on the motor's shaft. It raises the kerosene from tank pressure to above chamber pressure.",
+      "explode_offset": [
+        -0.18263,
+        0.0,
+        -0.10146
+      ],
+      "explode_order": 12,
+      "cut": true,
+      "materials": [
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "EP_PumpOxidizer",
+      "role": "part",
+      "title": "Oxidizer pump",
+      "description": "Centrifugal pump on the motor's shaft. It raises the liquid oxygen from tank pressure to above chamber pressure.",
+      "explode_offset": [
+        0.18263,
+        0.0,
+        -0.10146
+      ],
+      "explode_order": 12,
+      "cut": true,
+      "materials": [
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "EP_RotorFuel",
+      "role": "part",
+      "title": "Fuel pump rotor",
+      "description": "The motor's magnet rotor and the pump impeller on one short shaft.",
+      "explode_offset": [
+        -0.34497,
+        0.0,
+        -0.02029
+      ],
+      "explode_order": 13,
+      "spin": {
+        "axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "rev_per_s": -1.4
+      },
+      "materials": [
+        "M_Steel",
+        "M_Steel_Dark",
+        "M_Copper"
+      ]
+    },
+    {
+      "node": "EP_RotorOxidizer",
+      "role": "part",
+      "title": "Oxidizer pump rotor",
+      "description": "The motor's magnet rotor and the pump impeller on one short shaft.",
+      "explode_offset": [
+        0.34497,
+        0.0,
+        -0.02029
+      ],
+      "explode_order": 13,
+      "spin": {
+        "axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "rev_per_s": 1.4
+      },
+      "materials": [
+        "M_Steel",
+        "M_Steel_Dark",
+        "M_Copper"
+      ]
+    },
+    {
+      "node": "EP_InverterFuel",
+      "role": "part",
+      "title": "Fuel motor controller",
+      "description": "Power electronics that turn the battery's direct current into the three-phase current the motor needs.",
+      "explode_offset": [
+        -0.18263,
+        0.12175,
+        0.06088
+      ],
+      "explode_order": 14,
+      "materials": [
+        "M_Steel_Dark"
+      ]
+    },
+    {
+      "node": "EP_InverterOxidizer",
+      "role": "part",
+      "title": "Oxidizer motor controller",
+      "description": "Power electronics that turn the battery's direct current into the three-phase current the motor needs. Changing the motor speed throttles the engine.",
+      "explode_offset": [
+        0.18263,
+        0.12175,
+        0.06088
+      ],
+      "explode_order": 14,
+      "materials": [
+        "M_Steel_Dark"
+      ]
+    },
+    {
+      "node": "EP_Battery",
+      "role": "context",
+      "title": "Battery pack",
+      "description": "Lithium-polymer battery that powers both pump motors. It is the cycle's weakness: unlike propellant, an empty battery still has to be carried. Shown schematically, not to scale.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        0.30438
+      ],
+      "explode_order": 15,
+      "cut": false,
+      "materials": [
+        "M_Battery",
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "EP_CableFuel",
+      "role": "part",
+      "title": "Power cable",
+      "description": "Carries the battery's current to the fuel pump's motor controller.",
+      "explode_offset": [
+        -0.08117,
+        0.12175,
+        0.18263
+      ],
+      "explode_order": 16,
+      "materials": [
+        "M_Cable"
+      ]
+    },
+    {
+      "node": "EP_CableOxidizer",
+      "role": "part",
+      "title": "Power cable",
+      "description": "Carries the battery's current to the oxidizer pump's motor controller.",
+      "explode_offset": [
+        0.08117,
+        0.12175,
+        0.18263
+      ],
+      "explode_order": 16,
+      "materials": [
+        "M_Cable"
+      ]
+    },
+    {
+      "node": "EP_ValveFuel",
+      "role": "part",
+      "title": "Main fuel valve",
+      "description": "Opens to send high-pressure fuel to the cooling passages and on to the injector.",
+      "explode_offset": [
+        -0.18263,
+        0.14205,
+        -0.20292
+      ],
+      "explode_order": 17,
+      "materials": [
+        "M_Steel_Dark",
+        "M_Steel",
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "EP_ValveOxidizer",
+      "role": "part",
+      "title": "Main oxidizer valve",
+      "description": "Opens to send high-pressure liquid oxygen to the injector.",
+      "explode_offset": [
+        0.18263,
+        0.16234,
+        -0.04058
+      ],
+      "explode_order": 17,
+      "materials": [
+        "M_Steel_Dark",
+        "M_Steel",
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "EP_InletLineFuel",
+      "role": "part",
+      "title": "High-pressure fuel line",
+      "description": "Carries fuel from the pump down to the manifold on the nozzle.",
+      "explode_offset": [
+        -0.16234,
+        0.16234,
+        -0.40584
+      ],
+      "explode_order": 18,
+      "materials": [
+        "M_Line_Fuel"
+      ]
+    },
+    {
+      "node": "EP_InletLineOxidizer",
+      "role": "part",
+      "title": "High-pressure oxidizer line",
+      "description": "Carries liquid oxygen from the pump to the dome.",
+      "explode_offset": [
+        0.08117,
+        0.20292,
+        -0.08117
+      ],
+      "explode_order": 18,
+      "materials": [
+        "M_Line_Oxidizer"
+      ]
+    },
+    {
+      "node": "EP_ActuatorPitch",
+      "role": "part",
+      "title": "Gimbal actuator",
+      "description": "Electromechanical actuator that tilts the engine. The two actuators sit 90 degrees apart.",
+      "explode_offset": [
+        0.12175,
+        0.12175,
+        -0.10146
+      ],
+      "explode_order": 19,
+      "materials": [
+        "M_Steel_Dark",
+        "M_Chrome",
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "EP_ActuatorYaw",
+      "role": "part",
+      "title": "Gimbal actuator",
+      "description": "Electromechanical actuator that tilts the engine. The two actuators sit 90 degrees apart.",
+      "explode_offset": [
+        -0.12175,
+        0.12175,
+        -0.10146
+      ],
+      "explode_order": 19,
+      "materials": [
+        "M_Steel_Dark",
+        "M_Chrome",
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "EP_FeedLineFuel",
+      "role": "part",
+      "title": "Fuel feed line",
+      "description": "Low-pressure kerosene from the tank to the pump inlet.",
+      "explode_offset": [
+        -0.30438,
+        0.0,
+        0.04058
+      ],
+      "explode_order": 20,
+      "materials": [
+        "M_Line_Fuel"
+      ]
+    },
+    {
+      "node": "EP_FeedLineOxidizer",
+      "role": "part",
+      "title": "Oxidizer feed line",
+      "description": "Low-pressure liquid oxygen from the tank to the pump inlet.",
+      "explode_offset": [
+        0.30438,
+        0.0,
+        0.04058
+      ],
+      "explode_order": 20,
+      "materials": [
+        "M_Line_Oxidizer"
+      ]
+    },
+    {
+      "node": "EP_TankFuel",
+      "role": "context",
+      "title": "Fuel tank",
+      "description": "Kerosene. Only lightly pressurised, because the pumps do the work. Shown schematically, not to scale.",
+      "explode_offset": [
+        -0.18263,
+        0.0,
+        0.18263
+      ],
+      "explode_order": 21,
+      "materials": [
+        "M_Context_Ghost"
+      ]
+    },
+    {
+      "node": "EP_TankOxidizer",
+      "role": "context",
+      "title": "Oxidizer tank",
+      "description": "Liquid oxygen. Only lightly pressurised, because the pumps do the work. Shown schematically, not to scale.",
+      "explode_offset": [
+        0.18263,
+        0.0,
+        0.18263
+      ],
+      "explode_order": 21,
+      "materials": [
+        "M_Context_Ghost"
+      ]
+    }
+  ],
+  "flows": [
+    {
+      "node": "EP_FLOW_Electric",
+      "medium": "electric",
+      "color": [
+        1.0,
+        0.85,
+        0.2
+      ],
+      "length_m": 0.269,
+      "label": "Electric power",
+      "style": "streamlines",
+      "period_s": 0.35,
+      "lines": 6
+    },
+    {
+      "node": "EP_FLOW_Fuel",
+      "medium": "fuel",
+      "color": [
+        1.0,
+        0.35,
+        0.08
+      ],
+      "length_m": 2.177,
+      "label": null,
+      "style": "streamlines",
+      "period_s": 0.9,
+      "lines": 10
+    },
+    {
+      "node": "EP_FLOW_HotGas",
+      "medium": "hot_gas",
+      "color": [
+        1.0,
+        0.75,
+        0.3
+      ],
+      "length_m": 0.532,
+      "label": null,
+      "style": "streamlines",
+      "period_s": 0.32,
+      "lines": 35
+    },
+    {
+      "node": "EP_FLOW_Oxidizer",
+      "medium": "oxidizer",
+      "color": [
+        0.15,
+        0.45,
+        1.0
+      ],
+      "length_m": 1.703,
+      "label": null,
+      "style": "streamlines",
+      "period_s": 0.9,
+      "lines": 8
+    }
+  ]
+}

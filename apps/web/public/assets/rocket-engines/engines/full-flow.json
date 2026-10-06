@@ -1,0 +1,676 @@
+{
+  "id": "full-flow",
+  "title": "Full-flow staged-combustion engine",
+  "description": "Two preburners, one fuel-rich and one oxygen-rich, so all of both propellants pass through a turbine and reach the main chamber as hot gas. Each turbine runs cooler for the same power, and nothing is wasted.",
+  "thrust_axis": "+Z in Blender, +Y in glTF",
+  "reference": {
+    "engine": "SpaceX Raptor 2 (Starship and Super Heavy)",
+    "published": {
+      "thrust_sl_kN": 2256,
+      "isp_sl_s": 327,
+      "isp_vac_s": 350,
+      "chamber_pressure_bar": 300,
+      "expansion_ratio": 34.34,
+      "mixture_ratio": 3.8,
+      "propellants": "LOX / CH4",
+      "dry_mass_kg": 1600,
+      "length_m": 3.1,
+      "max_diameter_m": 1.3,
+      "cooling": "methane regenerative chamber and nozzle"
+    },
+    "derived": {
+      "throat_radius_m": 0.1084,
+      "note": "throat from nozzle diameter and expansion ratio"
+    },
+    "note": "Length, nozzle diameter and expansion ratio match the published figures. Little else is published, so the internal layout is representative.",
+    "sources": [
+      "https://en.wikipedia.org/wiki/SpaceX_Raptor",
+      "https://everydayastronaut.com/spacex-raptor-engine-comparison/"
+    ]
+  },
+  "flow_model": {
+    "note": "Streak speed follows local flow speed on a compressed scale: display speed = 0.22 * v^0.32 (m/s).",
+    "hot_gas": {
+      "model": "1-D isentropic expansion",
+      "assumed_gamma": 1.2,
+      "assumed_chamber_temp_K": 3700.0,
+      "assumed_molar_mass_g_mol": 22.0,
+      "chamber_speed_ms": 321,
+      "throat_speed_ms": 1235,
+      "exit_speed_ms": 3253,
+      "exit_mach": 4.13,
+      "exit_temp_K": 1366
+    },
+    "liquids_ms": {
+      "tank": 0.05,
+      "feed_line": 5,
+      "pump_discharge": 60,
+      "high_pressure_line": 40,
+      "coolant_passages": 40,
+      "note": "nominal values, not from engine data"
+    },
+    "preburner_gas_ms": {
+      "preburner": 30,
+      "turbine_blades": 300,
+      "duct": 150,
+      "injector": 120,
+      "note": "nominal values, not from engine data"
+    }
+  },
+  "parts": [
+    {
+      "node": "FF_ThrustMount",
+      "role": "part",
+      "title": "Thrust mount",
+      "description": "Bolts the engine to the vehicle and carries the thrust load into the structure.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explode_order": 0,
+      "materials": [
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "FF_Gimbal",
+      "role": "part",
+      "title": "Gimbal joint",
+      "description": "Two-axis universal joint. Lets the whole engine swivel so the thrust vector can steer the vehicle.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.13
+      ],
+      "explode_order": 1,
+      "materials": [
+        "M_Steel",
+        "M_Steel_Dark"
+      ]
+    },
+    {
+      "node": "FF_ThrustAdapter",
+      "role": "part",
+      "title": "Thrust adapter",
+      "description": "Transfers thrust from the top of the oxidizer turbopump into the gimbal.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.26
+      ],
+      "explode_order": 2,
+      "materials": [
+        "M_Titanium"
+      ]
+    },
+    {
+      "node": "FF_PumpOxidizer",
+      "role": "part",
+      "title": "Oxidizer pump",
+      "description": "Raises all of the liquid oxygen to far above chamber pressure. On this engine the whole oxidizer turbopump sits on the engine's own axis, above the injector.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.45
+      ],
+      "explode_order": 3,
+      "materials": [
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "FF_PreburnerOxidizer",
+      "role": "part",
+      "title": "Oxygen-rich preburner",
+      "description": "Burns nearly all of the oxygen with a little fuel. The result is hot, oxygen-rich gas, which is what makes this cycle 'full flow'.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.75
+      ],
+      "explode_order": 4,
+      "materials": [
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "FF_TurbineOxidizer",
+      "role": "part",
+      "title": "Oxidizer pump turbine",
+      "description": "Driven by the oxygen-rich gas, which then flows straight down into the injector.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -1.05
+      ],
+      "explode_order": 5,
+      "materials": [
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "FF_RotorOxidizer",
+      "role": "part",
+      "title": "Oxidizer turbopump rotor",
+      "description": "Pump impeller at the top, turbine wheel at the bottom. Both sides handle oxygen, so a leak along the shaft is harmless.",
+      "explode_offset": [
+        -0.8,
+        0.0,
+        -0.9
+      ],
+      "explode_order": 6,
+      "cut": false,
+      "spin": {
+        "axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "rev_per_s": 1.0
+      },
+      "materials": [
+        "M_Steel",
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "FF_InjectorBolts",
+      "role": "part",
+      "title": "Dome bolts",
+      "description": "Clamp the oxidizer dome onto the injector assembly.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -1.25
+      ],
+      "explode_order": 7,
+      "materials": [
+        "M_Fastener"
+      ]
+    },
+    {
+      "node": "FF_OxidizerDome",
+      "role": "part",
+      "title": "Oxidizer gas dome",
+      "description": "Spreads the oxygen-rich gas from the turbine over the tops of the injector posts.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -1.35
+      ],
+      "explode_order": 8,
+      "materials": [
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "FF_FuelGasManifold",
+      "role": "part",
+      "title": "Fuel gas manifold",
+      "description": "Takes the fuel-rich gas from the fuel turbine and leads it around the injector posts.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -1.55
+      ],
+      "explode_order": 9,
+      "materials": [
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "FF_Injector",
+      "role": "part",
+      "title": "Gas-gas injector",
+      "description": "Both propellants arrive as hot gas: oxygen-rich down the posts, fuel-rich around them. Gas mixes and burns faster than liquid, so the chamber can be short.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -1.95
+      ],
+      "explode_order": 10,
+      "materials": [
+        "M_Steel",
+        "M_Copper"
+      ]
+    },
+    {
+      "node": "FF_ChamberLiner",
+      "role": "part",
+      "title": "Chamber liner",
+      "description": "Copper-alloy inner wall. Liquid methane runs through the channels milled into its outside and keeps it from melting.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -2.4
+      ],
+      "explode_order": 11,
+      "materials": [
+        "M_Copper"
+      ]
+    },
+    {
+      "node": "FF_CoolantCollector",
+      "role": "part",
+      "title": "Coolant outlet manifold",
+      "description": "Collects the methane after it has cooled the nozzle and chamber, and sends it on to the preburners.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -3.1
+      ],
+      "explode_order": 12,
+      "materials": [
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "FF_ChamberJacket",
+      "role": "part",
+      "title": "Chamber jacket",
+      "description": "Outer shell that closes the coolant channels and holds the chamber pressure: 300 bar, the highest of any engine in service.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -3.2
+      ],
+      "explode_order": 13,
+      "materials": [
+        "M_Nickel"
+      ]
+    },
+    {
+      "node": "FF_NozzleBolts",
+      "role": "part",
+      "title": "Nozzle joint bolts",
+      "description": "Fasten the nozzle to the chamber exit flange.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -3.42
+      ],
+      "explode_order": 14,
+      "materials": [
+        "M_Fastener"
+      ]
+    },
+    {
+      "node": "FF_FuelManifold",
+      "role": "part",
+      "title": "Coolant inlet manifold",
+      "description": "Ring low on the nozzle. High-pressure methane from the pump enters here and spreads into the wall.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -3.45
+      ],
+      "explode_order": 15,
+      "materials": [
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "FF_Nozzle",
+      "role": "part",
+      "title": "Nozzle",
+      "description": "Expands the exhaust to high speed. Its wall is cooled by the methane on its way up to the chamber.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -3.6
+      ],
+      "explode_order": 16,
+      "materials": [
+        "M_Nickel"
+      ]
+    },
+    {
+      "node": "FF_PreburnerFuel",
+      "role": "part",
+      "title": "Fuel-rich preburner",
+      "description": "Burns nearly all of the methane with a little oxygen. The fuel-rich gas drives the fuel pump's turbine.",
+      "explode_offset": [
+        0.8,
+        0.0,
+        0.25
+      ],
+      "explode_order": 17,
+      "cut": true,
+      "materials": [
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "FF_TurbineFuel",
+      "role": "part",
+      "title": "Fuel pump turbine",
+      "description": "Driven by the fuel-rich gas, which then flows through the side duct into the injector.",
+      "explode_offset": [
+        0.8,
+        0.0,
+        -0.05
+      ],
+      "explode_order": 18,
+      "cut": true,
+      "materials": [
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "FF_PumpFuel",
+      "role": "part",
+      "title": "Fuel pump",
+      "description": "Two centrifugal stages raise the liquid methane to far above chamber pressure.",
+      "explode_offset": [
+        0.8,
+        0.0,
+        -0.45
+      ],
+      "explode_order": 19,
+      "cut": true,
+      "materials": [
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "FF_RotorFuel",
+      "role": "part",
+      "title": "Fuel turbopump rotor",
+      "description": "Turbine wheels at the top, pump impellers below. Both sides handle fuel, so here too a shaft leak is harmless.",
+      "explode_offset": [
+        1.4,
+        0.0,
+        -0.1
+      ],
+      "explode_order": 20,
+      "spin": {
+        "axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "rev_per_s": -1.2
+      },
+      "materials": [
+        "M_Steel",
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "FF_ValveFuel",
+      "role": "part",
+      "title": "Main fuel valve",
+      "description": "Opens to send high-pressure methane to the cooling circuit.",
+      "explode_offset": [
+        0.8,
+        0.3,
+        -0.45
+      ],
+      "explode_order": 21,
+      "materials": [
+        "M_Steel_Dark",
+        "M_Steel",
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "FF_ValveOxidizer",
+      "role": "part",
+      "title": "Main oxidizer valve",
+      "description": "Opens to send high-pressure oxygen to the oxygen-rich preburner.",
+      "explode_offset": [
+        0.0,
+        0.45,
+        -0.45
+      ],
+      "explode_order": 21,
+      "materials": [
+        "M_Steel_Dark",
+        "M_Steel",
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "FF_OxidizerLine",
+      "role": "part",
+      "title": "High-pressure oxidizer line",
+      "description": "Carries liquid oxygen from the pump to the oxygen-rich preburner.",
+      "explode_offset": [
+        0.0,
+        0.6,
+        -0.75
+      ],
+      "explode_order": 22,
+      "materials": [
+        "M_Line_Oxidizer"
+      ]
+    },
+    {
+      "node": "FF_PreburnerOxidizerLine",
+      "role": "part",
+      "title": "Preburner oxidizer line",
+      "description": "Sends a small share of the oxygen to the fuel-rich preburner.",
+      "explode_offset": [
+        0.4,
+        0.6,
+        0.1
+      ],
+      "explode_order": 22,
+      "materials": [
+        "M_Line_Oxidizer"
+      ]
+    },
+    {
+      "node": "FF_CoolantFeedLine",
+      "role": "part",
+      "title": "Coolant feed line",
+      "description": "Carries methane from the pump down the outside of the nozzle to the inlet manifold.",
+      "explode_offset": [
+        0.5,
+        0.5,
+        -2.0
+      ],
+      "explode_order": 23,
+      "materials": [
+        "M_Line_Fuel"
+      ]
+    },
+    {
+      "node": "FF_PreburnerFuelLine",
+      "role": "part",
+      "title": "Preburner fuel line",
+      "description": "Carries the warmed methane from the coolant outlet manifold to the fuel-rich preburner.",
+      "explode_offset": [
+        0.4,
+        -0.6,
+        -0.6
+      ],
+      "explode_order": 23,
+      "materials": [
+        "M_Line_Fuel"
+      ]
+    },
+    {
+      "node": "FF_PreburnerFuelTap",
+      "role": "part",
+      "title": "Preburner fuel tap",
+      "description": "Sends a small share of the methane to the oxygen-rich preburner.",
+      "explode_offset": [
+        -0.3,
+        -0.55,
+        -1.0
+      ],
+      "explode_order": 23,
+      "materials": [
+        "M_Line_Fuel"
+      ]
+    },
+    {
+      "node": "FF_ActuatorPitch",
+      "role": "part",
+      "title": "Gimbal actuator",
+      "description": "Linear actuator that tilts the engine. The two actuators sit 90 degrees apart.",
+      "explode_offset": [
+        0.4,
+        0.4,
+        -0.3
+      ],
+      "explode_order": 24,
+      "materials": [
+        "M_Steel_Dark",
+        "M_Chrome",
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "FF_ActuatorYaw",
+      "role": "part",
+      "title": "Gimbal actuator",
+      "description": "Linear actuator that tilts the engine. The two actuators sit 90 degrees apart.",
+      "explode_offset": [
+        -0.4,
+        0.4,
+        -0.3
+      ],
+      "explode_order": 24,
+      "materials": [
+        "M_Steel_Dark",
+        "M_Chrome",
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "FF_FeedLineFuel",
+      "role": "part",
+      "title": "Fuel feed line",
+      "description": "Low-pressure liquid methane from the tank to the pump inlet.",
+      "explode_offset": [
+        1.2,
+        0.0,
+        0.6
+      ],
+      "explode_order": 25,
+      "materials": [
+        "M_Line_Fuel"
+      ]
+    },
+    {
+      "node": "FF_FeedLineOxidizer",
+      "role": "part",
+      "title": "Oxidizer feed line",
+      "description": "Low-pressure liquid oxygen from the tank to the pump inlet.",
+      "explode_offset": [
+        -1.0,
+        0.0,
+        0.2
+      ],
+      "explode_order": 25,
+      "materials": [
+        "M_Line_Oxidizer"
+      ]
+    },
+    {
+      "node": "FF_TankFuel",
+      "role": "context",
+      "title": "Fuel tank",
+      "description": "Liquid methane. Only lightly pressurised, because the pumps do the work. Shown schematically, not to scale.",
+      "explode_offset": [
+        1.2,
+        0.0,
+        1.2
+      ],
+      "explode_order": 26,
+      "materials": [
+        "M_Context_Ghost"
+      ]
+    },
+    {
+      "node": "FF_TankOxidizer",
+      "role": "context",
+      "title": "Oxidizer tank",
+      "description": "Liquid oxygen. Only lightly pressurised, because the pumps do the work. Shown schematically, not to scale.",
+      "explode_offset": [
+        -1.0,
+        0.0,
+        0.9
+      ],
+      "explode_order": 26,
+      "materials": [
+        "M_Context_Ghost"
+      ]
+    }
+  ],
+  "flows": [
+    {
+      "node": "FF_FLOW_Fuel",
+      "medium": "fuel",
+      "color": [
+        1.0,
+        0.35,
+        0.08
+      ],
+      "length_m": 12.578,
+      "label": null,
+      "style": "streamlines",
+      "period_s": 0.9,
+      "lines": 10
+    },
+    {
+      "node": "FF_FLOW_FuelRichGas",
+      "medium": "turbine_gas",
+      "color": [
+        0.7,
+        0.45,
+        0.95
+      ],
+      "length_m": 2.051,
+      "label": "Fuel-rich gas",
+      "style": "streamlines",
+      "period_s": 0.5,
+      "lines": 6
+    },
+    {
+      "node": "FF_FLOW_HotGas",
+      "medium": "hot_gas",
+      "color": [
+        1.0,
+        0.75,
+        0.3
+      ],
+      "length_m": 2.613,
+      "label": null,
+      "style": "streamlines",
+      "period_s": 0.32,
+      "lines": 35
+    },
+    {
+      "node": "FF_FLOW_OxRichGas",
+      "medium": "ox_rich_gas",
+      "color": [
+        0.3,
+        0.9,
+        0.8
+      ],
+      "length_m": 1.574,
+      "label": "Oxygen-rich gas",
+      "style": "streamlines",
+      "period_s": 0.5,
+      "lines": 8
+    },
+    {
+      "node": "FF_FLOW_Oxidizer",
+      "medium": "oxidizer",
+      "color": [
+        0.15,
+        0.45,
+        1.0
+      ],
+      "length_m": 5.107,
+      "label": null,
+      "style": "streamlines",
+      "period_s": 0.9,
+      "lines": 10
+    }
+  ]
+}

@@ -1,0 +1,347 @@
+{
+  "type": "generated",
+  "status": "DRAFT written at integration (2026-10-04) from the shipped files, their manifests and HANDOVER-concept-002-rocket-engines.md. Fields marked UNKNOWN are not stated in any of those and need Kari. Updated 2026-10-06 (add-on data removed from the models).",
+  "used_for": "Concept 002 engine explorer (/concept/rocket-engines/): one model + one manifest per engine, content/explorers/rocket-engines.json explorer.engines[]",
+  "asset": "apps/web/public/assets/rocket-engines/engines/<id>_d.glb + <id>.json (13 engines, listed in entries)",
+  "tool": "Blender — the files identify their exporter as 'Khronos glTF Blender I/O v5.2.40'; exact Blender version UNKNOWN",
+  "generator": "rk.export_engine() from the helper scripts rk_helpers.py and rk_engine_parts.py, kept as text blocks in the source .blend (per the handover). The scripts are not in this repository.",
+  "prompt_or_input": "X:\\projects\\farsidelab\\rocket_engines\\engine_v001.blend (15,146,308 B, saved 2026-10-03 23:02 +03:00; outside the repo). The handover asks Kari to confirm it holds all thirteen engines. Published outer dimensions per engine: see entries[].dimension_sources.",
+  "ai_models": "UNKNOWN — the handover does not say whether any generative model produced geometry. The files contain no textures.",
+  "date": "2026-10-03",
+  "license_at_generation": "project-original procedural geometry modelled to published outer dimensions; internal layouts are representative (see entries[].accuracy_note and the handover's 'Models that are representative' list). UNKNOWN: confirm no third-party or AI-generated mesh is included.",
+  "notes": "Web copies are the Blender exports with one change, made on 2026-10-06 with Kari's go-ahead: the scene-level `extras` were removed with pipeline/pack/strip-glb-scene-extras.py. Each export carried there a 58 KB block named `higgsfield` (a Blender add-on's settings: parameter lists at their defaults, prompts empty) with a `scene_builder_id`; no key, token, address or path, and nothing on the site read it. Proven per file: the binary part (all geometry) is byte-identical to the export, and the JSON part is identical apart from that one member; each file is 59,228 bytes smaller. `export_sha256` / `export_bytes` in each entry describe the file as Blender wrote it. The node-level extras (part titles, explode offsets, flow data) are the project's own and were kept. The file names also gained the _d (desktop budget tier) suffix. Manifests: line endings normalised CRLF -> LF, content unchanged. Uncompressed glTF (no Draco/meshopt), 16-bit indices, float attributes.",
+  "entries": [
+    {
+      "ref": "E_01",
+      "asset": "apps/web/public/assets/rocket-engines/engines/pressure-fed_d.glb",
+      "bytes": 2602688,
+      "export_bytes": 2661916,
+      "sha256": "ff7f6c80e6dffa62748b892596355758947967072938949e41ceeda6265a6e1e",
+      "export_sha256": "118611b495dbb5184730d504f9388e8e687ab404ade3e339ddeca76a8fe7c37f",
+      "manifest": "apps/web/public/assets/rocket-engines/engines/pressure-fed.json",
+      "manifest_sha256": "a4d6b6d85305dc74c7af845cfe81773b69e8cb9596fb7f2892e21f2d14c8cfc8",
+      "exported": "2026-10-03 12:14 (+03:00)",
+      "reference_engine": "Aerojet AJ10-190 (Space Shuttle Orbital Maneuvering Engine)",
+      "dimension_sources": [
+        "https://en.wikipedia.org/wiki/Orbital_Maneuvering_System",
+        "https://ntrs.nasa.gov/api/citations/19910014943/downloads/19910014943.pdf"
+      ],
+      "parts": 24,
+      "flow_streams": 4,
+      "gltf_extensions": [
+        "KHR_materials_clearcoat"
+      ],
+      "textures": 0,
+      "derived": {
+        "throat_radius_m": 0.0775,
+        "note": "throat from exit diameter and expansion ratio; chamber, injector, head and feed layout are representative, not from drawings"
+      }
+    },
+    {
+      "ref": "E_02",
+      "asset": "apps/web/public/assets/rocket-engines/engines/gas-generator_d.glb",
+      "bytes": 3419576,
+      "export_bytes": 3478804,
+      "sha256": "2c6bf99af8d02ae8d571c0793ee9624435dcf944bf8ad2312a9961a432255ea6",
+      "export_sha256": "a25ed13290b28c6a72404a901e23cba2f580e1e5cd739d8a79185de7395fcb4f",
+      "manifest": "apps/web/public/assets/rocket-engines/engines/gas-generator.json",
+      "manifest_sha256": "4e47b91880923543fa42cf1a9fa231eb84c190573d8f91958fe738db7fb586bf",
+      "exported": "2026-10-03 13:02 (+03:00)",
+      "reference_engine": "SpaceX Merlin 1D, sea-level version (Falcon 9 and Falcon Heavy)",
+      "dimension_sources": [
+        "https://en.wikipedia.org/wiki/SpaceX_Merlin"
+      ],
+      "parts": 29,
+      "flow_streams": 4,
+      "gltf_extensions": [],
+      "textures": 0,
+      "derived": {
+        "throat_radius_m": 0.115,
+        "model_length_m": 1.773,
+        "note": "throat from exit diameter and expansion ratio; overall length is not published"
+      },
+      "accuracy_note": "Nozzle exit diameter and expansion ratio match the published figures. Overall length is not published, and the internal layout is representative."
+    },
+    {
+      "ref": "E_03",
+      "asset": "apps/web/public/assets/rocket-engines/engines/staged-combustion_d.glb",
+      "bytes": 4343696,
+      "export_bytes": 4402924,
+      "sha256": "100a86212b84a5761dd45c81df8eba32836838896ec839a02f474cd06b5d9882",
+      "export_sha256": "d06be634bb66ab3d8558936135cfd19fbedec8a31b5c86ba2add0fb9c653b58c",
+      "manifest": "apps/web/public/assets/rocket-engines/engines/staged-combustion.json",
+      "manifest_sha256": "3d17ebc5cbf585ae26ed3993582f9092617c9fa5d5ec55663d61ead17e4426b1",
+      "exported": "2026-10-03 18:19 (+03:00)",
+      "reference_engine": "Aerojet Rocketdyne RS-25 (Space Shuttle Main Engine, now on the Space Launch System)",
+      "dimension_sources": [
+        "https://l3harris.com/all-capabilities/rs-25-engine",
+        "https://en.wikipedia.org/wiki/RS-25"
+      ],
+      "parts": 33,
+      "flow_streams": 4,
+      "gltf_extensions": [],
+      "textures": 0,
+      "derived": {
+        "throat_radius_m": 0.138,
+        "note": "throat from exit diameter and expansion ratio"
+      },
+      "accuracy_note": "Outer dimensions match the published figures. The powerhead layout is simplified: the low-pressure boost pumps are left out and the coolant routing is reduced to one path."
+    },
+    {
+      "ref": "E_04",
+      "asset": "apps/web/public/assets/rocket-engines/engines/full-flow_d.glb",
+      "bytes": 3806500,
+      "export_bytes": 3865728,
+      "sha256": "edf6ab723e674f772b2365b4e8cd7e61373dd8bfdbfe95a2315ed376c3d15b0f",
+      "export_sha256": "7d26a4f7b35282084858836d7a1bf02772f20575c4f0738fface8a570e3c8130",
+      "manifest": "apps/web/public/assets/rocket-engines/engines/full-flow.json",
+      "manifest_sha256": "22287b3493daf30a25302dfcbc742dc513859385ece6232fb829bbb7f20bdc27",
+      "exported": "2026-10-03 19:42 (+03:00)",
+      "reference_engine": "SpaceX Raptor 2 (Starship and Super Heavy)",
+      "dimension_sources": [
+        "https://en.wikipedia.org/wiki/SpaceX_Raptor",
+        "https://everydayastronaut.com/spacex-raptor-engine-comparison/"
+      ],
+      "parts": 34,
+      "flow_streams": 5,
+      "gltf_extensions": [],
+      "textures": 0,
+      "derived": {
+        "throat_radius_m": 0.1084,
+        "note": "throat from nozzle diameter and expansion ratio"
+      },
+      "accuracy_note": "Length, nozzle diameter and expansion ratio match the published figures. Little else is published, so the internal layout is representative."
+    },
+    {
+      "ref": "E_05",
+      "asset": "apps/web/public/assets/rocket-engines/engines/expander_d.glb",
+      "bytes": 3383292,
+      "export_bytes": 3442520,
+      "sha256": "21a342b185d9b386c5a9c9036670314c2ea01b2b56090ff7601ca916d16f03ff",
+      "export_sha256": "402427be45dbaec6a19a9b26efe89e360e93a631a978f80281e65724eebdc29b",
+      "manifest": "apps/web/public/assets/rocket-engines/engines/expander.json",
+      "manifest_sha256": "b05a5bd723f95f558bdc2db22a71122cce40e99fad362463cb9ac93c6b97d2e2",
+      "exported": "2026-10-03 19:52 (+03:00)",
+      "reference_engine": "Aerojet Rocketdyne RL10A-4-2 (Centaur upper stage of the Atlas V)",
+      "dimension_sources": [
+        "https://www.l3harris.com/sites/default/files/2024-01/AJRD-LHX_RL10_SpecSheet_CMYK_APPROVED_011024.pdf",
+        "https://en.wikipedia.org/wiki/RL10"
+      ],
+      "parts": 31,
+      "flow_streams": 3,
+      "gltf_extensions": [],
+      "textures": 0,
+      "derived": {
+        "throat_radius_m": 0.0638,
+        "note": "throat from nozzle diameter and expansion ratio"
+      },
+      "accuracy_note": "Outer dimensions match the published figures. The turbopump and plumbing layout is representative."
+    },
+    {
+      "ref": "E_06",
+      "asset": "apps/web/public/assets/rocket-engines/engines/electric-pump_d.glb",
+      "bytes": 2904544,
+      "export_bytes": 2963772,
+      "sha256": "f0eabbb16b83ab70fcea3d3d8482a1ac9a854e2807ae7f35bf9615aadde30743",
+      "export_sha256": "c78b50a25dd663719dbc3e4cb45fb6a53fb3af05daf51c73e84c5a0ac862ae15",
+      "manifest": "apps/web/public/assets/rocket-engines/engines/electric-pump.json",
+      "manifest_sha256": "9b67dd54f7bc9e252db07d0e4a4aeaed9360b9ade8714a68576d22d2b7664184",
+      "exported": "2026-10-03 20:04 (+03:00)",
+      "reference_engine": "Rocket Lab Rutherford, sea-level version (Electron)",
+      "dimension_sources": [
+        "https://en.wikipedia.org/wiki/Rutherford_(rocket_engine)",
+        "https://rocketlabcorp.com/updates/rocket-lab-increases-electron-payload-capacity-enabling-interplanetary-missions-and-reusability/"
+      ],
+      "parts": 32,
+      "flow_streams": 4,
+      "gltf_extensions": [],
+      "textures": 0,
+      "derived": {
+        "model_length_m": 0.529,
+        "assumed_expansion_ratio": 12,
+        "note": "length and expansion ratio are not published"
+      },
+      "accuracy_note": "Only the 0.25 m diameter and the mass are published. Length, expansion ratio and the internal layout are representative, and the battery is not to scale."
+    },
+    {
+      "ref": "E_07",
+      "asset": "apps/web/public/assets/rocket-engines/engines/solid_d.glb",
+      "bytes": 1936976,
+      "export_bytes": 1996204,
+      "sha256": "19df971c76f02a864e36370c083f9a3377f4f32e18f173a5abad1b1df2431e4f",
+      "export_sha256": "52f4d0231e68cb94a6164cf1504cb7777e7427a2ac80a58bedba317d0ac607e3",
+      "manifest": "apps/web/public/assets/rocket-engines/engines/solid.json",
+      "manifest_sha256": "a40c05aa2c28f9478ca19efb3829e55a1ce5fdba5c486464b2c454397ff9dac2",
+      "exported": "2026-10-03 20:13 (+03:00)",
+      "reference_engine": "Star 48B (Thiokol, now Northrop Grumman), the motor of the PAM-D upper stage",
+      "dimension_sources": [
+        "https://spaceflight101.com/re-entry-payload-assist-module-34662/",
+        "https://en.wikipedia.org/wiki/Star_48"
+      ],
+      "parts": 10,
+      "flow_streams": 1,
+      "gltf_extensions": [
+        "KHR_materials_clearcoat"
+      ],
+      "textures": 0,
+      "derived": {
+        "note": "throat and exit diameters, grain shape and internal details are representative"
+      },
+      "accuracy_note": "Case diameter and overall length match the published figures. The thrust shown is the average over the burn. Grain shape, nozzle proportions and internal details are representative."
+    },
+    {
+      "ref": "E_08",
+      "asset": "apps/web/public/assets/rocket-engines/engines/hybrid_d.glb",
+      "bytes": 1817428,
+      "export_bytes": 1876656,
+      "sha256": "9f57fcd7cc3dcee5f50851f00685e073af90b3c8ec1e3de990f6f9a6579968c2",
+      "export_sha256": "7ec3901ac0fd7a51d6a28217bd04c20c46d91bedd5f9282b8992ee60bb7d926e",
+      "manifest": "apps/web/public/assets/rocket-engines/engines/hybrid.json",
+      "manifest_sha256": "a390b830ca4e956d473c028a54fb6f2a7af3c6fb8c7182ba5d059c2182a43f77",
+      "exported": "2026-10-03 20:30 (+03:00)",
+      "reference_engine": "RocketMotorTwo (Virgin Galactic SpaceShipTwo)",
+      "dimension_sources": [
+        "https://en.wikipedia.org/wiki/RocketMotorTwo",
+        "https://www.sncorp.com/press-releases/snc-hybrid-rocket-spaceshiptwo/"
+      ],
+      "parts": 14,
+      "flow_streams": 2,
+      "gltf_extensions": [
+        "KHR_materials_clearcoat"
+      ],
+      "textures": 0,
+      "derived": {
+        "model_length_m": 5.4,
+        "model_tank_diameter_m": 1.1,
+        "assumed_expansion_ratio": 10.1,
+        "note": "no dimensions are published"
+      },
+      "accuracy_note": "No dimensions are published for this motor. The size, proportions and every internal detail of the model are representative."
+    },
+    {
+      "ref": "E_09",
+      "asset": "apps/web/public/assets/rocket-engines/engines/ion_d.glb",
+      "bytes": 1366960,
+      "export_bytes": 1426188,
+      "sha256": "79f431b7d6be26f7af1f4158295e9f344d659ee726c3a6a4318bf754fff02710",
+      "export_sha256": "d2ff5e35c0200854e58fc7277c7265ba41eba9511a6b4cf388d4b9a69359b6d1",
+      "manifest": "apps/web/public/assets/rocket-engines/engines/ion.json",
+      "manifest_sha256": "263000de12b0656b249d8da690fd255a8c0639f82608dbc35cd11d560884cff2",
+      "exported": "2026-10-03 20:53 (+03:00)",
+      "reference_engine": "NASA NEXT-C (flown on the DART spacecraft)",
+      "dimension_sources": [
+        "https://ntrs.nasa.gov/api/citations/20180001491/downloads/20180001491.pdf",
+        "https://en.wikipedia.org/wiki/NEXT_(ion_thruster)"
+      ],
+      "parts": 15,
+      "flow_streams": 4,
+      "gltf_extensions": [],
+      "textures": 0,
+      "derived": {
+        "note": "overall size and internal layout are representative"
+      },
+      "accuracy_note": "The 0.36 m beam diameter matches the published figure. The overall size and internal layout are representative, the grid holes are drawn far larger and fewer than the real ones, and the tank and power unit are schematic."
+    },
+    {
+      "ref": "E_10",
+      "asset": "apps/web/public/assets/rocket-engines/engines/aerospike_d.glb",
+      "bytes": 2725380,
+      "export_bytes": 2784608,
+      "sha256": "f74e4d55c77ea53d87299cc9642f7d1e1b2ce0715782aba8a5718ab726bc235a",
+      "export_sha256": "b05f3334346a00e885adab98e0e830b946154950c3c3ea5141ab9767c02338c1",
+      "manifest": "apps/web/public/assets/rocket-engines/engines/aerospike.json",
+      "manifest_sha256": "e62affeeaf08b8b2a7fe25c331764da738fe04f523404ec330567b2ed24a7c19",
+      "exported": "2026-10-03 21:00 (+03:00)",
+      "reference_engine": "Rocketdyne XRS-2200 (built for the X-33 spaceplane)",
+      "dimension_sources": [
+        "https://en.wikipedia.org/wiki/Rocketdyne_XRS-2200",
+        "https://ntrs.nasa.gov/api/citations/19980174934/downloads/19980174934.pdf"
+      ],
+      "parts": 28,
+      "flow_streams": 4,
+      "gltf_extensions": [],
+      "textures": 0,
+      "derived": {
+        "model_width_m": 3.4,
+        "note": "width, ramp contour and powerpack layout are representative"
+      },
+      "accuracy_note": "The 2.01 m height matches the published figure. The width, ramp contour, powerpack layout and plumbing are representative."
+    },
+    {
+      "ref": "E_11",
+      "asset": "apps/web/public/assets/rocket-engines/engines/rotating-detonation_d.glb",
+      "bytes": 1489604,
+      "export_bytes": 1548832,
+      "sha256": "42cf1c5b3b8dc7cdb168ff3dd8396a287a29ac236ba62d81382bbce5dbb545b9",
+      "export_sha256": "60d2b665d70e0abf7b24c75fcb0ae32850382bba99193efb02c08a8d688f8e35",
+      "manifest": "apps/web/public/assets/rocket-engines/engines/rotating-detonation.json",
+      "manifest_sha256": "bd3528373efb2ef10020025a656d4918fb8030613ed90bb151f9637275b76af8",
+      "exported": "2026-10-03 21:40 (+03:00)",
+      "reference_engine": "NASA rotating detonation rocket engine (test combustor, Marshall Space Flight Center)",
+      "dimension_sources": [
+        "https://www.nasa.gov/centers/marshall/feature/nasa-validates-revolutionary-propulsion-design-for-deep-space-missions"
+      ],
+      "parts": 15,
+      "flow_streams": 4,
+      "gltf_extensions": [],
+      "textures": 0,
+      "derived": {
+        "model_ring_diameter_m": 0.254,
+        "note": "no dimensions are published"
+      },
+      "accuracy_note": "No dimensions are published for the test engine. The size, layout and all internal details of the model are representative, and the tanks and valves are schematic."
+    },
+    {
+      "ref": "E_12",
+      "asset": "apps/web/public/assets/rocket-engines/engines/nuclear-thermal_d.glb",
+      "bytes": 3237868,
+      "export_bytes": 3297096,
+      "sha256": "224bd500dc55f482907ce9bdabb2e084b3980fefe1091780a7518f24a56ce3fe",
+      "export_sha256": "baed9b19ea03c6ef1d7ea06cb4daf6550d618e0889da00d9c70d9c9f693c9f13",
+      "manifest": "apps/web/public/assets/rocket-engines/engines/nuclear-thermal.json",
+      "manifest_sha256": "a09998ea9da9882b4e996d609cc5370969b759b4779e8749a85433244062409d",
+      "exported": "2026-10-03 22:10 (+03:00)",
+      "reference_engine": "NERVA XE Prime (ground-tested at Jackass Flats, Nevada, 1969)",
+      "dimension_sources": [
+        "https://en.wikipedia.org/wiki/NERVA",
+        "https://ntrs.nasa.gov/api/citations/19700004945/downloads/19700004945.pdf"
+      ],
+      "parts": 25,
+      "flow_streams": 3,
+      "gltf_extensions": [],
+      "textures": 0,
+      "derived": {
+        "model_nozzle_exit_diameter_m": 2.0,
+        "assumed_expansion_ratio": 87,
+        "note": "nozzle proportions and internal layout are representative"
+      },
+      "accuracy_note": "The 6.9 m length matches the published figure. The model is 2.0 m across at the nozzle, not the published 2.59 m, and its nozzle is a flight-style bell, larger than the short one used in the ground tests. The internal layout is representative."
+    },
+    {
+      "ref": "E_13",
+      "asset": "apps/web/public/assets/rocket-engines/engines/air-breathing_d.glb",
+      "bytes": 3596328,
+      "export_bytes": 3655556,
+      "sha256": "79d9f1c3a8b647cde24749dc2f7ebc6ecd709fa3ed7fff9829991795d9ae4b74",
+      "export_sha256": "c78e79cb1d99aabe9ad7ee38a97ee811745d0caf3237e2a8922accb058a64291",
+      "manifest": "apps/web/public/assets/rocket-engines/engines/air-breathing.json",
+      "manifest_sha256": "dc543848397ef2d944dd4dc4befc4d578a5ce20d2d0192abfa88c8564513e2ec",
+      "exported": "2026-10-03 22:15 (+03:00)",
+      "reference_engine": "SABRE (Reaction Engines, United Kingdom; never completed)",
+      "dimension_sources": [
+        "https://en.wikipedia.org/wiki/SABRE_(rocket_engine)",
+        "https://reactionengines.co.uk/about/sabre/"
+      ],
+      "parts": 20,
+      "flow_streams": 6,
+      "gltf_extensions": [],
+      "textures": 0,
+      "derived": {
+        "model_length_m": 7.0,
+        "model_diameter_m": 1.6,
+        "note": "no dimensions from the real design are used"
+      },
+      "accuracy_note": "This is a representative layout of the published concept, not the real design. Its size, proportions and every internal detail are my own."
+    }
+  ]
+}

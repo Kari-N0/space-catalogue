@@ -1,0 +1,348 @@
+{
+  "id": "ion",
+  "title": "Gridded ion thruster",
+  "description": "No combustion at all. Electricity strips electrons from xenon atoms, and an electric field between two grids fires the ions out at about 40 km/s. The thrust is tiny, about the weight of a few sheets of paper, but it uses propellant ten times more sparingly than any chemical engine and can run for years.",
+  "thrust_axis": "+Z in Blender, +Y in glTF",
+  "reference": {
+    "engine": "NASA NEXT-C (flown on the DART spacecraft)",
+    "published": {
+      "propellants": "Xenon",
+      "extra": [
+        [
+          "Thrust",
+          "25 to 235 mN"
+        ],
+        [
+          "Specific impulse, max",
+          "4,220 s"
+        ],
+        [
+          "Input power",
+          "0.5 to 6.9 kW"
+        ],
+        [
+          "Beam diameter",
+          "0.36 m"
+        ],
+        [
+          "Beam voltage, max",
+          "1,800 V"
+        ],
+        [
+          "Thruster mass",
+          "under 13.5 kg"
+        ]
+      ]
+    },
+    "derived": {
+      "note": "overall size and internal layout are representative"
+    },
+    "note": "The 0.36 m beam diameter matches the published figure. The overall size and internal layout are representative, the grid holes are drawn far larger and fewer than the real ones, and the tank and power unit are schematic.",
+    "sources": [
+      "https://ntrs.nasa.gov/api/citations/20180001491/downloads/20180001491.pdf",
+      "https://en.wikipedia.org/wiki/NEXT_(ion_thruster)"
+    ]
+  },
+  "flow_model": {
+    "caption": "Xenon gas drifts slowly into the chamber, is ionised there, and is flung out through the grids at about 40 km/s, more than ten times faster than any chemical exhaust. Streak speeds are on a compressed scale.",
+    "note": "Xenon and electron speeds are nominal. Ion speed follows from the published specific impulse.",
+    "ion_exit_speed_ms": 41000
+  },
+  "parts": [
+    {
+      "node": "IT_XenonTank",
+      "role": "context",
+      "title": "Xenon tank",
+      "description": "Stores the propellant, the inert gas xenon, at high pressure. An ion thruster uses so little of it that a small tank lasts for years. Shown schematically, not to scale.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        0.55
+      ],
+      "explode_order": 0,
+      "cut": false,
+      "materials": [
+        "M_Context_Ghost"
+      ]
+    },
+    {
+      "node": "IT_FlowController",
+      "role": "context",
+      "title": "Flow controller",
+      "description": "Meters a trickle of xenon into the thruster: a few milligrams per second.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        0.32
+      ],
+      "explode_order": 1,
+      "cut": false,
+      "materials": [
+        "M_Steel_Dark",
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "IT_PowerUnit",
+      "role": "context",
+      "title": "Power processing unit",
+      "description": "Converts the spacecraft's solar power into the voltages the thruster needs, up to 1,800 V across the grids. Shown schematically, not to scale.",
+      "explode_offset": [
+        -0.35,
+        0.0,
+        0.3
+      ],
+      "explode_order": 2,
+      "materials": [
+        "M_Steel_Dark"
+      ]
+    },
+    {
+      "node": "IT_Harness",
+      "role": "context",
+      "title": "Power harness",
+      "description": "Cables from the power unit to the thruster and its neutralizer.",
+      "explode_offset": [
+        -0.25,
+        0.0,
+        0.12
+      ],
+      "explode_order": 3,
+      "materials": [
+        "M_Cable"
+      ]
+    },
+    {
+      "node": "IT_Mount",
+      "role": "part",
+      "title": "Mount",
+      "description": "Fixes the thruster to the spacecraft, usually on a gimbal so the thrust can be aimed.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        0.12
+      ],
+      "explode_order": 4,
+      "cut": false,
+      "materials": [
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "IT_PlasmaScreen",
+      "role": "part",
+      "title": "Plasma screen",
+      "description": "Grounded outer shell. It keeps the high-voltage parts inside from attracting stray electrons from space.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explode_order": 5,
+      "materials": [
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "IT_PropellantManifold",
+      "role": "part",
+      "title": "Propellant manifold",
+      "description": "Ring that releases the xenon gas evenly into the back of the chamber.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.22
+      ],
+      "explode_order": 6,
+      "cut": true,
+      "materials": [
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "IT_DischargeCathode",
+      "role": "part",
+      "title": "Discharge cathode",
+      "description": "Emits electrons into the chamber. They collide with xenon atoms and knock an electron off each, turning the gas into positively charged ions.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.36
+      ],
+      "explode_order": 7,
+      "cut": false,
+      "materials": [
+        "M_Molybdenum",
+        "M_Ceramic",
+        "M_CarbonCarbon"
+      ]
+    },
+    {
+      "node": "IT_Magnets",
+      "role": "part",
+      "title": "Magnet rings",
+      "description": "Permanent magnets around the chamber. Their field makes the electrons spiral instead of flying straight to the wall, so each one ionises more xenon.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.5
+      ],
+      "explode_order": 8,
+      "cut": true,
+      "materials": [
+        "M_Magnet"
+      ]
+    },
+    {
+      "node": "IT_DischargeChamber",
+      "role": "part",
+      "title": "Discharge chamber",
+      "description": "Where the xenon is ionised. The wall is the anode that collects the electrons.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.62
+      ],
+      "explode_order": 9,
+      "materials": [
+        "M_Titanium"
+      ]
+    },
+    {
+      "node": "IT_GridMount",
+      "role": "part",
+      "title": "Grid mount",
+      "description": "Holds the two grids a fraction of a millimetre apart on ceramic insulators.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.98
+      ],
+      "explode_order": 10,
+      "materials": [
+        "M_Titanium",
+        "M_Ceramic"
+      ]
+    },
+    {
+      "node": "IT_ScreenGrid",
+      "role": "part",
+      "title": "Screen grid",
+      "description": "First of two perforated grids. Ions drift into its thousands of holes from the chamber side.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -1.1
+      ],
+      "explode_order": 11,
+      "materials": [
+        "M_Molybdenum"
+      ]
+    },
+    {
+      "node": "IT_AcceleratorGrid",
+      "role": "part",
+      "title": "Accelerator grid",
+      "description": "Held at a strongly negative voltage. The electric field between the two grids accelerates each ion to about 40 km/s. This is the thruster's nozzle.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -1.24
+      ],
+      "explode_order": 12,
+      "materials": [
+        "M_Molybdenum"
+      ]
+    },
+    {
+      "node": "IT_FrontMask",
+      "role": "part",
+      "title": "Front mask",
+      "description": "Closes the gap between the grids and the plasma screen.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -1.38
+      ],
+      "explode_order": 13,
+      "materials": [
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "IT_Neutralizer",
+      "role": "part",
+      "title": "Neutralizer",
+      "description": "A second cathode beside the beam. It adds electrons to the departing ions, so the spacecraft does not build up a charge that would pull the ions back.",
+      "explode_offset": [
+        0.3,
+        0.0,
+        -0.55
+      ],
+      "explode_order": 14,
+      "materials": [
+        "M_Molybdenum",
+        "M_Ceramic",
+        "M_CarbonCarbon"
+      ]
+    }
+  ],
+  "flows": [
+    {
+      "node": "IT_FLOW_Electric",
+      "medium": "electric",
+      "color": [
+        1.0,
+        0.85,
+        0.2
+      ],
+      "length_m": 0.789,
+      "label": "Electric power",
+      "style": "streamlines",
+      "period_s": 0.35,
+      "lines": 6
+    },
+    {
+      "node": "IT_FLOW_Electrons",
+      "medium": "electrons",
+      "color": [
+        0.53,
+        0.94,
+        0.67
+      ],
+      "length_m": 1.111,
+      "label": "Electrons",
+      "style": "streamlines",
+      "period_s": 0.3,
+      "lines": 5
+    },
+    {
+      "node": "IT_FLOW_IonBeam",
+      "medium": "ion_beam",
+      "color": [
+        0.4,
+        0.9,
+        1.0
+      ],
+      "length_m": 1.363,
+      "label": "Ion beam",
+      "style": "streamlines",
+      "period_s": 0.22,
+      "lines": 43
+    },
+    {
+      "node": "IT_FLOW_Xenon",
+      "medium": "xenon",
+      "color": [
+        0.77,
+        0.71,
+        0.99
+      ],
+      "length_m": 1.131,
+      "label": "Xenon gas",
+      "style": "streamlines",
+      "period_s": 1.2,
+      "lines": 6
+    }
+  ]
+}

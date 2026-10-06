@@ -1,0 +1,603 @@
+{
+  "id": "expander",
+  "title": "Expander-cycle engine",
+  "description": "No burner drives the pumps at all. Liquid hydrogen cools the chamber and nozzle, the heat turns it into gas, and that gas spins the turbine before it is burned. Simple and very reliable, but limited in size by how much heat the wall can supply.",
+  "thrust_axis": "+Z in Blender, +Y in glTF",
+  "reference": {
+    "engine": "Aerojet Rocketdyne RL10A-4-2 (Centaur upper stage of the Atlas V)",
+    "published": {
+      "thrust_vac_kN": 99.2,
+      "isp_vac_s": 451,
+      "chamber_pressure_bar": 42,
+      "expansion_ratio": 84,
+      "mixture_ratio": 5.5,
+      "propellants": "LOX / LH2",
+      "dry_mass_kg": 168,
+      "length_m": 2.29,
+      "max_diameter_m": 1.17,
+      "cooling": "hydrogen-cooled tube wall, radiation-cooled extension"
+    },
+    "derived": {
+      "throat_radius_m": 0.0638,
+      "note": "throat from nozzle diameter and expansion ratio"
+    },
+    "note": "Outer dimensions match the published figures. The turbopump and plumbing layout is representative.",
+    "sources": [
+      "https://www.l3harris.com/sites/default/files/2024-01/AJRD-LHX_RL10_SpecSheet_CMYK_APPROVED_011024.pdf",
+      "https://en.wikipedia.org/wiki/RL10"
+    ]
+  },
+  "flow_model": {
+    "note": "Streak speed follows local flow speed on a compressed scale: display speed = 0.22 * v^0.32 (m/s).",
+    "hot_gas": {
+      "model": "1-D isentropic expansion",
+      "assumed_gamma": 1.2,
+      "assumed_chamber_temp_K": 3300.0,
+      "assumed_molar_mass_g_mol": 12.5,
+      "chamber_speed_ms": 234,
+      "throat_speed_ms": 1547,
+      "exit_speed_ms": 4276,
+      "exit_mach": 4.76,
+      "exit_temp_K": 1009
+    },
+    "fuel_ms": {
+      "tank": 0.05,
+      "feed_line": 5,
+      "pump_discharge": 50,
+      "tube_wall": "15 to 80 as it warms into gas",
+      "turbine_blades": 250,
+      "to_injector": 120,
+      "note": "nominal values, not from engine data"
+    },
+    "oxidizer_ms": {
+      "feed_line": 5,
+      "pump_discharge": 30,
+      "line": 20,
+      "note": "nominal values"
+    }
+  },
+  "parts": [
+    {
+      "node": "EX_ThrustMount",
+      "role": "part",
+      "title": "Thrust mount",
+      "description": "Bolts the engine to the stage and carries the thrust load into its structure.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explode_order": 0,
+      "materials": [
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "EX_Gimbal",
+      "role": "part",
+      "title": "Gimbal joint",
+      "description": "Two-axis universal joint. Lets the whole engine swivel a few degrees to steer the stage.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.1
+      ],
+      "explode_order": 1,
+      "materials": [
+        "M_Steel",
+        "M_Steel_Dark"
+      ]
+    },
+    {
+      "node": "EX_ThrustAdapter",
+      "role": "part",
+      "title": "Thrust adapter",
+      "description": "Short cone that transfers thrust from the injector head up into the gimbal.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.2
+      ],
+      "explode_order": 2,
+      "materials": [
+        "M_Titanium"
+      ]
+    },
+    {
+      "node": "EX_InjectorBolts",
+      "role": "part",
+      "title": "Injector bolts",
+      "description": "Clamp the dome, injector plate and chamber flange into one sealed stack.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.3
+      ],
+      "explode_order": 3,
+      "materials": [
+        "M_Fastener"
+      ]
+    },
+    {
+      "node": "EX_OxidizerDome",
+      "role": "part",
+      "title": "Oxidizer dome",
+      "description": "Spreads the liquid oxygen from the pump evenly across the back of the injector.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.4
+      ],
+      "explode_order": 4,
+      "materials": [
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "EX_InjectorPlate",
+      "role": "part",
+      "title": "Injector plate",
+      "description": "Mixes liquid oxygen with hydrogen that arrives as a warm gas, having already cooled the engine and driven the turbine.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.56
+      ],
+      "explode_order": 5,
+      "materials": [
+        "M_Copper"
+      ]
+    },
+    {
+      "node": "EX_InjectorManifold",
+      "role": "part",
+      "title": "Injector fuel manifold",
+      "description": "Ring that feeds the hydrogen gas from the turbine into the injector.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.66
+      ],
+      "explode_order": 6,
+      "materials": [
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "EX_CoolantCollector",
+      "role": "part",
+      "title": "Coolant outlet manifold",
+      "description": "Collects the hydrogen at the top of the tubes. By now the engine's waste heat has turned it from liquid into warm gas.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.8
+      ],
+      "explode_order": 7,
+      "cut": true,
+      "materials": [
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "EX_TubeWall",
+      "role": "part",
+      "title": "Tube-wall chamber and nozzle",
+      "description": "The chamber and upper nozzle are built from hundreds of thin tubes brazed side by side. Liquid hydrogen flows up inside them, cooling the wall and picking up the heat that powers the engine.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "explode_order": 8,
+      "materials": [
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "EX_ChamberBands",
+      "role": "part",
+      "title": "Stiffening bands",
+      "description": "Hoops around the tube wall that hold it against the chamber pressure, about 42 bar.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "explode_order": 9,
+      "cut": true,
+      "materials": [
+        "M_Nickel"
+      ]
+    },
+    {
+      "node": "EX_FuelManifold",
+      "role": "part",
+      "title": "Coolant inlet manifold",
+      "description": "Ring at the lower end of the tube wall. Liquid hydrogen from the pump enters the tubes here.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -1.15
+      ],
+      "explode_order": 10,
+      "cut": true,
+      "materials": [
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "EX_NozzleBolts",
+      "role": "part",
+      "title": "Nozzle joint bolts",
+      "description": "Fasten the nozzle extension to the end of the tube wall.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -1.3
+      ],
+      "explode_order": 11,
+      "materials": [
+        "M_Fastener"
+      ]
+    },
+    {
+      "node": "EX_NozzleExtension",
+      "role": "part",
+      "title": "Nozzle extension",
+      "description": "Thin uncooled extension that takes the expansion ratio to 84. It glows hot and radiates its heat to space.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -1.45
+      ],
+      "explode_order": 12,
+      "materials": [
+        "M_Niobium"
+      ]
+    },
+    {
+      "node": "EX_Turbine",
+      "role": "part",
+      "title": "Turbine",
+      "description": "Driven by nothing but the warm hydrogen gas from the tube wall. There is no gas generator and no preburner, so nothing in the engine burns outside the main chamber.",
+      "explode_offset": [
+        0.45,
+        0.0,
+        0.25
+      ],
+      "explode_order": 13,
+      "cut": true,
+      "materials": [
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "EX_PumpFuel",
+      "role": "part",
+      "title": "Fuel pump",
+      "description": "Two centrifugal stages on the turbine's shaft raise the liquid hydrogen to working pressure.",
+      "explode_offset": [
+        0.45,
+        0.0,
+        -0.05
+      ],
+      "explode_order": 14,
+      "cut": true,
+      "materials": [
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "EX_PumpOxidizer",
+      "role": "part",
+      "title": "Oxidizer pump",
+      "description": "Liquid oxygen pump. It has no turbine of its own and is driven through the gearbox.",
+      "explode_offset": [
+        0.78,
+        0.0,
+        -0.05
+      ],
+      "explode_order": 15,
+      "cut": true,
+      "materials": [
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "EX_Gearbox",
+      "role": "part",
+      "title": "Gearbox",
+      "description": "Gears link the two shafts, so the single turbine drives both pumps and the oxygen pump turns more slowly than the hydrogen pump.",
+      "explode_offset": [
+        0.6,
+        0.0,
+        -0.5
+      ],
+      "explode_order": 16,
+      "cut": true,
+      "materials": [
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "EX_RotorFuel",
+      "role": "part",
+      "title": "Fuel pump rotor",
+      "description": "Turbine wheel at the top, two pump impellers below it, and the drive gear at the bottom.",
+      "explode_offset": [
+        0.45,
+        -0.5,
+        -0.2
+      ],
+      "explode_order": 17,
+      "spin": {
+        "axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "rev_per_s": 1.5
+      },
+      "materials": [
+        "M_Steel",
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "EX_RotorOxidizer",
+      "role": "part",
+      "title": "Oxidizer pump rotor",
+      "description": "Pump impeller and the large driven gear.",
+      "explode_offset": [
+        0.78,
+        -0.5,
+        -0.2
+      ],
+      "explode_order": 17,
+      "spin": {
+        "axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "rev_per_s": -0.43
+      },
+      "materials": [
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "EX_CoolantFeedLine",
+      "role": "part",
+      "title": "Coolant feed line",
+      "description": "Carries liquid hydrogen from the pump down to the inlet manifold.",
+      "explode_offset": [
+        0.35,
+        0.4,
+        -0.6
+      ],
+      "explode_order": 18,
+      "materials": [
+        "M_Line_Fuel"
+      ]
+    },
+    {
+      "node": "EX_TurbineInletLine",
+      "role": "part",
+      "title": "Turbine inlet line",
+      "description": "Carries the warm hydrogen gas from the outlet manifold to the turbine.",
+      "explode_offset": [
+        0.18,
+        0.0,
+        -0.3
+      ],
+      "explode_order": 18,
+      "materials": [
+        "M_Line_Fuel"
+      ]
+    },
+    {
+      "node": "EX_TurbineOutletLine",
+      "role": "part",
+      "title": "Turbine outlet line",
+      "description": "Carries the hydrogen gas from the turbine to the injector.",
+      "explode_offset": [
+        0.3,
+        -0.3,
+        0.15
+      ],
+      "explode_order": 19,
+      "materials": [
+        "M_Line_Fuel"
+      ]
+    },
+    {
+      "node": "EX_ValveFuel",
+      "role": "part",
+      "title": "Main fuel valve",
+      "description": "Opens to let the hydrogen gas into the injector.",
+      "explode_offset": [
+        0.3,
+        -0.46,
+        0.15
+      ],
+      "explode_order": 19,
+      "materials": [
+        "M_Steel_Dark",
+        "M_Steel",
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "EX_InletLineOxidizer",
+      "role": "part",
+      "title": "High-pressure oxidizer line",
+      "description": "Carries liquid oxygen from the pump to the dome.",
+      "explode_offset": [
+        0.5,
+        0.5,
+        0.0
+      ],
+      "explode_order": 20,
+      "materials": [
+        "M_Line_Oxidizer"
+      ]
+    },
+    {
+      "node": "EX_ValveOxidizer",
+      "role": "part",
+      "title": "Main oxidizer valve",
+      "description": "Opens to send liquid oxygen to the injector.",
+      "explode_offset": [
+        0.78,
+        0.5,
+        -0.05
+      ],
+      "explode_order": 20,
+      "materials": [
+        "M_Steel_Dark",
+        "M_Steel",
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "EX_ActuatorPitch",
+      "role": "part",
+      "title": "Pitch actuator",
+      "description": "Linear actuator that tilts the engine about one gimbal axis.",
+      "explode_offset": [
+        0.0,
+        0.3,
+        -0.25
+      ],
+      "explode_order": 21,
+      "materials": [
+        "M_Steel_Dark",
+        "M_Chrome",
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "EX_ActuatorYaw",
+      "role": "part",
+      "title": "Yaw actuator",
+      "description": "Linear actuator that tilts the engine about the other gimbal axis.",
+      "explode_offset": [
+        -0.3,
+        0.0,
+        -0.25
+      ],
+      "explode_order": 21,
+      "materials": [
+        "M_Steel_Dark",
+        "M_Chrome",
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "EX_FeedLineFuel",
+      "role": "part",
+      "title": "Fuel feed line",
+      "description": "Low-pressure liquid hydrogen from the tank to the pump inlet.",
+      "explode_offset": [
+        0.0,
+        -0.34,
+        0.1
+      ],
+      "explode_order": 22,
+      "materials": [
+        "M_Line_Fuel"
+      ]
+    },
+    {
+      "node": "EX_FeedLineOxidizer",
+      "role": "part",
+      "title": "Oxidizer feed line",
+      "description": "Low-pressure liquid oxygen from the tank to the pump inlet.",
+      "explode_offset": [
+        0.78,
+        0.0,
+        0.38
+      ],
+      "explode_order": 22,
+      "materials": [
+        "M_Line_Oxidizer"
+      ]
+    },
+    {
+      "node": "EX_TankFuel",
+      "role": "context",
+      "title": "Fuel tank",
+      "description": "Liquid hydrogen. Only lightly pressurised, because the pumps do the work. Shown schematically, not to scale.",
+      "explode_offset": [
+        0.0,
+        -0.34,
+        0.32
+      ],
+      "explode_order": 23,
+      "materials": [
+        "M_Context_Ghost"
+      ]
+    },
+    {
+      "node": "EX_TankOxidizer",
+      "role": "context",
+      "title": "Oxidizer tank",
+      "description": "Liquid oxygen. Only lightly pressurised, because the pumps do the work. Shown schematically, not to scale.",
+      "explode_offset": [
+        0.6,
+        0.0,
+        0.62
+      ],
+      "explode_order": 23,
+      "materials": [
+        "M_Context_Ghost"
+      ]
+    }
+  ],
+  "flows": [
+    {
+      "node": "EX_FLOW_Fuel",
+      "medium": "fuel",
+      "color": [
+        1.0,
+        0.35,
+        0.08
+      ],
+      "length_m": 7.759,
+      "label": null,
+      "style": "streamlines",
+      "period_s": 0.9,
+      "lines": 10
+    },
+    {
+      "node": "EX_FLOW_HotGas",
+      "medium": "hot_gas",
+      "color": [
+        1.0,
+        0.75,
+        0.3
+      ],
+      "length_m": 2.345,
+      "label": null,
+      "style": "streamlines",
+      "period_s": 0.32,
+      "lines": 35
+    },
+    {
+      "node": "EX_FLOW_Oxidizer",
+      "medium": "oxidizer",
+      "color": [
+        0.15,
+        0.45,
+        1.0
+      ],
+      "length_m": 3.411,
+      "label": null,
+      "style": "streamlines",
+      "period_s": 0.9,
+      "lines": 8
+    }
+  ]
+}

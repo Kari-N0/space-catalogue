@@ -1,0 +1,574 @@
+{
+  "id": "gas-generator",
+  "title": "Gas-generator engine",
+  "description": "A small burner drives a turbine that spins the pumps, so the tanks can stay light and the chamber pressure can be far higher. The turbine exhaust is dumped overboard.",
+  "thrust_axis": "+Z in Blender, +Y in glTF",
+  "reference": {
+    "engine": "SpaceX Merlin 1D, sea-level version (Falcon 9 and Falcon Heavy)",
+    "published": {
+      "thrust_sl_kN": 845,
+      "thrust_vac_kN": 914,
+      "isp_sl_s": 282,
+      "isp_vac_s": 311,
+      "chamber_pressure_bar": 97,
+      "expansion_ratio": 16,
+      "propellants": "LOX / RP-1",
+      "dry_mass_kg": 470,
+      "max_diameter_m": 0.92,
+      "cooling": "fuel regenerative chamber and nozzle"
+    },
+    "derived": {
+      "throat_radius_m": 0.115,
+      "model_length_m": 1.773,
+      "note": "throat from exit diameter and expansion ratio; overall length is not published"
+    },
+    "note": "Nozzle exit diameter and expansion ratio match the published figures. Overall length is not published, and the internal layout is representative.",
+    "sources": [
+      "https://en.wikipedia.org/wiki/SpaceX_Merlin"
+    ]
+  },
+  "flow_model": {
+    "note": "Streak speed follows local flow speed on a compressed scale: display speed = 0.22 * v^0.32 (m/s).",
+    "hot_gas": {
+      "model": "1-D isentropic expansion",
+      "assumed_gamma": 1.2,
+      "assumed_chamber_temp_K": 3600.0,
+      "assumed_molar_mass_g_mol": 23.0,
+      "chamber_speed_ms": 312,
+      "throat_speed_ms": 1191,
+      "exit_speed_ms": 2970,
+      "exit_mach": 3.6,
+      "exit_temp_K": 1566
+    },
+    "liquids_ms": {
+      "tank": 0.05,
+      "feed_line": 5,
+      "pump_discharge": 30,
+      "high_pressure_line": 20,
+      "manifold": 3,
+      "coolant_passages": 12,
+      "injector": 25,
+      "note": "nominal values, not from engine data"
+    },
+    "turbine_gas_ms": {
+      "gas_generator": 20,
+      "duct": 60,
+      "turbine_blades": 250,
+      "exhaust_duct": 150,
+      "note": "nominal values, not from engine data"
+    }
+  },
+  "parts": [
+    {
+      "node": "GG_ThrustMount",
+      "role": "part",
+      "title": "Thrust mount",
+      "description": "Bolts the engine to the vehicle and carries the thrust load into the structure.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explode_order": 0,
+      "materials": [
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "GG_Gimbal",
+      "role": "part",
+      "title": "Gimbal joint",
+      "description": "Two-axis universal joint. Lets the whole engine swivel a few degrees so the thrust vector can steer the vehicle.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.1
+      ],
+      "explode_order": 1,
+      "materials": [
+        "M_Steel",
+        "M_Steel_Dark"
+      ]
+    },
+    {
+      "node": "GG_ThrustAdapter",
+      "role": "part",
+      "title": "Thrust adapter",
+      "description": "Short cone that transfers thrust from the injector head up into the gimbal.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.2
+      ],
+      "explode_order": 2,
+      "materials": [
+        "M_Titanium"
+      ]
+    },
+    {
+      "node": "GG_InjectorBolts",
+      "role": "part",
+      "title": "Injector bolts",
+      "description": "Clamp the dome, injector and chamber flange into one sealed stack.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.3
+      ],
+      "explode_order": 3,
+      "materials": [
+        "M_Fastener"
+      ]
+    },
+    {
+      "node": "GG_OxidizerDome",
+      "role": "part",
+      "title": "Oxidizer dome",
+      "description": "Feeds liquid oxygen from the pump into the centre of the injector.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.4
+      ],
+      "explode_order": 4,
+      "materials": [
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "GG_Injector",
+      "role": "part",
+      "title": "Pintle injector",
+      "description": "Liquid oxygen sprays sideways from the tip of the central post into a sheet of fuel flowing down around it. One central element does the job of hundreds of small orifices.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.62
+      ],
+      "explode_order": 5,
+      "materials": [
+        "M_Steel",
+        "M_Steel_Dark"
+      ]
+    },
+    {
+      "node": "GG_ChamberLiner",
+      "role": "part",
+      "title": "Chamber liner",
+      "description": "Copper-alloy inner wall. Fuel runs up the channels milled into its outside and carries the heat away before it is burned.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.92
+      ],
+      "explode_order": 6,
+      "materials": [
+        "M_Copper"
+      ]
+    },
+    {
+      "node": "GG_ChamberJacket",
+      "role": "part",
+      "title": "Chamber jacket",
+      "description": "Outer shell that closes the coolant channels and holds the chamber pressure: about 97 bar here, against 9 bar in the pressure-fed engine.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -1.62
+      ],
+      "explode_order": 7,
+      "materials": [
+        "M_Nickel"
+      ]
+    },
+    {
+      "node": "GG_NozzleBolts",
+      "role": "part",
+      "title": "Nozzle joint bolts",
+      "description": "Fasten the nozzle to the chamber exit flange.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -1.76
+      ],
+      "explode_order": 8,
+      "materials": [
+        "M_Fastener"
+      ]
+    },
+    {
+      "node": "GG_Nozzle",
+      "role": "part",
+      "title": "Nozzle",
+      "description": "Expands the exhaust to high speed. Its wall is cooled by the fuel on its way up to the chamber.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -1.9
+      ],
+      "explode_order": 9,
+      "materials": [
+        "M_Nickel"
+      ]
+    },
+    {
+      "node": "GG_FuelManifold",
+      "role": "part",
+      "title": "Fuel inlet manifold",
+      "description": "Ring at the nozzle exit. High-pressure fuel from the pump enters here and spreads into the coolant passages.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -2.06
+      ],
+      "explode_order": 10,
+      "materials": [
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "GG_PumpOxidizer",
+      "role": "part",
+      "title": "Oxidizer pump",
+      "description": "Centrifugal pump that raises the liquid oxygen from tank pressure to well above chamber pressure.",
+      "explode_offset": [
+        0.55,
+        0.0,
+        0.2
+      ],
+      "explode_order": 11,
+      "cut": true,
+      "materials": [
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "GG_PumpFuel",
+      "role": "part",
+      "title": "Fuel pump",
+      "description": "Centrifugal pump for the kerosene, on the same shaft as the oxidizer pump.",
+      "explode_offset": [
+        0.55,
+        0.0,
+        -0.15
+      ],
+      "explode_order": 12,
+      "cut": true,
+      "materials": [
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "GG_Turbine",
+      "role": "part",
+      "title": "Turbine",
+      "description": "Hot gas from the gas generator blows through the turbine wheel inside and drives both pumps.",
+      "explode_offset": [
+        0.55,
+        0.0,
+        -0.55
+      ],
+      "explode_order": 13,
+      "cut": true,
+      "materials": [
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "GG_PumpRotor",
+      "role": "part",
+      "title": "Turbopump rotor",
+      "description": "One shaft carries both pump impellers and the turbine wheel. On the Merlin it spins at about 36,000 rpm and delivers about 7,500 kW.",
+      "explode_offset": [
+        1.05,
+        0.0,
+        -0.15
+      ],
+      "explode_order": 14,
+      "spin": {
+        "axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "rev_per_s": 1.2
+      },
+      "materials": [
+        "M_Steel",
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "GG_GasGenerator",
+      "role": "part",
+      "title": "Gas generator",
+      "description": "A small combustion chamber that burns a small share of the propellants. It runs fuel-rich to keep the gas cool enough for the turbine.",
+      "explode_offset": [
+        0.55,
+        -0.38,
+        -0.55
+      ],
+      "explode_order": 15,
+      "materials": [
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "GG_TurbineExhaust",
+      "role": "part",
+      "title": "Turbine exhaust",
+      "description": "Dumps the used turbine gas overboard. It never passes through the main chamber, which is what makes this an open cycle and costs a little efficiency.",
+      "explode_offset": [
+        0.55,
+        0.0,
+        -0.98
+      ],
+      "explode_order": 16,
+      "materials": [
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "GG_ValveFuel",
+      "role": "part",
+      "title": "Main fuel valve",
+      "description": "Opens to send high-pressure fuel to the cooling passages and on to the injector.",
+      "explode_offset": [
+        0.55,
+        0.3,
+        -0.15
+      ],
+      "explode_order": 17,
+      "materials": [
+        "M_Steel_Dark",
+        "M_Steel",
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "GG_ValveOxidizer",
+      "role": "part",
+      "title": "Main oxidizer valve",
+      "description": "Opens to send high-pressure liquid oxygen to the injector.",
+      "explode_offset": [
+        0.28,
+        0.0,
+        -0.1
+      ],
+      "explode_order": 17,
+      "materials": [
+        "M_Steel_Dark",
+        "M_Steel",
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "GG_InletLineFuel",
+      "role": "part",
+      "title": "High-pressure fuel line",
+      "description": "Carries fuel from the pump down to the manifold at the nozzle exit.",
+      "explode_offset": [
+        0.4,
+        0.42,
+        -1.0
+      ],
+      "explode_order": 18,
+      "materials": [
+        "M_Line_Fuel"
+      ]
+    },
+    {
+      "node": "GG_InletLineOxidizer",
+      "role": "part",
+      "title": "High-pressure oxidizer line",
+      "description": "Carries liquid oxygen from the main valve into the dome.",
+      "explode_offset": [
+        0.14,
+        0.0,
+        -0.4
+      ],
+      "explode_order": 18,
+      "materials": [
+        "M_Line_Oxidizer"
+      ]
+    },
+    {
+      "node": "GG_TapFuel",
+      "role": "part",
+      "title": "Gas generator fuel line",
+      "description": "Bleeds a little high-pressure fuel from the pump to the gas generator.",
+      "explode_offset": [
+        0.55,
+        -0.32,
+        -0.28
+      ],
+      "explode_order": 19,
+      "materials": [
+        "M_Line_Fuel"
+      ]
+    },
+    {
+      "node": "GG_TapOxidizer",
+      "role": "part",
+      "title": "Gas generator oxidizer line",
+      "description": "Bleeds a little high-pressure oxygen from the pump outlet to the gas generator.",
+      "explode_offset": [
+        0.4,
+        -0.28,
+        0.02
+      ],
+      "explode_order": 19,
+      "materials": [
+        "M_Line_Oxidizer"
+      ]
+    },
+    {
+      "node": "GG_ActuatorPitch",
+      "role": "part",
+      "title": "Pitch actuator",
+      "description": "Linear actuator that tilts the engine about one gimbal axis.",
+      "explode_offset": [
+        0.0,
+        0.3,
+        -0.25
+      ],
+      "explode_order": 20,
+      "materials": [
+        "M_Steel_Dark",
+        "M_Chrome",
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "GG_ActuatorYaw",
+      "role": "part",
+      "title": "Yaw actuator",
+      "description": "Linear actuator that tilts the engine about the other gimbal axis.",
+      "explode_offset": [
+        -0.3,
+        0.0,
+        -0.25
+      ],
+      "explode_order": 20,
+      "materials": [
+        "M_Steel_Dark",
+        "M_Chrome",
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "GG_FeedLineFuel",
+      "role": "part",
+      "title": "Fuel feed line",
+      "description": "Low-pressure line from the tank to the pump inlet. It is wide because the propellant arrives at low pressure.",
+      "explode_offset": [
+        0.0,
+        -0.34,
+        0.1
+      ],
+      "explode_order": 21,
+      "materials": [
+        "M_Line_Fuel"
+      ]
+    },
+    {
+      "node": "GG_FeedLineOxidizer",
+      "role": "part",
+      "title": "Oxidizer feed line",
+      "description": "Low-pressure line from the tank to the pump inlet. It is wide because the propellant arrives at low pressure.",
+      "explode_offset": [
+        0.48,
+        0.0,
+        0.42
+      ],
+      "explode_order": 21,
+      "materials": [
+        "M_Line_Oxidizer"
+      ]
+    },
+    {
+      "node": "GG_TankFuel",
+      "role": "context",
+      "title": "Fuel tank",
+      "description": "Only lightly pressurised, so its walls can be thin and light. The pumps do the work. Shown schematically, not to scale.",
+      "explode_offset": [
+        0.0,
+        -0.34,
+        0.32
+      ],
+      "explode_order": 22,
+      "materials": [
+        "M_Context_Ghost"
+      ]
+    },
+    {
+      "node": "GG_TankOxidizer",
+      "role": "context",
+      "title": "Oxidizer tank",
+      "description": "Only lightly pressurised, so its walls can be thin and light. The pumps do the work. Shown schematically, not to scale.",
+      "explode_offset": [
+        0.4,
+        0.0,
+        0.62
+      ],
+      "explode_order": 22,
+      "materials": [
+        "M_Context_Ghost"
+      ]
+    }
+  ],
+  "flows": [
+    {
+      "node": "GG_FLOW_Fuel",
+      "medium": "fuel",
+      "color": [
+        1.0,
+        0.35,
+        0.08
+      ],
+      "length_m": 7.507,
+      "style": "streamlines",
+      "period_s": 0.9,
+      "lines": 14
+    },
+    {
+      "node": "GG_FLOW_HotGas",
+      "medium": "hot_gas",
+      "color": [
+        1.0,
+        0.75,
+        0.3
+      ],
+      "length_m": 1.752,
+      "style": "streamlines",
+      "period_s": 0.32,
+      "lines": 35
+    },
+    {
+      "node": "GG_FLOW_Oxidizer",
+      "medium": "oxidizer",
+      "color": [
+        0.15,
+        0.45,
+        1.0
+      ],
+      "length_m": 2.81,
+      "style": "streamlines",
+      "period_s": 0.9,
+      "lines": 10
+    },
+    {
+      "node": "GG_FLOW_TurbineGas",
+      "medium": "turbine_gas",
+      "color": [
+        0.85,
+        0.5,
+        0.25
+      ],
+      "length_m": 2.109,
+      "style": "streamlines",
+      "period_s": 0.5,
+      "lines": 8
+    }
+  ]
+}

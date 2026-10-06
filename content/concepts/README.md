@@ -5,6 +5,9 @@ file and builds everything: hero, 3D view, pins, overview, article, sources,
 signup, footer. **You never touch HTML/CSS/TS** — if something can't be done
 from the JSON, that's a template gap: ask for it.
 
+- **Not every concept uses this template:** Concept 002 (rocket engines) is
+  an engine-explorer page with its own content file and guide —
+  `../explorers/README.md`. Keep that file out of this folder.
 - **View a page:** `/concept/?id=<filename>` — e.g. `/concept/?id=moon-base`
   → https://farsidelab.com/concept/?id=moon-base
 - **Edit a page:** change the JSON, commit, push → live in ~1 min.
@@ -28,6 +31,10 @@ from the JSON, that's a template gap: ask for it.
 | `video` | looping background video (muted, autoplays) |
 | `video_mobile` | optional smaller encode (720p) served to phones; omit to serve `video` everywhere |
 | `poster_image` | still image shown while the video loads / for reduced-motion visitors |
+
+The header bar of every concept page has a fixed "← Catalogue" button back to
+the landing page, which lists the concepts. It is part of the page, not set
+from JSON.
 
 ### `live_view` — the 3D gaussian-splat section
 | field | what it does |

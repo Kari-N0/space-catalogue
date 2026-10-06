@@ -1,0 +1,767 @@
+{
+  "_readme": "This file drives the whole concept page. Edit text here, no code needed. An engine's 'summary' and 'description' are the first and second paragraph of its panel: together they must say each thing once. An engine appears in the 3D view once its status is 'live' and its model and manifest files exist. Keys starting with _ are ignored. A photo can set 'position' (a CSS object-position value) to choose which part shows in its thumbnail.",
+  "id": "rocket-engines",
+  "page_title": "Concept 002: Rocket Engines",
+  "footer_label": "Concept 002",
+  "hero": {
+    "label": "Concept 002",
+    "status": "Engineering",
+    "title_line_1": "Rocket Engines",
+    "title_line_2": "Cycle by Cycle",
+    "era_line": "From pressure-fed to full-flow",
+    "button_text": "Explore in 3D",
+    "poster_image": "assets/rocket-engines/hero/hero_poster_v3.webp",
+    "video": "assets/rocket-engines/hero/hero_v3.mp4",
+    "video_mobile": "assets/rocket-engines/hero/hero_v3_m.mp4"
+  },
+  "explorer": {
+    "heading": "3D View",
+    "note": "Navigation — Drag to orbit, Right-drag to pan, Scroll to zoom, Click a part to inspect it",
+    "groups": [
+      {
+        "id": "today",
+        "title": "Flying today"
+      },
+      {
+        "id": "future",
+        "title": "Future concepts"
+      }
+    ],
+    "engines": [
+      {
+        "id": "pressure-fed",
+        "ref": "E_01",
+        "group": "today",
+        "title": "Pressure-fed",
+        "summary": "The simplest liquid rocket cycle: high-pressure gas pushes the propellants out of the tanks and into the chamber. Tank pressure alone does the work. No pumps.",
+        "description": "Easy to restart, but the heavy tanks keep it to small engines.",
+        "reference_engine": "Aerojet AJ10-190",
+        "status": "live",
+        "model": "assets/rocket-engines/engines/pressure-fed_d.glb",
+        "manifest": "assets/rocket-engines/engines/pressure-fed.json",
+        "flown_on": {
+          "heading": "Flown on",
+          "text": "Space Shuttle orbiter, 1981 to 2011, with two engines per vehicle. The same engine type now powers the Orion spacecraft's service module.",
+          "photos": [
+            {
+              "src": "assets/rocket-engines/vehicles/shuttle-discovery-sts133-orbit.webp",
+              "alt": "Space Shuttle Discovery in orbit seen from above and behind, with all its engine nozzles in sunlight",
+              "caption": "Discovery approaching the International Space Station on its final flight, February 2011. The two smaller nozzles either side of the upper main engine are the orbital maneuvering engines, one at the back of each pod.",
+              "credit": "NASA",
+              "license": "Public domain",
+              "source_url": "https://commons.wikimedia.org/wiki/File:STS-133_Rendezvous_Pitch_Maneuver_4.jpg"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/shuttle-atlantis-sts129-rollout.webp",
+              "alt": "The complete Space Shuttle standing upright on its mobile launch platform",
+              "caption": "Space Shuttle Atlantis rolling out to Launch Pad 39A, October 2009. The winged orbiter rides on the orange external tank, between two white solid rocket boosters.",
+              "credit": "NASA / Kim Shiflett",
+              "license": "Public domain",
+              "source_url": "https://commons.wikimedia.org/wiki/File:STS-129_Atlantis_Launch_Pad_39A_Rollout_1.jpg"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/shuttle-atlantis-sts117-aft.webp",
+              "alt": "Space Shuttle Atlantis in orbit seen from directly behind, engine nozzles in the foreground, clouds and ocean below",
+              "caption": "Atlantis seen from behind as it nears the International Space Station, June 2007. The three large nozzles are the main engines. The two smaller ones beside the upper main engine are the orbital maneuvering engines.",
+              "credit": "NASA",
+              "license": "Public domain",
+              "source_url": "https://commons.wikimedia.org/wiki/File:STS117_Atlantis_approaches_ISS2.jpg"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/shuttle-endeavour-aft.webp",
+              "alt": "The aft end of Space Shuttle Endeavour with its engine nozzles",
+              "caption": "Endeavour from behind, February 2010. The two smaller nozzles above the three main engines are the orbital maneuvering engines.",
+              "credit": "NASA, composite by Raziel Abulafia",
+              "license": "CC0",
+              "source_url": "https://commons.wikimedia.org/wiki/File:Space_Shuttle_Endeavour_(51134889512).png"
+            }
+          ]
+        }
+      },
+      {
+        "id": "gas-generator",
+        "ref": "E_02",
+        "group": "today",
+        "title": "Gas generator",
+        "summary": "A small burner drives a turbine that spins the pumps, so the tanks can stay light and the chamber pressure can be far higher.",
+        "description": "The turbine exhaust is dumped overboard, which costs a little efficiency.",
+        "reference_engine": "SpaceX Merlin 1D",
+        "status": "live",
+        "model": "assets/rocket-engines/engines/gas-generator_d.glb",
+        "manifest": "assets/rocket-engines/engines/gas-generator.json",
+        "flown_on": {
+          "heading": "Flown on",
+          "text": "Falcon 9 and Falcon Heavy, since 2013. Each first-stage booster has nine of these engines.",
+          "photos": [
+            {
+              "src": "assets/rocket-engines/vehicles/falcon9-merlin-engines-hangar.webp",
+              "alt": "Nine sooty rocket engine nozzles on the base of a Falcon 9 first stage in a hangar",
+              "caption": "The nine Merlin 1D engines of a Falcon 9 first stage, December 2015, still sooty from the flight and landing.",
+              "credit": "SpaceX",
+              "license": "CC0",
+              "source_url": "https://commons.wikimedia.org/wiki/File:Falcon_9_first_stage_in_hangar;_upgraded_Merlin_engines_close-up_(24175842635).jpg"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/falcon9-vandenberg-pad.webp",
+              "alt": "A white Falcon 9 rocket standing upright on its launch pad beside the ocean",
+              "caption": "A Falcon 9 on the pad at Vandenberg, January 2016. Nine Merlin engines power the first stage, and one vacuum version powers the second.",
+              "credit": "SpaceX",
+              "license": "CC0",
+              "source_url": "https://commons.wikimedia.org/wiki/File:2016_Falcon_9_at_Vandenberg_Air_Force_Base.jpg"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/falcon9-liftoff.webp",
+              "alt": "A Falcon 9 rocket climbing above its launch pad on a column of flame, with smoke clouds below",
+              "caption": "A Falcon 9 lifting off from Vandenberg, September 2013, on the first flight of the Merlin 1D.",
+              "credit": "SpaceX",
+              "license": "CC0",
+              "source_url": "https://commons.wikimedia.org/wiki/File:Liftoff_of_the_upgraded_Falcon_9_(1).jpg"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/falcon9-first-stage-landing.webp",
+              "alt": "A Falcon 9 first stage descending with its landing legs out and one engine firing",
+              "caption": "A Falcon 9 first stage coming in to land on one of its nine Merlin engines, March 2017.",
+              "credit": "SpaceX",
+              "license": "CC0",
+              "source_url": "https://commons.wikimedia.org/wiki/File:SES-10_Mission_-_Falcon_9_First_Stage_Landing_(32996435084).jpg"
+            }
+          ]
+        }
+      },
+      {
+        "id": "staged-combustion",
+        "ref": "E_03",
+        "group": "today",
+        "title": "Staged combustion",
+        "summary": "The turbine gas is not thrown away. Two preburners drive the pumps, and their exhaust flows on into the main chamber and burns there.",
+        "description": "That allows much higher pressure and the best efficiency of any chemical engine.",
+        "reference_engine": "Aerojet Rocketdyne RS-25",
+        "status": "live",
+        "model": "assets/rocket-engines/engines/staged-combustion_d.glb",
+        "manifest": "assets/rocket-engines/engines/staged-combustion.json",
+        "flown_on": {
+          "heading": "Flown on",
+          "text": "Space Shuttle, 1981 to 2011, with three engines on each orbiter. The Space Launch System now flies four of them on its core stage.",
+          "photos": [
+            {
+              "src": "assets/rocket-engines/vehicles/shuttle-atlantis-sts117-aft.webp",
+              "alt": "Space Shuttle Atlantis in orbit seen from directly behind, engine nozzles in the foreground, clouds and ocean below",
+              "caption": "Atlantis seen from behind in orbit, June 2007. The three large nozzles are its RS-25 main engines.",
+              "credit": "NASA",
+              "license": "Public domain",
+              "source_url": "https://commons.wikimedia.org/wiki/File:STS117_Atlantis_approaches_ISS2.jpg"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/rs25-four-engines.webp",
+              "alt": "Four large rocket engines standing side by side on work stands in a factory hall",
+              "caption": "The four RS-25 engines for the first Space Launch System flight, October 2017, before they were fitted to the core stage.",
+              "credit": "NASA",
+              "license": "Public domain",
+              "source_url": "https://commons.wikimedia.org/wiki/File:Em1_4engines3_The_Four_RS-25_Engines_that_will_Power_SLS.jpg"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/rs25-test-firing.webp",
+              "alt": "Close view of a rocket engine nozzle firing on a test stand, with a pale flame and steam",
+              "caption": "A Space Shuttle Main Engine during a test firing at the Stennis Space Center in Mississippi, 1981.",
+              "credit": "NASA",
+              "license": "Public domain",
+              "source_url": "https://commons.wikimedia.org/wiki/File:Shuttle_Main_Engine_Test_Firing.jpg"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/shuttle-columbia-sts1-launch.webp",
+              "alt": "Space Shuttle Columbia lifting off from the launch pad on a column of flame and smoke",
+              "caption": "Columbia lifts off on the first Space Shuttle mission, 12 April 1981, with its three main engines and two solid boosters firing.",
+              "credit": "NASA",
+              "license": "Public domain",
+              "source_url": "https://commons.wikimedia.org/wiki/File:Space_Shuttle_Columbia_launching.jpg"
+            }
+          ]
+        }
+      },
+      {
+        "id": "full-flow",
+        "ref": "E_04",
+        "group": "today",
+        "title": "Full-flow staged",
+        "summary": "Two preburners, one fuel-rich and one oxygen-rich, so all of both propellants pass through a turbine and reach the main chamber as hot gas.",
+        "description": "Each turbine runs cooler for the same power, and nothing is wasted.",
+        "reference_engine": "SpaceX Raptor",
+        "status": "live",
+        "model": "assets/rocket-engines/engines/full-flow_d.glb",
+        "manifest": "assets/rocket-engines/engines/full-flow.json",
+        "flown_on": {
+          "heading": "Flown on",
+          "text": "Starship and its Super Heavy booster. The booster alone carries 33 of these engines.",
+          "photos": [
+            {
+              "src": "assets/rocket-engines/vehicles/starship-ift5-liftoff.webp",
+              "alt": "The Starship rocket lifting off from its launch tower on a broad column of flame",
+              "caption": "Starship lifting off on its fifth flight test, 13 October 2024, on the 33 Raptor engines of its Super Heavy booster.",
+              "credit": "Steve Jurvetson",
+              "license": "CC BY 2.0, resized",
+              "source_url": "https://commons.wikimedia.org/wiki/File:Liftoff_of_SpaceX_IFT-5_(54064037095).jpg"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/raptor-test-firing-2016.webp",
+              "alt": "A rocket engine firing horizontally on a test stand at night, with a long purple and orange flame",
+              "caption": "The first test firing of a Raptor development engine, 25 September 2016.",
+              "credit": "SpaceX / Elon Musk",
+              "license": "CC0",
+              "source_url": "https://commons.wikimedia.org/wiki/File:Raptor-test-9-25-2016.jpg"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/superheavy-booster-return.webp",
+              "alt": "The Super Heavy booster descending towards its launch tower",
+              "caption": "The Super Heavy booster returning to its launch tower on the same flight, 13 October 2024.",
+              "credit": "Steve Jurvetson",
+              "license": "CC BY 2.0, resized",
+              "source_url": "https://commons.wikimedia.org/wiki/File:Starship_Booster_Return_on_Final_Approach_(54063904149).jpg"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/starship-flight6-from-iss.webp",
+              "alt": "A rocket exhaust plume above the Earth's surface seen from orbit",
+              "caption": "The exhaust plume of Starship's sixth flight seen from the International Space Station, 19 November 2024.",
+              "credit": "NASA",
+              "license": "Public domain",
+              "source_url": "https://commons.wikimedia.org/wiki/File:Launch_of_SpaceX_Starship_6_rocket_seen_from_the_International_Space_Station_(iss072e220161,_cropped).jpg"
+            }
+          ]
+        }
+      },
+      {
+        "id": "expander",
+        "ref": "E_05",
+        "group": "today",
+        "title": "Expander",
+        "summary": "No burner drives the pumps at all. The fuel, liquid hydrogen, cools the chamber and nozzle. Warmed in the cooling channels, it turns into gas, which expands and spins the pump turbine before it is burned.",
+        "description": "Simple and very reliable, but limited in size by how much heat the wall can supply.",
+        "reference_engine": "Aerojet Rocketdyne RL10A-4-2",
+        "status": "live",
+        "model": "assets/rocket-engines/engines/expander_d.glb",
+        "manifest": "assets/rocket-engines/engines/expander.json",
+        "flown_on": {
+          "heading": "Flown on",
+          "text": "Centaur upper stages since 1963, today on the Atlas V. An early version also powered the upper stage of the Saturn I.",
+          "photos": [
+            {
+              "src": "assets/rocket-engines/vehicles/centaur-landsat9-lift.webp",
+              "alt": "A Centaur upper stage hanging from a crane beside a launch tower, with its engine at the bottom",
+              "caption": "A Centaur upper stage being hoisted onto its Atlas V booster, July 2021. Its single RL10 engine is at the bottom, under a red protective cover.",
+              "credit": "NASA / USSF 30th Space Wing, Julio Paz",
+              "license": "Public domain",
+              "source_url": "https://commons.wikimedia.org/wiki/File:Landsat_9_Atlas_V_Centaur_Lift_and_Mate_(KSC-20210715-PH-JCP01_0160).jpg",
+              "position": "center 88%"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/atlas5-juno-liftoff.webp",
+              "alt": "An Atlas V rocket at liftoff on its pad between four lightning towers, with the ocean behind",
+              "caption": "An Atlas V at liftoff with the Juno probe to Jupiter, 5 August 2011. The Centaur upper stage and its RL10 are inside the white upper section.",
+              "credit": "NASA / Tony Gray and Tim Powers",
+              "license": "Public domain",
+              "source_url": "https://commons.wikimedia.org/wiki/File:Juno%27s_Atlas_V_551_at_liftoff.jpg"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/centaur-atlas2a-engines.webp",
+              "alt": "The engine end of a Centaur stage in a hangar, with two engine nozzles under yellow covers",
+              "caption": "The two RL10 engines of an Atlas IIA Centaur stage, under yellow covers, May 2000.",
+              "credit": "NASA",
+              "license": "Public domain",
+              "source_url": "https://commons.wikimedia.org/wiki/File:Centaur_stage_KSC-00PP-0666.jpg"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/centaur-goesr-transport.webp",
+              "alt": "A Centaur stage lying on a yellow transport trailer inside a large building",
+              "caption": "A Centaur stage for an Atlas V arriving at Cape Canaveral, September 2016. The engine end is inside the yellow frame.",
+              "credit": "NOAA",
+              "license": "Public domain",
+              "source_url": "https://commons.wikimedia.org/wiki/File:GOES-R_Centaur_Stage_Transport_(30494034251).jpg"
+            }
+          ]
+        }
+      },
+      {
+        "id": "electric-pump",
+        "ref": "E_06",
+        "group": "today",
+        "title": "Electric pump-fed",
+        "summary": "Two battery-powered electric motors spin the pumps. There is no turbine and no hot gas in the pump drive, which makes the engine simple to build and easy to control.",
+        "description": "The price is the battery, which stays heavy even when empty, so the cycle suits small engines and small launchers.",
+        "reference_engine": "Rocket Lab Rutherford",
+        "status": "live",
+        "model": "assets/rocket-engines/engines/electric-pump_d.glb",
+        "manifest": "assets/rocket-engines/engines/electric-pump.json",
+        "flown_on": {
+          "heading": "Flown on",
+          "text": "Electron, since 2017. Nine engines power the first stage and one vacuum version powers the second.",
+          "photos": [
+            {
+              "src": "assets/rocket-engines/vehicles/electron-engines-liftoff.webp",
+              "alt": "The base of an Electron rocket at liftoff with its engines firing",
+              "caption": "The nine Rutherford engines of an Electron first stage at liftoff, 25 May 2024.",
+              "credit": "Rocket Lab, via NASA",
+              "license": "Use with credit, per Rocket Lab's media terms",
+              "source_url": "https://images.nasa.gov/details/KSC-20240525-PH-RKL01_0006"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/electron-tropics-liftoff.webp",
+              "alt": "A black Electron rocket lifting off from its launch pad against a blue sky",
+              "caption": "An Electron lifting off from Mahia, New Zealand, 8 May 2023.",
+              "credit": "Rocket Lab, via NASA",
+              "license": "Use with credit, per Rocket Lab's media terms",
+              "source_url": "https://images.nasa.gov/details/KSC-20230507-PH-RLS01_0001-reupload"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/electron-on-pad.webp",
+              "alt": "An Electron rocket standing on its launch pad beside the sea",
+              "caption": "An Electron on its pad at Mahia, New Zealand, shortly before liftoff, 26 May 2023.",
+              "credit": "Rocket Lab, via NASA",
+              "license": "Use with credit, per Rocket Lab's media terms",
+              "source_url": "https://images.nasa.gov/details/KSC-20230526-PH-RKL01_0001"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/electron-engines-night.webp",
+              "alt": "Rocket engines igniting at the base of an Electron rocket",
+              "caption": "The first-stage engines igniting at liftoff, 8 May 2023.",
+              "credit": "Rocket Lab, via NASA",
+              "license": "Use with credit, per Rocket Lab's media terms",
+              "source_url": "https://images.nasa.gov/details/KSC-20230507-PH-RLS01_0004-reupload"
+            }
+          ]
+        }
+      },
+      {
+        "id": "solid",
+        "ref": "E_07",
+        "group": "today",
+        "title": "Solid motor",
+        "summary": "Fuel and oxidizer are cast together as one solid grain inside the case. There are no tanks, pumps, valves or injector: the case is the combustion chamber.",
+        "description": "Simple and storable for years, but there is no way to shut it down: once lit, it burns until the propellant is gone.",
+        "reference_engine": "Star 48B",
+        "status": "live",
+        "model": "assets/rocket-engines/engines/solid_d.glb",
+        "manifest": "assets/rocket-engines/engines/solid.json",
+        "flown_on": {
+          "heading": "Flown on",
+          "text": "The PAM-D upper stage of the Delta II and of Space Shuttle satellite launches, and the final kick for deep-space probes such as Dawn and New Horizons.",
+          "photos": [
+            {
+              "src": "assets/rocket-engines/vehicles/star48-dawn-third-stage.webp",
+              "alt": "The Dawn spacecraft standing on its third-stage rocket motor inside a clean room, with half a payload fairing behind it",
+              "caption": "The Dawn asteroid probe mounted on its Star 48B third stage, September 2007, before the fairing closed around it.",
+              "credit": "NASA / Jim Grossmann",
+              "license": "Public domain",
+              "source_url": "https://commons.wikimedia.org/wiki/File:Dawn_on_its_third_stage.jpg",
+              "position": "center 70%"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/star48-ldsd-test-vehicle.webp",
+              "alt": "A saucer-shaped test vehicle in an assembly building, with a rocket nozzle underneath it",
+              "caption": "NASA's Low-Density Supersonic Decelerator test vehicle, 2014. The nozzle under the saucer belongs to the Star 48 motor that boosted it to the top of the stratosphere.",
+              "credit": "NASA",
+              "license": "Public domain",
+              "source_url": "https://commons.wikimedia.org/wiki/File:Low-Density_Supersonic_Decelerator_preparing_for_a_supersonic_test_PIA18006.jpg"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/delta2-dawn-liftoff.webp",
+              "alt": "A Delta II rocket lifting off with its solid boosters firing",
+              "caption": "A Delta II lifting off with Dawn, 27 September 2007. The Star 48B is its third stage, inside the fairing at the top.",
+              "credit": "NASA / Sandra Joseph and Rafael Hernandez",
+              "license": "Public domain",
+              "source_url": "https://commons.wikimedia.org/wiki/File:Delta_II_Dawn_liftoff_2.jpg"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/star48-parker-solar-probe.webp",
+              "alt": "Parker Solar Probe mounted on its third-stage rocket motor in a clean room",
+              "caption": "Parker Solar Probe on its third-stage motor, a thrust-vectoring version of the Star 48, July 2018.",
+              "credit": "NASA / Johns Hopkins APL / Ed Whitman",
+              "license": "Public domain",
+              "source_url": "https://commons.wikimedia.org/wiki/File:Parker_Solar_Probe_mated.jpg",
+              "position": "center 75%"
+            }
+          ]
+        }
+      },
+      {
+        "id": "hybrid",
+        "ref": "E_08",
+        "group": "today",
+        "title": "Hybrid motor",
+        "summary": "A solid fuel grain burned with a liquid or gaseous oxidizer. The grain sits in the case like a solid motor's, but it contains no oxidizer, so it only burns while oxidizer is sprayed over it.",
+        "description": "One valve starts, throttles and stops the motor. Safer than a solid and simpler than a liquid engine, but less efficient than either.",
+        "reference_engine": "RocketMotorTwo",
+        "status": "live",
+        "model": "assets/rocket-engines/engines/hybrid_d.glb",
+        "manifest": "assets/rocket-engines/engines/hybrid.json",
+        "flown_on": {
+          "heading": "Flown on",
+          "text": "Virgin Galactic's SpaceShipTwo, an air-launched suborbital spaceplane. It is released from a carrier aircraft before the motor is lit.",
+          "photos": [
+            {
+              "src": "assets/rocket-engines/vehicles/spaceshiptwo-enterprise.webp",
+              "alt": "The SpaceShipTwo spaceplane in a hangar, attached under its twin-fuselage carrier aircraft",
+              "caption": "SpaceShipTwo attached under its carrier aircraft, October 2014. The hybrid motor fills the rear of the fuselage, behind the cabin.",
+              "credit": "Steve Jurvetson",
+              "license": "CC BY 2.0, resized",
+              "source_url": "https://commons.wikimedia.org/wiki/File:SpaceShip_2_VSS_Enterprise.jpg"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/spaceshiptwo-under-whiteknighttwo.webp",
+              "alt": "The carrier aircraft White Knight Two seen from directly below in flight, with SpaceShipTwo between its two fuselages",
+              "caption": "SpaceShipTwo carried aloft between the two fuselages of White Knight Two, October 2010. The motor is lit only after release at altitude.",
+              "credit": "Jeff Foust",
+              "license": "CC BY 2.0, resized",
+              "source_url": "https://commons.wikimedia.org/wiki/File:White_Knight_Two_and_SpaceShipTwo_from_directly_below.jpg"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/spaceshipone-nasm.webp",
+              "alt": "The small white spaceplane SpaceShipOne hanging in a museum, seen from below",
+              "caption": "SpaceShipOne, the predecessor, in the National Air and Space Museum. It flew to space in 2004 on a smaller hybrid motor of the same kind.",
+              "credit": "Balon Greyjoy",
+              "license": "CC0",
+              "source_url": "https://commons.wikimedia.org/wiki/File:20180410_SpaceShipOne_NASM.jpg"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/spaceshiptwo-hangar.webp",
+              "alt": "SpaceShipTwo seen from the front quarter in a hangar",
+              "caption": "SpaceShipTwo in its hangar at Mojave, October 2014.",
+              "credit": "Steve Jurvetson",
+              "license": "CC BY 2.0, resized",
+              "source_url": "https://commons.wikimedia.org/wiki/File:Last_sight_of_Virgin_Galactic%E2%80%99s_SpaceShipTwo_(15064101403).jpg"
+            }
+          ]
+        }
+      },
+      {
+        "id": "ion",
+        "ref": "E_09",
+        "group": "today",
+        "title": "Ion thruster",
+        "summary": "No combustion at all. Electricity ionises the xenon propellant by stripping electrons from its atoms, and an electric field between two grids fires the ions out at about 40 km/s.",
+        "description": "The thrust is tiny, about the weight of a few sheets of paper, but the efficiency is very high: the thruster uses propellant ten times more sparingly than any chemical engine. It can run for years.",
+        "reference_engine": "NASA NEXT-C",
+        "status": "live",
+        "model": "assets/rocket-engines/engines/ion_d.glb",
+        "manifest": "assets/rocket-engines/engines/ion.json",
+        "flown_on": {
+          "heading": "Flown on",
+          "text": "NASA's DART asteroid-deflection spacecraft, launched in 2021. Earlier thrusters of the same kind drove the Deep Space 1 and Dawn probes.",
+          "photos": [
+            {
+              "src": "assets/rocket-engines/vehicles/next-ion-thruster-firing.webp",
+              "alt": "An ion thruster firing in a vacuum chamber, with a pale blue beam coming from its grid",
+              "caption": "A NEXT ion thruster firing in a vacuum chamber at NASA's Glenn Research Center. The blue glow is the beam of xenon ions.",
+              "credit": "NASA",
+              "license": "Public domain",
+              "source_url": "https://commons.wikimedia.org/wiki/File:NASA_NEXT_Ion_thruster.712983main_NEXT_LDT_Thrusterhi-res_full.jpg"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/dart-spacecraft-cleanroom.webp",
+              "alt": "The DART spacecraft being lowered onto a work stand by technicians in a clean room",
+              "caption": "The DART spacecraft before launch, October 2021. It carried a NEXT-C thruster, the first to fly in space.",
+              "credit": "USSF 30th Space Wing / Aaron Taubman, via NASA",
+              "license": "Public domain",
+              "source_url": "https://commons.wikimedia.org/wiki/File:51619406234_b05ef2464f_o_Dart_Spacecraft_Launch_Configuration.jpg"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/ion-engine-prototype-firing.webp",
+              "alt": "A xenon ion engine seen through a vacuum chamber port, glowing faint blue",
+              "caption": "An earlier xenon ion engine on test at NASA's Jet Propulsion Laboratory. A similar engine powered the Deep Space 1 probe.",
+              "credit": "NASA / JPL-Caltech",
+              "license": "Public domain",
+              "source_url": "https://commons.wikimedia.org/wiki/File:PIA04238.jpg"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/dart-launch-falcon9.webp",
+              "alt": "A long-exposure streak of a rocket launch at night over a coastline",
+              "caption": "DART launching on a Falcon 9 from Vandenberg, 23 November 2021. An ion thruster cannot lift off the ground: a chemical rocket carries it to space first.",
+              "credit": "U.S. Space Force / Michael Peterson",
+              "license": "Public domain",
+              "source_url": "https://commons.wikimedia.org/wiki/File:Team_Vandenberg_Launches_the_NASA_DART_Mission_(121123-F-IN231-1001).jpg"
+            }
+          ]
+        }
+      },
+      {
+        "id": "aerospike",
+        "ref": "E_10",
+        "group": "future",
+        "title": "Aerospike",
+        "summary": "A bell nozzle is only the right shape at one altitude. An aerospike turns the nozzle inside out: the exhaust expands along the outside of a central spike instead of inside a bell, with the open air as its other wall. That lets the nozzle adapt to altitude, so it stays efficient from the ground to vacuum.",
+        "description": "The pumps and plumbing here are a gas-generator cycle. The nozzle is what is new.",
+        "reference_engine": "Rocketdyne XRS-2200",
+        "status": "live",
+        "model": "assets/rocket-engines/engines/aerospike_d.glb",
+        "manifest": "assets/rocket-engines/engines/aerospike.json",
+        "flown_on": {
+          "heading": "Tested, never flown",
+          "text": "The engines were built for the X-33 spaceplane and fired on the ground at NASA's Stennis Space Center until the programme ended in 2001. A small aerospike was also carried on the back of an SR-71 in 1997.",
+          "photos": [
+            {
+              "src": "assets/rocket-engines/vehicles/xrs2200-twin-test.webp",
+              "alt": "Two linear aerospike engines firing side by side on a test stand",
+              "caption": "Two XRS-2200 engines firing side by side at NASA's Stennis Space Center, 6 August 2001, in one of the last tests of the programme.",
+              "credit": "NASA Marshall Space Flight Center",
+              "license": "Public domain",
+              "source_url": "https://commons.wikimedia.org/wiki/File:Twin_Linear_Aerospike_XRS-2200_Engine.jpg"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/xrs2200-test-firing.webp",
+              "alt": "A section of a linear aerospike engine firing on a test stand",
+              "caption": "Three aerospike thrust cells and a section of ramp on test at NASA's Marshall Space Flight Center, April 1997.",
+              "credit": "NASA / Dennis Olive",
+              "license": "Public domain",
+              "source_url": "https://commons.wikimedia.org/wiki/File:Test_Firing_of_Linear_Aerospike_Engine_-_GPN-2000-000066.jpg"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/lasre-sr71-flight.webp",
+              "alt": "An SR-71 aircraft in flight with an experimental pod mounted on its back",
+              "caption": "An SR-71 carrying a small linear aerospike on its back, 31 October 1997, on the first flight of the LASRE experiment.",
+              "credit": "NASA / Lori Losey",
+              "license": "Public domain",
+              "source_url": "https://commons.wikimedia.org/wiki/File:Linear_Aerospike_SR-71_Experiment_(LASRE)_first_flight_(EC97-44295-100).jpg"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/lasre-sr71-pod.webp",
+              "alt": "Rear view of a linear aerospike engine with a row of thrust cells along each side of its ramp",
+              "caption": "The LASRE aerospike seen from behind, February 1996, with a row of thrust cells along each side of the ramp.",
+              "credit": "NASA / Tony Landis",
+              "license": "Public domain",
+              "source_url": "https://commons.wikimedia.org/wiki/File:SR-71_LASRE.jpg"
+            }
+          ]
+        }
+      },
+      {
+        "id": "rotating-detonation",
+        "ref": "E_11",
+        "group": "future",
+        "title": "Rotating detonation",
+        "summary": "In every other engine here the propellant burns as a steady flame. In this one it detonates: a supersonic shock wave travels around a ring-shaped channel without stopping, compressing and burning the propellant as it goes.",
+        "description": "That extracts more work from the same propellant, in a much shorter chamber. The hard part is building hardware that survives it.",
+        "reference_engine": "NASA RDRE test combustor",
+        "status": "live",
+        "model": "assets/rocket-engines/engines/rotating-detonation_d.glb",
+        "manifest": "assets/rocket-engines/engines/rotating-detonation.json",
+        "flown_on": {
+          "heading": "Tested, not yet in service",
+          "text": "NASA has test-fired full-scale combustors on the ground since 2022, the longest for 251 seconds. A small Japanese rotating detonation engine was fired in space on a sounding rocket in 2021.",
+          "photos": [
+            {
+              "src": "assets/rocket-engines/vehicles/rdre-nasa-test.webp",
+              "alt": "A small ring-shaped rocket engine firing on a test stand, with a blue flame around a pointed centre body",
+              "caption": "NASA's rotating detonation rocket engine firing at the Marshall Space Flight Center in 2022. The flame leaves from a ring around the pointed centre body.",
+              "credit": "NASA",
+              "license": "Public domain",
+              "source_url": "https://commons.wikimedia.org/wiki/File:NASA_RDE.jpg"
+            }
+          ]
+        }
+      },
+      {
+        "id": "nuclear-thermal",
+        "ref": "E_12",
+        "group": "future",
+        "title": "Nuclear thermal",
+        "summary": "A fission reactor replaces the combustion chamber. Hydrogen is pumped through the hot reactor core, which heats it directly, and expands out of the nozzle without burning anything.",
+        "description": "Because the exhaust is pure hydrogen, the lightest gas there is, it leaves about twice as fast as any chemical exhaust. That makes the engine roughly twice as efficient as the best chemical engines, so it needs about half the propellant for the same job.",
+        "reference_engine": "NERVA XE Prime",
+        "status": "live",
+        "model": "assets/rocket-engines/engines/nuclear-thermal_d.glb",
+        "manifest": "assets/rocket-engines/engines/nuclear-thermal.json",
+        "flown_on": {
+          "heading": "Tested, never flown",
+          "text": "The United States ground-tested nuclear rocket reactors and complete engines in Nevada through the 1960s. The XE engine ran in 1969 and was judged ready for a Mars mission, but none ever flew.",
+          "photos": [
+            {
+              "src": "assets/rocket-engines/vehicles/nerva-xe-test-stand.webp",
+              "alt": "A nuclear rocket engine being installed nozzle-down in a tall steel test stand",
+              "caption": "The XE engine being installed in its test stand at Jackass Flats, Nevada, December 1967. This is the cold-flow version, built like the real engine but without nuclear fuel.",
+              "credit": "AEC / NASA",
+              "license": "Public domain",
+              "source_url": "https://commons.wikimedia.org/wiki/File:XECF_-_GPN-2002-000142.jpg"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/nerva-xe-transport.webp",
+              "alt": "A nuclear rocket engine on a rail car arriving at a test stand in the evening",
+              "caption": "The same engine arriving at the test stand by rail, December 1967.",
+              "credit": "AEC / NASA",
+              "license": "Public domain",
+              "source_url": "https://commons.wikimedia.org/wiki/File:NERVA_XE_nuclear_rocket_engine_being_transported_to_test_stand_-_GPN-2002-000143.jpg"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/kiwi-a-prime-reactor.webp",
+              "alt": "An early nuclear rocket reactor mounted on a rail car in the desert",
+              "caption": "Kiwi-A Prime, one of the first reactors built to test the idea. It ran at full power on 8 July 1960.",
+              "credit": "NASA",
+              "license": "Public domain",
+              "source_url": "https://commons.wikimedia.org/wiki/File:Kiwi-A_Prime_Atomic_Reactor_-_GPN-2002-000141.jpg"
+            },
+            {
+              "src": "assets/rocket-engines/vehicles/kiwi-b4d-workers.webp",
+              "alt": "Workers standing on and around a nuclear rocket reactor before a test",
+              "caption": "Workers preparing a Kiwi-B reactor for a test in the 1960s.",
+              "credit": "U.S. Atomic Energy Commission",
+              "license": "Public domain",
+              "source_url": "https://commons.wikimedia.org/wiki/File:Workers_on_Kiwi_B4-D.png"
+            }
+          ]
+        }
+      },
+      {
+        "id": "air-breathing",
+        "ref": "E_13",
+        "group": "future",
+        "title": "Air-breathing combined cycle",
+        "summary": "Most of a rocket's lift-off weight is oxygen. Low in the atmosphere, this engine takes its oxygen from the air. That covers the first part of the climb, to about five times the speed of sound. Then it switches to a tank of liquid oxygen carried on board and continues as a rocket.",
+        "description": "One engine does both jobs, which is what a spaceplane that takes off from a runway would need.",
+        "reference_engine": "SABRE (Reaction Engines)",
+        "status": "live",
+        "model": "assets/rocket-engines/engines/air-breathing_d.glb",
+        "manifest": "assets/rocket-engines/engines/air-breathing.json",
+        "flown_on": {
+          "heading": "Never built",
+          "text": "A British design that was never completed. Its precooler was tested on the ground at Mach 5 heat conditions in 2019, but the company went bankrupt in 2024 before a full engine was built.",
+          "photos": []
+        }
+      }
+    ]
+  },
+  "ladder": {
+    "heading": "The Cycle Ladder",
+    "intro_blocks": [
+      {
+        "type": "paragraph",
+        "text": "Every liquid rocket engine has to solve the same problem: force propellant into a chamber that is already at high pressure. The engine types differ mostly in how they do that."
+      },
+      {
+        "type": "paragraph",
+        "text": "Each step up the ladder adds machinery to raise the chamber pressure, and with it the performance. The 3D view keeps the chamber, injector and nozzle in the same place for every engine, so what changes between them stands out."
+      }
+    ]
+  },
+  "sources": {
+    "heading": "Sources",
+    "intro": "FarsideLab is an independent visualization project. It is not affiliated with or endorsed by NASA or any engine manufacturer. Outer dimensions of each engine follow published figures. Internal layout, injector patterns, feed systems and tank sizes are representative.",
+    "items": [
+      {
+        "label": "SRC_01",
+        "text": "AJ10-190 thrust, specific impulse, chamber pressure, expansion ratio and mixture ratio. Wikipedia, Orbital Maneuvering System.",
+        "url": "https://en.wikipedia.org/wiki/Orbital_Maneuvering_System"
+      },
+      {
+        "label": "SRC_02",
+        "text": "Uprated OMS engine status: sea level testing results. NASA Technical Reports Server, 19910014943.",
+        "url": "https://ntrs.nasa.gov/api/citations/19910014943/downloads/19910014943.pdf"
+      },
+      {
+        "label": "SRC_03",
+        "text": "AJ10-190 length, maximum diameter, dry mass and cooling method. NASA Goddard, Imagine the Universe, Ask an Astrophysicist, 9 May 1997 (archived)."
+      },
+      {
+        "label": "SRC_04",
+        "text": "Merlin 1D thrust, specific impulse, chamber pressure, expansion ratio, nozzle diameter, dry mass and turbopump figures. Wikipedia, SpaceX Merlin.",
+        "url": "https://en.wikipedia.org/wiki/SpaceX_Merlin"
+      },
+      {
+        "label": "SRC_05",
+        "text": "RS-25 thrust, specific impulse, pressures, pump power, area ratio, mixture ratio, dry weight and dimensions. L3Harris, RS-25 engine.",
+        "url": "https://l3harris.com/all-capabilities/rs-25-engine"
+      },
+      {
+        "label": "SRC_06",
+        "text": "Raptor specific impulse, chamber pressure, nozzle ratio, mixture ratio, length and diameter. Wikipedia, SpaceX Raptor.",
+        "url": "https://en.wikipedia.org/wiki/SpaceX_Raptor"
+      },
+      {
+        "label": "SRC_07",
+        "text": "Raptor 2 thrust and mass. Everyday Astronaut, Raptor 1 vs Raptor 2.",
+        "url": "https://everydayastronaut.com/spacex-raptor-engine-comparison/"
+      },
+      {
+        "label": "SRC_08",
+        "text": "RL10A-4-2 thrust, weight, mixture ratio, specific impulse and nozzle diameter. L3Harris, RL10 propulsion system data sheet.",
+        "url": "https://www.l3harris.com/sites/default/files/2024-01/AJRD-LHX_RL10_SpecSheet_CMYK_APPROVED_011024.pdf"
+      },
+      {
+        "label": "SRC_09",
+        "text": "RL10A-4-2 length and expansion ratio, and RL10 flight history. Wikipedia, RL10.",
+        "url": "https://en.wikipedia.org/wiki/RL10"
+      },
+      {
+        "label": "SRC_10",
+        "text": "Rutherford thrust, specific impulse, diameter, mass, motor power and speed. Wikipedia, Rutherford (rocket engine).",
+        "url": "https://en.wikipedia.org/wiki/Rutherford_(rocket_engine)"
+      },
+      {
+        "label": "SRC_11",
+        "text": "Star 48B diameter, length, propellant mass, loaded mass, average and peak thrust. Spaceflight101, Payload Assist Module re-entry.",
+        "url": "https://spaceflight101.com/re-entry-payload-assist-module-34662/"
+      },
+      {
+        "label": "SRC_12",
+        "text": "Star 48B burn time and use as a third stage. Wikipedia, Star 48.",
+        "url": "https://en.wikipedia.org/wiki/Star_48"
+      },
+      {
+        "label": "SRC_13",
+        "text": "RocketMotorTwo propellants, thrust and burn time. Wikipedia, RocketMotorTwo.",
+        "url": "https://en.wikipedia.org/wiki/RocketMotorTwo"
+      },
+      {
+        "label": "SRC_14",
+        "text": "NEXT-C thrust, specific impulse, power, beam diameter, beam voltage and mass. NASA Technical Reports Server, 20180001491.",
+        "url": "https://ntrs.nasa.gov/api/citations/20180001491/downloads/20180001491.pdf"
+      },
+      {
+        "label": "SRC_15",
+        "text": "XRS-2200 thrust, specific impulse, chamber pressure, nozzle ratio and length. Wikipedia, Rocketdyne XRS-2200.",
+        "url": "https://en.wikipedia.org/wiki/Rocketdyne_XRS-2200"
+      },
+      {
+        "label": "SRC_16",
+        "text": "XRS-2200 cycle and thrust cell arrangement. NASA Technical Reports Server, 19980174934, X-33 Linear Aerospike Engine.",
+        "url": "https://ntrs.nasa.gov/api/citations/19980174934/downloads/19980174934.pdf"
+      },
+      {
+        "label": "SRC_17",
+        "text": "NASA rotating detonation rocket engine thrust, burn time, chamber pressure and material. NASA Marshall Space Flight Center.",
+        "url": "https://www.nasa.gov/centers/marshall/feature/nasa-validates-revolutionary-propulsion-design-for-deep-space-missions"
+      },
+      {
+        "label": "SRC_18",
+        "text": "NERVA XE Prime thrust, specific impulse, reactor power, mass and dimensions, and programme history. Wikipedia, NERVA.",
+        "url": "https://en.wikipedia.org/wiki/NERVA"
+      },
+      {
+        "label": "SRC_19",
+        "text": "SABRE specific impulse, operating modes, helium loop and programme status. Wikipedia, SABRE (rocket engine).",
+        "url": "https://en.wikipedia.org/wiki/SABRE_(rocket_engine)"
+      },
+      {
+        "label": "SRC_20",
+        "text": "SABRE building blocks and the 2019 precooler test. Reaction Engines.",
+        "url": "https://reactionengines.co.uk/about/sabre/"
+      },
+      {
+        "label": "VID_01",
+        "text": "Hero video: Apollo 11 launch, Saturn V first-stage engines filmed at 500 frames per second, 1969. NASA. Wikimedia Commons.",
+        "url": "https://commons.wikimedia.org/wiki/Special:Search?search=Apollo+11+Saturn+V+launch+500+fps&ns6=1"
+      },
+      {
+        "label": "VID_02",
+        "text": "Hero video: RS-25 engine test, NASA Stennis Space Center, 20 June 2025. NASA.",
+        "url": "https://images.nasa.gov/details/SSC_2025-06-20_RS-25_Engine_Test"
+      },
+      {
+        "label": "VID_03",
+        "text": "Hero video: Rotating detonation rocket engine test, NASA Marshall Space Flight Center, 27 September 2023. NASA.",
+        "url": "https://images.nasa.gov/details/PN068%20HF-12-hd%2009-27-2023"
+      },
+      {
+        "label": "ENV_01",
+        "text": "Lighting of the 3D view: studio environment (studio.env) from the Babylon.js asset library, unmodified. Babylon.js, CC BY 4.0.",
+        "url": "https://github.com/BabylonJS/Assets"
+      }
+    ]
+  }
+}

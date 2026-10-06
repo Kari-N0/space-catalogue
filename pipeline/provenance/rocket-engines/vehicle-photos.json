@@ -1,0 +1,510 @@
+{
+  "type": "reference",
+  "status": "DRAFT written at integration (2026-10-04). Licences are AS RECORDED in the content file at download time; they have not been re-checked against the source pages. The four Electron photos were re-checked on 2026-10-06 (see their flag).",
+  "used_for": "Concept 002 side panel, 'Flown on' photos (content/explorers/rocket-engines.json explorer.engines[].flown_on.photos). The content file is the live record: credit, licence and source link are shown in the enlarged view.",
+  "accessed": "2026-10-03 (file dates; per the handover, licences were recorded at download)",
+  "publisher": "various — see entries[].credit; all retrieved via Wikimedia Commons",
+  "usage_terms": "per entry. NASA media: generally free to use, no endorsement may be implied (the page's sources intro carries the non-affiliation statement).",
+  "notes": "Web exports: WebP, 1600 px wide (per the handover). Two SpaceShipTwo photos show the first vehicle a few weeks before it was lost in the 2014 accident (handover note). 8 further photos in the demo folder are not referenced by any engine and were not copied to the site.",
+  "open_flags": 9,
+  "entries": [
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/atlas5-juno-liftoff.webp",
+      "sha256": "5a96287b310e89233620f4dfff47fd1ef0dc44ae3d8793eadf4956e3617555c1",
+      "bytes": 281642,
+      "credit": "NASA / Tony Gray and Tim Powers",
+      "license_as_recorded": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Juno%27s_Atlas_V_551_at_liftoff.jpg",
+      "used_by": [
+        "E_05"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/centaur-atlas2a-engines.webp",
+      "sha256": "562e4aab1569055e08857a9195485edb0df7078111e4060f9c9f3471a2b8b2d9",
+      "bytes": 353062,
+      "credit": "NASA",
+      "license_as_recorded": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Centaur_stage_KSC-00PP-0666.jpg",
+      "used_by": [
+        "E_05"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/centaur-goesr-transport.webp",
+      "sha256": "15df6fea2182a3788093e7fe5c430896cf74ac6303fcb51cc83b75d07a3fd5aa",
+      "bytes": 267286,
+      "credit": "NOAA",
+      "license_as_recorded": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:GOES-R_Centaur_Stage_Transport_(30494034251).jpg",
+      "used_by": [
+        "E_05"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/centaur-landsat9-lift.webp",
+      "sha256": "9f7e5be21b059dde832e5c7bbdbd3ad76504fafe96666741fc7c0fa64f734b24",
+      "bytes": 476144,
+      "credit": "NASA / USSF 30th Space Wing, Julio Paz",
+      "license_as_recorded": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Landsat_9_Atlas_V_Centaur_Lift_and_Mate_(KSC-20210715-PH-JCP01_0160).jpg",
+      "used_by": [
+        "E_05"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/dart-launch-falcon9.webp",
+      "sha256": "f2f612510ea1dc7231ae74dfaa47ed11fd1554d073b4b1b0c09973705728864a",
+      "bytes": 53842,
+      "credit": "U.S. Space Force / Michael Peterson",
+      "license_as_recorded": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Team_Vandenberg_Launches_the_NASA_DART_Mission_(121123-F-IN231-1001).jpg",
+      "used_by": [
+        "E_09"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/dart-spacecraft-cleanroom.webp",
+      "sha256": "6316c9e5968afe88a93932451048bbfbaec29c2791729a57fc2ce2ac2570e6f0",
+      "bytes": 624946,
+      "credit": "USSF 30th Space Wing / Aaron Taubman, via NASA",
+      "license_as_recorded": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:51619406234_b05ef2464f_o_Dart_Spacecraft_Launch_Configuration.jpg",
+      "used_by": [
+        "E_09"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/delta2-dawn-liftoff.webp",
+      "sha256": "e886af58ae19ec5662ee6b6623d08d7a88e61bc20a0595576074ea02ec221b31",
+      "bytes": 113624,
+      "credit": "NASA / Sandra Joseph and Rafael Hernandez",
+      "license_as_recorded": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Delta_II_Dawn_liftoff_2.jpg",
+      "used_by": [
+        "E_07"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/electron-engines-liftoff.webp",
+      "sha256": "68549160d54f3314746cba51127066ee95d658e893f3bdcc14a84502add7c50c",
+      "bytes": 177138,
+      "credit": "Rocket Lab, via NASA",
+      "license_as_recorded": "Use with credit, per Rocket Lab's media terms",
+      "source": "https://images.nasa.gov/details/KSC-20240525-PH-RKL01_0006",
+      "used_by": [
+        "E_06"
+      ],
+      "flag": "CHECKED 2026-10-06, NOT PUBLIC DOMAIN: NASA's image library names Rocket Lab as the photographer (NASA ID KSC-20240525-PH-RKL01_0006), so the public-domain tag on Wikimedia Commons, which rests on NASA authorship, does not hold. Basis for use: Rocket Lab's gallery (https://rocketlabusa.com/gallery) states that its imagery is 'available for media download and use, and must be credited to Rocket Lab or the photographer specified in the image caption' and 'cannot be used for advertising, marketing or to imply endorsement'. Not confirmed: that this very photo is in that gallery, and that an independent catalogue site counts as media use. Kari's decision: keep under these terms, replace with a photo by NASA staff, or remove.",
+      "downloaded_from": "https://commons.wikimedia.org/wiki/File:Rocket_Lab_PREFIRE-1_Launch_(KSC-20240525-PH-RKL01_0006).jpg"
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/electron-engines-night.webp",
+      "sha256": "8dd1d5d744ed27c51986988bdf1f17cc505ed5bc364492c04c3d180bad8a028c",
+      "bytes": 689212,
+      "credit": "Rocket Lab, via NASA",
+      "license_as_recorded": "Use with credit, per Rocket Lab's media terms",
+      "source": "https://images.nasa.gov/details/KSC-20230507-PH-RLS01_0004-reupload",
+      "used_by": [
+        "E_06"
+      ],
+      "flag": "CHECKED 2026-10-06, NOT PUBLIC DOMAIN: NASA's image library names Rocket Lab as the photographer (NASA ID KSC-20230507-PH-RLS01_0004-reupload), so the public-domain tag on Wikimedia Commons, which rests on NASA authorship, does not hold. Basis for use: Rocket Lab's gallery (https://rocketlabusa.com/gallery) states that its imagery is 'available for media download and use, and must be credited to Rocket Lab or the photographer specified in the image caption' and 'cannot be used for advertising, marketing or to imply endorsement'. Not confirmed: that this very photo is in that gallery, and that an independent catalogue site counts as media use. Kari's decision: keep under these terms, replace with a photo by NASA staff, or remove.",
+      "downloaded_from": "https://commons.wikimedia.org/wiki/File:TROPICS_Rocket_Launch_(KSC-20230507-PH-RLS01_0004-reupload).jpg"
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/electron-on-pad.webp",
+      "sha256": "e8159abd1fe2e2dfff1899d2a4da191fdc5d86d057f854807d610469d1f1fec1",
+      "bytes": 234522,
+      "credit": "Rocket Lab, via NASA",
+      "license_as_recorded": "Use with credit, per Rocket Lab's media terms",
+      "source": "https://images.nasa.gov/details/KSC-20230526-PH-RKL01_0001",
+      "used_by": [
+        "E_06"
+      ],
+      "flag": "CHECKED 2026-10-06, NOT PUBLIC DOMAIN: NASA's image library names Rocket Lab as the photographer (NASA ID KSC-20230526-PH-RKL01_0001), so the public-domain tag on Wikimedia Commons, which rests on NASA authorship, does not hold. Basis for use: Rocket Lab's gallery (https://rocketlabusa.com/gallery) states that its imagery is 'available for media download and use, and must be credited to Rocket Lab or the photographer specified in the image caption' and 'cannot be used for advertising, marketing or to imply endorsement'. Not confirmed: that this very photo is in that gallery, and that an independent catalogue site counts as media use. Kari's decision: keep under these terms, replace with a photo by NASA staff, or remove.",
+      "downloaded_from": "https://commons.wikimedia.org/wiki/File:TROPICS_Rocket_Launch_(KSC-20230526-PH-RKL01_0001).jpg"
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/electron-tropics-liftoff.webp",
+      "sha256": "2287e26520df896343c6ab76f4340c0f6aa52fac6c8303918293d9d949954748",
+      "bytes": 55576,
+      "credit": "Rocket Lab, via NASA",
+      "license_as_recorded": "Use with credit, per Rocket Lab's media terms",
+      "source": "https://images.nasa.gov/details/KSC-20230507-PH-RLS01_0001-reupload",
+      "used_by": [
+        "E_06"
+      ],
+      "flag": "CHECKED 2026-10-06, NOT PUBLIC DOMAIN: NASA's image library names Rocket Lab as the photographer (NASA ID KSC-20230507-PH-RLS01_0001-reupload), so the public-domain tag on Wikimedia Commons, which rests on NASA authorship, does not hold. Basis for use: Rocket Lab's gallery (https://rocketlabusa.com/gallery) states that its imagery is 'available for media download and use, and must be credited to Rocket Lab or the photographer specified in the image caption' and 'cannot be used for advertising, marketing or to imply endorsement'. Not confirmed: that this very photo is in that gallery, and that an independent catalogue site counts as media use. Kari's decision: keep under these terms, replace with a photo by NASA staff, or remove.",
+      "downloaded_from": "https://commons.wikimedia.org/wiki/File:TROPICS_Rocket_Launch_(KSC-20230507-PH-RLS01_0001-reupload).jpg"
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/falcon9-first-stage-landing.webp",
+      "sha256": "889c55e579e6a6201614c3edfd45bf3e77c62a3d446529797d223b4d9c552eb6",
+      "bytes": 40058,
+      "credit": "SpaceX",
+      "license_as_recorded": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:SES-10_Mission_-_Falcon_9_First_Stage_Landing_(32996435084).jpg",
+      "used_by": [
+        "E_02"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/falcon9-liftoff.webp",
+      "sha256": "e3df2b0a9a56a43c2f380fdb4f9f140fdc7e6bf2d3daeb29d859484caaaf25f4",
+      "bytes": 72514,
+      "credit": "SpaceX",
+      "license_as_recorded": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Liftoff_of_the_upgraded_Falcon_9_(1).jpg",
+      "used_by": [
+        "E_02"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/falcon9-merlin-engines-hangar.webp",
+      "sha256": "b3f26e59e1f90d9a834a3161979225b508947a8c8bee5d03ae9501cf7b402b14",
+      "bytes": 283234,
+      "credit": "SpaceX",
+      "license_as_recorded": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Falcon_9_first_stage_in_hangar;_upgraded_Merlin_engines_close-up_(24175842635).jpg",
+      "used_by": [
+        "E_02"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/falcon9-vandenberg-pad.webp",
+      "sha256": "8f30bc4a2eef35b5c4c0ba2ecb16ff2e17165d9a76526bcb9e2fe1baaa863800",
+      "bytes": 206928,
+      "credit": "SpaceX",
+      "license_as_recorded": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:2016_Falcon_9_at_Vandenberg_Air_Force_Base.jpg",
+      "used_by": [
+        "E_02"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/ion-engine-prototype-firing.webp",
+      "sha256": "f3532356b4c868ca20b3a8c4af6696bd9ded1e055986411539f8c7213c860093",
+      "bytes": 94230,
+      "credit": "NASA / JPL-Caltech",
+      "license_as_recorded": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:PIA04238.jpg",
+      "used_by": [
+        "E_09"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/kiwi-a-prime-reactor.webp",
+      "sha256": "2b63b90069f5206d4793e4b89df574485afea593e4eca4ba92c0501bc7eb8fd9",
+      "bytes": 247996,
+      "credit": "NASA",
+      "license_as_recorded": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Kiwi-A_Prime_Atomic_Reactor_-_GPN-2002-000141.jpg",
+      "used_by": [
+        "E_12"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/kiwi-b4d-workers.webp",
+      "sha256": "168174a057882123b7c6d1f081a8bdf6a41cee7ca96ae957b2fb9a8c67e23ba4",
+      "bytes": 168136,
+      "credit": "U.S. Atomic Energy Commission",
+      "license_as_recorded": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Workers_on_Kiwi_B4-D.png",
+      "used_by": [
+        "E_12"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/lasre-sr71-flight.webp",
+      "sha256": "8709e00fb58573d633cd9401c8ac1295e36dd60c6b3f4107d96c09d4d884f401",
+      "bytes": 269294,
+      "credit": "NASA / Lori Losey",
+      "license_as_recorded": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Linear_Aerospike_SR-71_Experiment_(LASRE)_first_flight_(EC97-44295-100).jpg",
+      "used_by": [
+        "E_10"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/lasre-sr71-pod.webp",
+      "sha256": "1eee73c5c5a2a29dd4d932473e7e387320ef306bbd511dae3b8428f4b4f18b3d",
+      "bytes": 202416,
+      "credit": "NASA / Tony Landis",
+      "license_as_recorded": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:SR-71_LASRE.jpg",
+      "used_by": [
+        "E_10"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/nerva-xe-test-stand.webp",
+      "sha256": "1b5d8f68e38e7db07162377e84851d2dff6abd33b455495e3ea52ba96ba4a0a2",
+      "bytes": 376792,
+      "credit": "AEC / NASA",
+      "license_as_recorded": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:XECF_-_GPN-2002-000142.jpg",
+      "used_by": [
+        "E_12"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/nerva-xe-transport.webp",
+      "sha256": "095fc7505852ac6d8a140321fde4b0a8de1243133283c22b6f0917f35718ae7e",
+      "bytes": 382328,
+      "credit": "AEC / NASA",
+      "license_as_recorded": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:NERVA_XE_nuclear_rocket_engine_being_transported_to_test_stand_-_GPN-2002-000143.jpg",
+      "used_by": [
+        "E_12"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/next-ion-thruster-firing.webp",
+      "sha256": "da452f53cc95593e9fb163fa812801b4d912cf91dac65e4704b8186dd7654fcb",
+      "bytes": 77852,
+      "credit": "NASA",
+      "license_as_recorded": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:NASA_NEXT_Ion_thruster.712983main_NEXT_LDT_Thrusterhi-res_full.jpg",
+      "used_by": [
+        "E_09"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/raptor-test-firing-2016.webp",
+      "sha256": "a0631e3ac65d0ac8cc059ec187ddd947d0bb4f82b33455be036b410325c4c156",
+      "bytes": 119468,
+      "credit": "SpaceX / Elon Musk",
+      "license_as_recorded": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Raptor-test-9-25-2016.jpg",
+      "used_by": [
+        "E_04"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/rdre-nasa-test.webp",
+      "sha256": "1fa28af3c7a7fd17c3cc8cdd283b00594cf562d70a23c0ecdbed4977a1c50211",
+      "bytes": 149640,
+      "credit": "NASA",
+      "license_as_recorded": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:NASA_RDE.jpg",
+      "used_by": [
+        "E_11"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/rs25-four-engines.webp",
+      "sha256": "d6a124aaf21154594e04a6bc2f67240100b2c7c93731f1d101759660d619cfb2",
+      "bytes": 276102,
+      "credit": "NASA",
+      "license_as_recorded": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Em1_4engines3_The_Four_RS-25_Engines_that_will_Power_SLS.jpg",
+      "used_by": [
+        "E_03"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/rs25-test-firing.webp",
+      "sha256": "bf2347ca9f3f575b19e3e06e0d261870a8c3ce1ad1fd26fa3a9c84773f83b2a6",
+      "bytes": 340866,
+      "credit": "NASA",
+      "license_as_recorded": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Shuttle_Main_Engine_Test_Firing.jpg",
+      "used_by": [
+        "E_03"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/shuttle-atlantis-sts117-aft.webp",
+      "sha256": "04da33d4beadaedb21bd99d099193f7a2ffd0b2bf32f38fda91258cc10039841",
+      "bytes": 163100,
+      "credit": "NASA",
+      "license_as_recorded": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:STS117_Atlantis_approaches_ISS2.jpg",
+      "used_by": [
+        "E_01",
+        "E_03"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/shuttle-atlantis-sts129-rollout.webp",
+      "sha256": "b59fd7ecf4740bcd96f8754e86fe3d907b4e582548e96cd0d8ce43d2cc56e5f9",
+      "bytes": 105630,
+      "credit": "NASA / Kim Shiflett",
+      "license_as_recorded": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:STS-129_Atlantis_Launch_Pad_39A_Rollout_1.jpg",
+      "used_by": [
+        "E_01"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/shuttle-columbia-sts1-launch.webp",
+      "sha256": "162ee7b9d450495a3f1ca449ab26798dff036bd2370021179aef63c8d0cf76b1",
+      "bytes": 188806,
+      "credit": "NASA",
+      "license_as_recorded": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Space_Shuttle_Columbia_launching.jpg",
+      "used_by": [
+        "E_03"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/shuttle-discovery-sts133-orbit.webp",
+      "sha256": "328cd1b6292ec39cce2158661e295f4b7d9a2d450c305517523528a7f8def247",
+      "bytes": 143362,
+      "credit": "NASA",
+      "license_as_recorded": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:STS-133_Rendezvous_Pitch_Maneuver_4.jpg",
+      "used_by": [
+        "E_01"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/shuttle-endeavour-aft.webp",
+      "sha256": "f7505183c8afa0c979cc248d5cf80cf51057d9bb066ebfa659aaa37044e67d91",
+      "bytes": 64074,
+      "credit": "NASA, composite by Raziel Abulafia",
+      "license_as_recorded": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:Space_Shuttle_Endeavour_(51134889512).png",
+      "used_by": [
+        "E_01"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/spaceshipone-nasm.webp",
+      "sha256": "5da7accf5758668a69dd213662e73924cbe845ee6f31f0fe79a460144fbe77a8",
+      "bytes": 153616,
+      "credit": "Balon Greyjoy",
+      "license_as_recorded": "CC0",
+      "source": "https://commons.wikimedia.org/wiki/File:20180410_SpaceShipOne_NASM.jpg",
+      "used_by": [
+        "E_08"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/spaceshiptwo-enterprise.webp",
+      "sha256": "71edecf7fcacce4fae9b1da502c390c57a0430c395015280b4fa0a3d2b58013f",
+      "bytes": 125258,
+      "credit": "Steve Jurvetson",
+      "license_as_recorded": "CC BY 2.0, resized",
+      "source": "https://commons.wikimedia.org/wiki/File:SpaceShip_2_VSS_Enterprise.jpg",
+      "used_by": [
+        "E_08"
+      ],
+      "flag": "CC BY 2.0: requires credit and a note of changes. Both are shown, but only in the enlarged photo view (credit line 'Credit — <author> / CC BY 2.0, resized / Source'). The thumbnail row credits the author by name only."
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/spaceshiptwo-hangar.webp",
+      "sha256": "58c95cf8b1edfdb606f66e337f71abe1914b4007aec04a6b4ee6b8a374d74a60",
+      "bytes": 119120,
+      "credit": "Steve Jurvetson",
+      "license_as_recorded": "CC BY 2.0, resized",
+      "source": "https://commons.wikimedia.org/wiki/File:Last_sight_of_Virgin_Galactic%E2%80%99s_SpaceShipTwo_(15064101403).jpg",
+      "used_by": [
+        "E_08"
+      ],
+      "flag": "CC BY 2.0: requires credit and a note of changes. Both are shown, but only in the enlarged photo view (credit line 'Credit — <author> / CC BY 2.0, resized / Source'). The thumbnail row credits the author by name only."
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/spaceshiptwo-under-whiteknighttwo.webp",
+      "sha256": "04f2663848793ade6ebeaf2c6c14827ea01f30c8ec9760186aa0c6a8796db933",
+      "bytes": 43288,
+      "credit": "Jeff Foust",
+      "license_as_recorded": "CC BY 2.0, resized",
+      "source": "https://commons.wikimedia.org/wiki/File:White_Knight_Two_and_SpaceShipTwo_from_directly_below.jpg",
+      "used_by": [
+        "E_08"
+      ],
+      "flag": "CC BY 2.0: requires credit and a note of changes. Both are shown, but only in the enlarged photo view (credit line 'Credit — <author> / CC BY 2.0, resized / Source'). The thumbnail row credits the author by name only."
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/star48-dawn-third-stage.webp",
+      "sha256": "001e05ec3a81a5ba0cbb75b6ef6a5958f733fb1afe64d40d6fe386b890a5d01f",
+      "bytes": 237002,
+      "credit": "NASA / Jim Grossmann",
+      "license_as_recorded": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Dawn_on_its_third_stage.jpg",
+      "used_by": [
+        "E_07"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/star48-ldsd-test-vehicle.webp",
+      "sha256": "7e004de8a6ae063704fc38f101d2514d4682904ee960f434685546285d2c47d5",
+      "bytes": 304750,
+      "credit": "NASA",
+      "license_as_recorded": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Low-Density_Supersonic_Decelerator_preparing_for_a_supersonic_test_PIA18006.jpg",
+      "used_by": [
+        "E_07"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/star48-parker-solar-probe.webp",
+      "sha256": "c3b4d4bdc151dbc43c57476f6cc130242cfae830cfd20abaa5b640186875a12f",
+      "bytes": 564072,
+      "credit": "NASA / Johns Hopkins APL / Ed Whitman",
+      "license_as_recorded": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Parker_Solar_Probe_mated.jpg",
+      "used_by": [
+        "E_07"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/starship-flight6-from-iss.webp",
+      "sha256": "e361b593f0135135421a0810fc07692b69de921f03a2225143286b569b08ac64",
+      "bytes": 279688,
+      "credit": "NASA",
+      "license_as_recorded": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Launch_of_SpaceX_Starship_6_rocket_seen_from_the_International_Space_Station_(iss072e220161,_cropped).jpg",
+      "used_by": [
+        "E_04"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/starship-ift5-liftoff.webp",
+      "sha256": "8efdb199ba8f727e0a10f68e47a9863e2b2fff671cdb6096e58240e333e08b8d",
+      "bytes": 65286,
+      "credit": "Steve Jurvetson",
+      "license_as_recorded": "CC BY 2.0, resized",
+      "source": "https://commons.wikimedia.org/wiki/File:Liftoff_of_SpaceX_IFT-5_(54064037095).jpg",
+      "used_by": [
+        "E_04"
+      ],
+      "flag": "CC BY 2.0: requires credit and a note of changes. Both are shown, but only in the enlarged photo view (credit line 'Credit — <author> / CC BY 2.0, resized / Source'). The thumbnail row credits the author by name only."
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/superheavy-booster-return.webp",
+      "sha256": "9849dcbbcdc079b548699c9e5914b0c124c90283f93e342600d20572ec653bca",
+      "bytes": 131770,
+      "credit": "Steve Jurvetson",
+      "license_as_recorded": "CC BY 2.0, resized",
+      "source": "https://commons.wikimedia.org/wiki/File:Starship_Booster_Return_on_Final_Approach_(54063904149).jpg",
+      "used_by": [
+        "E_04"
+      ],
+      "flag": "CC BY 2.0: requires credit and a note of changes. Both are shown, but only in the enlarged photo view (credit line 'Credit — <author> / CC BY 2.0, resized / Source'). The thumbnail row credits the author by name only."
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/xrs2200-test-firing.webp",
+      "sha256": "abda9070e1210d5de3b0fd737da1ac59e59cb6d4dee0694ecbf559b9f56e9780",
+      "bytes": 290950,
+      "credit": "NASA / Dennis Olive",
+      "license_as_recorded": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Test_Firing_of_Linear_Aerospike_Engine_-_GPN-2000-000066.jpg",
+      "used_by": [
+        "E_10"
+      ]
+    },
+    {
+      "asset": "apps/web/public/assets/rocket-engines/vehicles/xrs2200-twin-test.webp",
+      "sha256": "5f6c9b68eeda303bbaae82c4a842373d495ae12a1aac7105143d2b91932785b0",
+      "bytes": 216938,
+      "credit": "NASA Marshall Space Flight Center",
+      "license_as_recorded": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Twin_Linear_Aerospike_XRS-2200_Engine.jpg",
+      "used_by": [
+        "E_10"
+      ]
+    }
+  ]
+}

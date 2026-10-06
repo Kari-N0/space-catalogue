@@ -1,0 +1,337 @@
+{
+  "id": "rotating-detonation",
+  "title": "Rotating detonation engine",
+  "description": "In every other engine here the propellant burns as a steady flame. In this one it detonates: a supersonic shock wave travels around a ring-shaped channel without stopping, compressing and burning the propellant as it goes. That extracts more work from the same propellant, in a much shorter chamber. The hard part is building hardware that survives it.",
+  "thrust_axis": "+Z in Blender, +Y in glTF",
+  "reference": {
+    "engine": "NASA rotating detonation rocket engine (test combustor, Marshall Space Flight Center)",
+    "published": {
+      "extra": [
+        [
+          "Thrust, 2023 test",
+          "over 25.8 kN"
+        ],
+        [
+          "Burn time, 2023 test",
+          "251 s"
+        ],
+        [
+          "Chamber pressure, 2022 test",
+          "43 bar"
+        ],
+        [
+          "Material",
+          "3D-printed GRCop-42 copper alloy"
+        ],
+        [
+          "Status",
+          "Ground-tested"
+        ]
+      ]
+    },
+    "derived": {
+      "model_ring_diameter_m": 0.254,
+      "note": "no dimensions are published"
+    },
+    "note": "No dimensions are published for the test engine. The size, layout and all internal details of the model are representative, and the tanks and valves are schematic.",
+    "sources": [
+      "https://www.nasa.gov/centers/marshall/feature/nasa-validates-revolutionary-propulsion-design-for-deep-space-missions"
+    ]
+  },
+  "flow_model": {
+    "caption": "Two detonation waves race around the ring, each burning the fresh layer of propellant in front of it. The burnt gas leaves along the centre body. The waves are drawn far slower than real: a real wave travels at about 2 km/s and laps a ring this size thousands of times a second.",
+    "note": "All speeds are nominal. The number of waves varies with operating conditions; two are drawn."
+  },
+  "parts": [
+    {
+      "node": "RD_TankFuel",
+      "role": "context",
+      "title": "Fuel tank",
+      "description": "Pressurised fuel supply. Shown schematically, not to scale.",
+      "explode_offset": [
+        -0.10583,
+        0.0,
+        0.1905
+      ],
+      "explode_order": 0,
+      "materials": [
+        "M_Context_Ghost"
+      ]
+    },
+    {
+      "node": "RD_TankOxidizer",
+      "role": "context",
+      "title": "Oxidizer tank",
+      "description": "Pressurised oxidizer supply. Shown schematically, not to scale.",
+      "explode_offset": [
+        0.10583,
+        0.0,
+        0.1905
+      ],
+      "explode_order": 0,
+      "materials": [
+        "M_Context_Ghost"
+      ]
+    },
+    {
+      "node": "RD_FeedLineFuel",
+      "role": "part",
+      "title": "Fuel feed line",
+      "description": "Carries fuel from the tank to its valve.",
+      "explode_offset": [
+        -0.10583,
+        0.0,
+        0.10583
+      ],
+      "explode_order": 1,
+      "materials": [
+        "M_Line_Fuel"
+      ]
+    },
+    {
+      "node": "RD_FeedLineOxidizer",
+      "role": "part",
+      "title": "Oxidizer feed line",
+      "description": "Carries oxidizer from the tank to its valve.",
+      "explode_offset": [
+        0.10583,
+        0.0,
+        0.10583
+      ],
+      "explode_order": 1,
+      "materials": [
+        "M_Line_Oxidizer"
+      ]
+    },
+    {
+      "node": "RD_ValveFuel",
+      "role": "part",
+      "title": "Fuel valve",
+      "description": "Opens to start the fuel flow.",
+      "explode_offset": [
+        -0.16933,
+        0.0,
+        0.04233
+      ],
+      "explode_order": 2,
+      "materials": [
+        "M_Steel_Dark",
+        "M_Steel",
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "RD_ValveOxidizer",
+      "role": "part",
+      "title": "Oxidizer valve",
+      "description": "Opens to start the oxidizer flow.",
+      "explode_offset": [
+        0.16933,
+        0.0,
+        0.04233
+      ],
+      "explode_order": 2,
+      "materials": [
+        "M_Steel_Dark",
+        "M_Steel",
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "RD_InletLineFuel",
+      "role": "part",
+      "title": "Fuel inlet line",
+      "description": "Carries fuel into the injector head.",
+      "explode_offset": [
+        -0.127,
+        0.0,
+        -0.02117
+      ],
+      "explode_order": 3,
+      "materials": [
+        "M_Line_Fuel"
+      ]
+    },
+    {
+      "node": "RD_InletLineOxidizer",
+      "role": "part",
+      "title": "Oxidizer inlet line",
+      "description": "Carries oxidizer into the injector head.",
+      "explode_offset": [
+        0.127,
+        0.0,
+        -0.02117
+      ],
+      "explode_order": 3,
+      "materials": [
+        "M_Line_Oxidizer"
+      ]
+    },
+    {
+      "node": "RD_ThrustPlate",
+      "role": "part",
+      "title": "Thrust plate",
+      "description": "Bolts the engine to the test stand or vehicle.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        0.08467
+      ],
+      "explode_order": 4,
+      "materials": [
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "RD_InjectorHead",
+      "role": "part",
+      "title": "Injector head",
+      "description": "Two ring-shaped manifolds, one for each propellant, that feed the injector all the way around.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explode_order": 5,
+      "materials": [
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "RD_Bolts",
+      "role": "part",
+      "title": "Head bolts",
+      "description": "Clamp the head, injector ring and outer body together.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.0762
+      ],
+      "explode_order": 6,
+      "cut": false,
+      "materials": [
+        "M_Fastener"
+      ]
+    },
+    {
+      "node": "RD_InjectorRing",
+      "role": "part",
+      "title": "Injector ring",
+      "description": "Sprays both propellants into the ring-shaped channel through many small orifices. It must refill the channel in the instant between one wave passing and the next arriving.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.14817
+      ],
+      "explode_order": 7,
+      "materials": [
+        "M_Copper"
+      ]
+    },
+    {
+      "node": "RD_Igniter",
+      "role": "part",
+      "title": "Pre-detonator",
+      "description": "A small tube that fires a single detonation sideways into the channel to start the wave. After that the wave sustains itself.",
+      "explode_offset": [
+        0.1905,
+        0.0,
+        -0.23283
+      ],
+      "explode_order": 8,
+      "materials": [
+        "M_Steel",
+        "M_Inconel",
+        "M_Ceramic"
+      ]
+    },
+    {
+      "node": "RD_OuterBody",
+      "role": "part",
+      "title": "Outer body",
+      "description": "Outer wall of the combustion channel. The channel is a thin ring, not a hollow chamber, so the engine can be very short. NASA's test engines are 3D-printed in a copper alloy to survive the heat.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.3175
+      ],
+      "explode_order": 9,
+      "materials": [
+        "M_Copper"
+      ]
+    },
+    {
+      "node": "RD_CenterBody",
+      "role": "part",
+      "title": "Centre body",
+      "description": "Inner wall of the channel. Its tapered end acts as the nozzle: the exhaust expands along it, as on an aerospike.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.74083
+      ],
+      "explode_order": 10,
+      "materials": [
+        "M_Copper"
+      ]
+    }
+  ],
+  "flows": [
+    {
+      "node": "RD_FLOW_Detonation",
+      "medium": "detonation",
+      "color": [
+        1.0,
+        0.9,
+        1.0
+      ],
+      "length_m": 0.738,
+      "label": "Detonation wave",
+      "style": "streamlines",
+      "period_s": 0.5,
+      "lines": 14
+    },
+    {
+      "node": "RD_FLOW_Fuel",
+      "medium": "fuel",
+      "color": [
+        1.0,
+        0.35,
+        0.08
+      ],
+      "length_m": 0.909,
+      "label": null,
+      "style": "streamlines",
+      "period_s": 0.9,
+      "lines": 8
+    },
+    {
+      "node": "RD_FLOW_HotGas",
+      "medium": "hot_gas",
+      "color": [
+        1.0,
+        0.75,
+        0.3
+      ],
+      "length_m": 0.824,
+      "label": null,
+      "style": "streamlines",
+      "period_s": 0.32,
+      "lines": 28
+    },
+    {
+      "node": "RD_FLOW_Oxidizer",
+      "medium": "oxidizer",
+      "color": [
+        0.15,
+        0.45,
+        1.0
+      ],
+      "length_m": 0.966,
+      "label": null,
+      "style": "streamlines",
+      "period_s": 0.9,
+      "lines": 8
+    }
+  ]
+}
