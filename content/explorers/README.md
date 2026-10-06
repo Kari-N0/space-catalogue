@@ -35,6 +35,14 @@ Keys starting with `_` are ignored (use them for notes).
 
 The `ladder` block is left over from a removed section and is not rendered.
 
+### Notify and Contact
+
+`signup` and `contact` at the top level of the file are the "Notify" section (the email
+form) and the "Contact" section, the same two as on the concept template and with the same
+field names as in `content/concepts/<id>.json`. They sit before the sources. Leave a block
+out and its section is not drawn. The form posts to the same Buttondown list as the rest of
+the site and fires the same `Signup Completed` analytics event (Kari, 2026-10-06).
+
 ### One engine entry
 
 ```json

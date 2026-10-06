@@ -20,6 +20,8 @@
 
 /* the explorer is built from bare <button>s */
 button { font: inherit; color: inherit; background: none; border: 0; }
+/* the signup form's button keeps the concept template's height: the reset above would hand it the body's line-height */
+.notify-form button { line-height: normal; }
 
 /* the explorer section runs wider than the 1280px text container */
 .container--wide { max-width: 1760px; }

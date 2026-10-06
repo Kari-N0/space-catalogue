@@ -68,6 +68,18 @@ export interface ExplorerContent {
     intro: string;
     items: { label: string; text: string; url?: string }[];
   };
+  /** The "Notify" section with the email form, as on the concept template. Leave it out for no section. */
+  signup?: {
+    kicker: string;
+    heading_line_1: string;
+    heading_line_2: string;
+    label: string;
+    placeholder: string;
+    button: string;
+    note: string;
+  };
+  /** The "Contact" section. Leave it out (or the email empty) for no section. */
+  contact?: { label: string; email: string };
 }
 
 /* ---------------- engine manifest (Blender export) ------------------------ */
