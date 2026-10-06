@@ -84,4 +84,27 @@
   /* -- motion ------------------------------------------------------------ */
   --ease-brand: cubic-bezier(0.4, 0, 0.2, 1);
   --dur-base: 300ms;
+
+  /* -- Concept 002 (engine explorer): one colour per propellant stream ---- */
+  /* functional labelling only, drawn from the accents above where possible */
+  --flow-oxidizer: var(--chip-blue-text);
+  --flow-fuel: var(--chip-orange-text);
+  --flow-pressurant: var(--accent-live-ping);
+  --flow-hot-gas: #f5d48a;
+  --flow-fuel-warm: #fde68a;                         /* fuel after it has picked up heat in the cooling channels */
+  --flow-turbine-gas-hot: var(--chip-purple-text);   /* gas leaving the gas generator; purple keeps it apart from the fuel */
+  --flow-turbine-gas-cool: #7c5cc4;                  /* the same gas after the turbine */
+  --flow-ox-rich-gas-hot: #99f6e4;                   /* oxygen-rich preburner gas (full-flow cycle) */
+  --flow-ox-rich-gas-cool: #2dd4bf;                  /* the same gas after its turbine */
+  --flow-electric: #fde047;                          /* battery power to the pump motors (electric pump-fed cycle) */
+  --flow-xenon: #c4b5fd;                             /* neutral xenon gas (ion thruster) */
+  --flow-electrons: #86efac;                         /* neutralizer electrons */
+  --flow-ion-beam: #a5f3fc;                          /* accelerated ions */
+  --flow-ion-beam-slow: #0ea5e9;                     /* ions before the grids */
+  --flow-detonation: #ffffff;                        /* detonation front */
+  --flow-detonation-edge: #f0abfc;                   /* trailing edge of the front */
+  --flow-air-hot: #fda4af;                           /* air heated by ram compression in the intake */
+  --flow-air-cold: #e0f2fe;                          /* the same air after the precooler */
+  --flow-hot-gas-hot: #fff3cf;                       /* exhaust in the chamber */
+  --flow-hot-gas-cool: #e2502c;                      /* exhaust at the nozzle exit */
 }

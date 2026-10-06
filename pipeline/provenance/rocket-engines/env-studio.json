@@ -1,0 +1,18 @@
+{
+  "type": "reference",
+  "status": "Origin stated by Kari on 2026-10-06; licence read at the source on the same day. One point not confirmed, see open_flags.",
+  "used_for": "Image-based lighting of the 3D engine view (scene.environmentTexture in apps/web/src/explorer/engineViewer.ts)",
+  "asset": "apps/web/public/assets/rocket-engines/env/studio.env",
+  "bytes": 205260,
+  "sha256": "88639560e8e444eea5ebb15f0f97896f549f469f90afd6839f6ac9f67a40c9e1",
+  "format": "Babylon.js prefiltered environment (.env), version 1, 256 px, neutral grey studio lighting",
+  "source": "https://assets.babylonjs.com/environments/studio.env — Babylon.js's public asset server. Kari, 2026-10-06, from the record of the session that built the demo: downloaded from there in the same step as the Babylon.js library, the fonts and the logo. It is one of the ready-made lighting environments the Babylon.js team publishes; it was not made for this project and not modified.",
+  "usage_terms": "Creative Commons Attribution 4.0 International (CC BY 4.0). The asset library's repository, https://github.com/BabylonJS/Assets, states in its README: 'This work is licensed under a Creative Commons Attribution 4.0 International License' with the addition '(Unless specified otherwise in the asset folder)', and GitHub labels the repository CC-BY-4.0 (read 2026-10-06). The licence allows use and redistribution with credit.",
+  "accessed": "2026-10-03 11:51 +03:00 (file date in the demo folder); licence read 2026-10-06",
+  "credit_on_page": "Source list entry ENV_01 in content/explorers/rocket-engines.json: name of the file, Babylon.js as the author, 'unmodified', the licence, and a link to the asset library.",
+  "open_flags": [
+    "The repository's `environments` folder could not be opened from the assistant's side (GitHub does not allow automated readers there), so a folder-specific licence note could not be ruled out. Open https://github.com/BabylonJS/Assets/tree/master/environments once in a browser to confirm there is none.",
+    "The shipped file was not compared byte for byte with the one on the asset server: that server is not reachable from the assistant's workspaces.",
+    "The npm package @babylonjs/assets (a six-file subset that does not contain this file) is marked Apache-2.0, and a Babylon.js team member wrote in 2020 that playground textures are 'under Apache2 as well'. Both licences allow this use; the credit on the page meets the stricter one."
+  ]
+}

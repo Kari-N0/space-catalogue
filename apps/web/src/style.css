@@ -91,7 +91,10 @@ img { max-width: 100%; display: block; }
   line-height: 1.5; color: var(--color-text-secondary); margin-bottom: 40px;
 }
 
-.cta-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 48px; }
+/* the catalogue's contents: one row per concept, stacked at every width
+   (Kari 2026-10-05) */
+.cta-list { display: grid; gap: 16px; margin-bottom: 48px; }
+.cta-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
 /* same chip treatment as the concept page's status chip (concept.css) */
 .status-chip {
   display: inline-flex; align-items: center; gap: 6px;

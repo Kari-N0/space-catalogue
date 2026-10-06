@@ -48,6 +48,9 @@ export default defineConfig({
         mockupLanding: resolve(__dirname, "mockups/landing.html"),
         // the production concept-page template (JSON-driven; /concept/?id=<x>)
         conceptPage: resolve(__dirname, "concept/index.html"),
+        // Concept 002 — the engine explorer, a page type of its own next to the
+        // locked template (/concept/rocket-engines/; content/explorers/*.json)
+        explorerRocketEngines: resolve(__dirname, "concept/rocket-engines/index.html"),
         // static privacy notice (site chrome + article styles, no page JS)
         privacyPage: resolve(__dirname, "privacy/index.html"),
         // GitHub Pages serves dist/404.html for any unknown path

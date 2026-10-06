@@ -1,0 +1,496 @@
+{
+  "id": "nuclear-thermal",
+  "title": "Nuclear thermal engine",
+  "description": "A reactor replaces the combustion chamber. Hydrogen is pumped through a hot reactor core and expands out of the nozzle without burning anything. Because the exhaust is pure hydrogen, the lightest gas there is, it leaves about twice as fast as any chemical exhaust, so the engine needs about half the propellant for the same job.",
+  "thrust_axis": "+Z in Blender, +Y in glTF",
+  "reference": {
+    "engine": "NERVA XE Prime (ground-tested at Jackass Flats, Nevada, 1969)",
+    "published": {
+      "thrust_vac_kN": 246.7,
+      "isp_sl_s": 710,
+      "isp_vac_s": 841,
+      "propellants": "Liquid hydrogen",
+      "dry_mass_kg": 18144,
+      "length_m": 6.9,
+      "max_diameter_m": 2.59,
+      "extra": [
+        [
+          "Reactor power",
+          "1,137 MW thermal"
+        ],
+        [
+          "Status",
+          "Ground-tested, never flown"
+        ]
+      ]
+    },
+    "derived": {
+      "model_nozzle_exit_diameter_m": 2.0,
+      "assumed_expansion_ratio": 87,
+      "note": "nozzle proportions and internal layout are representative"
+    },
+    "note": "The 6.9 m length matches the published figure. The model is 2.0 m across at the nozzle, not the published 2.59 m, and its nozzle is a flight-style bell, larger than the short one used in the ground tests. The internal layout is representative.",
+    "sources": [
+      "https://en.wikipedia.org/wiki/NERVA",
+      "https://ntrs.nasa.gov/api/citations/19700004945/downloads/19700004945.pdf"
+    ]
+  },
+  "flow_model": {
+    "caption": "Nothing burns. Liquid hydrogen first cools the nozzle and the reflector, then passes down through the reactor core, where fission heats it to about 2,270 K. It leaves at about 8.2 km/s by this estimate, roughly twice the speed of the best chemical exhaust. A little hot hydrogen is bled off to drive the pump. Streak speeds are on a compressed scale.",
+    "hot_gas": {
+      "model": "1-D isentropic expansion",
+      "assumed_gamma": 1.3,
+      "assumed_chamber_temp_K": 2270.0,
+      "assumed_molar_mass_g_mol": 2.016,
+      "assumed_expansion_ratio": 87,
+      "throat_speed_ms": 3253,
+      "exit_speed_ms": 8194,
+      "exit_mach": 5.66,
+      "exit_temp_K": 391
+    }
+  },
+  "parts": [
+    {
+      "node": "NT_TankFuel",
+      "role": "context",
+      "title": "Hydrogen tank",
+      "description": "Liquid hydrogen is the only propellant. There is no oxidizer. Shown schematically, not to scale.",
+      "explode_offset": [
+        0.9,
+        0.0,
+        1.6
+      ],
+      "explode_order": 0,
+      "materials": [
+        "M_Context_Ghost"
+      ]
+    },
+    {
+      "node": "NT_FeedLine",
+      "role": "part",
+      "title": "Feed line",
+      "description": "Low-pressure liquid hydrogen from the tank to the pump.",
+      "explode_offset": [
+        0.9,
+        0.0,
+        1.1
+      ],
+      "explode_order": 1,
+      "materials": [
+        "M_Line_Fuel"
+      ]
+    },
+    {
+      "node": "NT_ThrustMount",
+      "role": "part",
+      "title": "Thrust mount",
+      "description": "Bolts the engine to the stage and carries the thrust load into its structure.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        0.6
+      ],
+      "explode_order": 2,
+      "materials": [
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "NT_Gimbal",
+      "role": "part",
+      "title": "Gimbal joint",
+      "description": "Two-axis joint that lets the whole engine swivel to steer the stage.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        0.45
+      ],
+      "explode_order": 3,
+      "materials": [
+        "M_Steel",
+        "M_Steel_Dark"
+      ]
+    },
+    {
+      "node": "NT_ThrustAdapter",
+      "role": "part",
+      "title": "Thrust adapter",
+      "description": "Transfers the thrust from the structure below into the gimbal.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        0.3
+      ],
+      "explode_order": 4,
+      "materials": [
+        "M_Titanium"
+      ]
+    },
+    {
+      "node": "NT_ActuatorPitch",
+      "role": "part",
+      "title": "Gimbal actuator",
+      "description": "Linear actuator that tilts the engine. The two actuators sit 90 degrees apart.",
+      "explode_offset": [
+        0.5,
+        0.5,
+        0.1
+      ],
+      "explode_order": 5,
+      "materials": [
+        "M_Steel_Dark",
+        "M_Chrome",
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "NT_ActuatorYaw",
+      "role": "part",
+      "title": "Gimbal actuator",
+      "description": "Linear actuator that tilts the engine. The two actuators sit 90 degrees apart.",
+      "explode_offset": [
+        -0.5,
+        0.5,
+        0.1
+      ],
+      "explode_order": 5,
+      "materials": [
+        "M_Steel_Dark",
+        "M_Chrome",
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "NT_ThrustStructure",
+      "role": "part",
+      "title": "Thrust structure",
+      "description": "Open frame of two rings and eight struts. It carries the thrust from the reactor vessel up to the gimbal, and keeps the reactor away from the stage above it.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explode_order": 6,
+      "materials": [
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "NT_Pump",
+      "role": "part",
+      "title": "Hydrogen pump",
+      "description": "Centrifugal pump that raises the liquid hydrogen to working pressure.",
+      "explode_offset": [
+        0.9,
+        0.0,
+        0.25
+      ],
+      "explode_order": 7,
+      "cut": true,
+      "materials": [
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "NT_Turbine",
+      "role": "part",
+      "title": "Turbine",
+      "description": "Driven by hot hydrogen bled from below the core, not by a burner. The used gas is dumped overboard.",
+      "explode_offset": [
+        0.9,
+        0.0,
+        -0.15
+      ],
+      "explode_order": 8,
+      "cut": true,
+      "materials": [
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "NT_PumpRotor",
+      "role": "part",
+      "title": "Turbopump rotor",
+      "description": "Pump impellers at the top and turbine wheels at the bottom, on one shaft.",
+      "explode_offset": [
+        1.7,
+        0.0,
+        0.0
+      ],
+      "explode_order": 9,
+      "spin": {
+        "axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "rev_per_s": 1.2
+      },
+      "materials": [
+        "M_Steel",
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "NT_ValveFuel",
+      "role": "part",
+      "title": "Main propellant valve",
+      "description": "Opens to send hydrogen to the cooling circuit and the core.",
+      "explode_offset": [
+        0.9,
+        0.45,
+        0.25
+      ],
+      "explode_order": 10,
+      "materials": [
+        "M_Steel_Dark",
+        "M_Steel",
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "NT_CoolantFeedLine",
+      "role": "part",
+      "title": "Coolant feed line",
+      "description": "Carries liquid hydrogen from the pump down to the manifold on the nozzle.",
+      "explode_offset": [
+        0.6,
+        0.7,
+        -0.3
+      ],
+      "explode_order": 11,
+      "materials": [
+        "M_Line_Fuel"
+      ]
+    },
+    {
+      "node": "NT_BleedLine",
+      "role": "part",
+      "title": "Hot bleed line",
+      "description": "Carries a small flow of hot hydrogen from below the core up to the turbine.",
+      "explode_offset": [
+        1.0,
+        0.0,
+        -0.6
+      ],
+      "explode_order": 12,
+      "materials": [
+        "M_Line_HotGas"
+      ]
+    },
+    {
+      "node": "NT_TurbineExhaust",
+      "role": "part",
+      "title": "Turbine exhaust",
+      "description": "Dumps the hydrogen that drove the turbine overboard through a small nozzle.",
+      "explode_offset": [
+        0.9,
+        -0.5,
+        -0.4
+      ],
+      "explode_order": 13,
+      "materials": [
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "NT_DrumActuators",
+      "role": "part",
+      "title": "Drum actuators",
+      "description": "Turn the control drums. Together they set the reactor's power.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.35
+      ],
+      "explode_order": 14,
+      "materials": [
+        "M_Steel_Dark"
+      ]
+    },
+    {
+      "node": "NT_PressureVessel",
+      "role": "part",
+      "title": "Pressure vessel",
+      "description": "Holds the reactor and the hydrogen pressure around it.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explode_order": 15,
+      "materials": [
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "NT_Shield",
+      "role": "part",
+      "title": "Radiation shield",
+      "description": "Blocks radiation from the core that would otherwise heat the propellant tank and reach the crew.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -1.75
+      ],
+      "explode_order": 16,
+      "materials": [
+        "M_Steel_Dark"
+      ]
+    },
+    {
+      "node": "NT_CoreSupportPlate",
+      "role": "part",
+      "title": "Core support plate",
+      "description": "Holds the fuel elements in place and lets the hydrogen into their channels.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -1.95
+      ],
+      "explode_order": 17,
+      "materials": [
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "NT_ReactorCore",
+      "role": "part",
+      "title": "Reactor core",
+      "description": "Hundreds of graphite fuel elements loaded with uranium, each pierced by coolant channels. Fission heats the graphite, and the hydrogen flowing through the channels carries the heat away. This replaces the combustion chamber.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -2.35
+      ],
+      "explode_order": 18,
+      "materials": [
+        "M_CarbonCarbon",
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "NT_Reflector",
+      "role": "part",
+      "title": "Reflector",
+      "description": "Beryllium sleeve that bounces escaping neutrons back into the core, so a smaller core can sustain the chain reaction.",
+      "explode_offset": [
+        1.55,
+        0.0,
+        -2.35
+      ],
+      "explode_order": 19,
+      "materials": [
+        "M_Beryllium"
+      ]
+    },
+    {
+      "node": "NT_ControlDrums",
+      "role": "part",
+      "title": "Control drums",
+      "description": "Twelve drums set into the reflector. One side of each carries a neutron absorber. Turning the absorber toward the core slows the reaction, and turning it away speeds it up.",
+      "explode_offset": [
+        -1.55,
+        0.0,
+        -2.35
+      ],
+      "explode_order": 20,
+      "materials": [
+        "M_Beryllium",
+        "M_Magnet",
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "NT_NozzleBolts",
+      "role": "part",
+      "title": "Nozzle bolts",
+      "description": "Fasten the nozzle to the bottom of the pressure vessel.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -2.45
+      ],
+      "explode_order": 21,
+      "cut": false,
+      "materials": [
+        "M_Fastener"
+      ]
+    },
+    {
+      "node": "NT_Nozzle",
+      "role": "part",
+      "title": "Nozzle",
+      "description": "Expands the hot hydrogen to very high speed. Its wall is cooled by the liquid hydrogen on its way to the core.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -2.6
+      ],
+      "explode_order": 22,
+      "materials": [
+        "M_Nickel"
+      ]
+    },
+    {
+      "node": "NT_CoolantManifold",
+      "role": "part",
+      "title": "Coolant manifold",
+      "description": "Ring on the nozzle where the liquid hydrogen enters the cooling passages.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -2.6
+      ],
+      "explode_order": 23,
+      "cut": true,
+      "materials": [
+        "M_Steel"
+      ]
+    }
+  ],
+  "flows": [
+    {
+      "node": "NT_FLOW_Bleed",
+      "medium": "turbine_gas",
+      "color": [
+        0.7,
+        0.45,
+        0.95
+      ],
+      "length_m": 6.638,
+      "label": "Hot hydrogen bleed",
+      "style": "streamlines",
+      "period_s": 0.5,
+      "lines": 4
+    },
+    {
+      "node": "NT_FLOW_HotGas",
+      "medium": "hot_gas",
+      "color": [
+        1.0,
+        0.75,
+        0.3
+      ],
+      "length_m": 6.07,
+      "label": "Heated hydrogen",
+      "style": "streamlines",
+      "period_s": 0.32,
+      "lines": 36
+    },
+    {
+      "node": "NT_FLOW_Hydrogen",
+      "medium": "fuel",
+      "color": [
+        1.0,
+        0.35,
+        0.08
+      ],
+      "length_m": 14.747,
+      "label": "Liquid hydrogen",
+      "style": "streamlines",
+      "period_s": 0.9,
+      "lines": 12
+    }
+  ]
+}

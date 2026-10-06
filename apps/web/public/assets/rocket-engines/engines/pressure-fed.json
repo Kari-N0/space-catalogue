@@ -1,0 +1,466 @@
+{
+  "id": "pressure-fed",
+  "title": "Pressure-fed engine",
+  "description": "The simplest liquid rocket cycle: high-pressure gas pushes the propellants out of the tanks and into the chamber. No pumps.",
+  "thrust_axis": "+Z in Blender, +Y in glTF",
+  "reference": {
+    "engine": "Aerojet AJ10-190 (Space Shuttle Orbital Maneuvering Engine)",
+    "published": {
+      "thrust_vac_kN": 26.7,
+      "isp_vac_s": 316,
+      "chamber_pressure_bar": 8.6,
+      "expansion_ratio": 55,
+      "mixture_ratio": 1.65,
+      "propellants": "N2O4 / MMH",
+      "dry_mass_kg": 118,
+      "length_m": 1.956,
+      "max_diameter_m": 1.168,
+      "cooling": "fuel regenerative chamber, radiation-cooled nozzle extension"
+    },
+    "derived": {
+      "throat_radius_m": 0.0775,
+      "note": "throat from exit diameter and expansion ratio; chamber, injector, head and feed layout are representative, not from drawings"
+    },
+    "sources": [
+      "https://en.wikipedia.org/wiki/Orbital_Maneuvering_System",
+      "https://ntrs.nasa.gov/api/citations/19910014943/downloads/19910014943.pdf"
+    ]
+  },
+  "flow_model": {
+    "note": "Streak speed follows local flow speed on a compressed scale: display speed = 0.22 * v^0.32 (m/s).",
+    "hot_gas": {
+      "model": "1-D isentropic expansion",
+      "assumed_gamma": 1.22,
+      "assumed_chamber_temp_K": 3000.0,
+      "assumed_molar_mass_g_mol": 21,
+      "chamber_speed_ms": 259,
+      "throat_speed_ms": 1143,
+      "exit_speed_ms": 3035,
+      "exit_mach": 4.6,
+      "exit_temp_K": 903
+    },
+    "liquids_ms": {
+      "tank": 0.05,
+      "feed_line": 6,
+      "manifold": 3,
+      "coolant_channels": 12,
+      "injector_orifices": 20,
+      "note": "nominal values, not from engine data"
+    },
+    "pressurant_ms": {
+      "lines": 15,
+      "note": "nominal"
+    }
+  },
+  "parts": [
+    {
+      "node": "PF_ThrustMount",
+      "role": "part",
+      "title": "Thrust mount",
+      "description": "Bolts the engine to the vehicle and carries the thrust load into the structure.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explode_order": 0,
+      "materials": [
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "PF_Gimbal",
+      "role": "part",
+      "title": "Gimbal joint",
+      "description": "Two-axis universal joint. Lets the whole engine swivel a few degrees so the thrust vector can steer the vehicle.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.1
+      ],
+      "explode_order": 1,
+      "materials": [
+        "M_Steel",
+        "M_Steel_Dark"
+      ]
+    },
+    {
+      "node": "PF_ThrustAdapter",
+      "role": "part",
+      "title": "Thrust adapter",
+      "description": "Short cone that transfers thrust from the injector head up into the gimbal.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.2
+      ],
+      "explode_order": 2,
+      "materials": [
+        "M_Titanium"
+      ]
+    },
+    {
+      "node": "PF_InjectorBolts",
+      "role": "part",
+      "title": "Injector bolts",
+      "description": "Clamp the dome, injector plate and chamber flange into one sealed stack.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.3
+      ],
+      "explode_order": 3,
+      "materials": [
+        "M_Fastener"
+      ]
+    },
+    {
+      "node": "PF_OxidizerDome",
+      "role": "part",
+      "title": "Oxidizer dome",
+      "description": "Manifold that spreads incoming oxidizer evenly across the back of the injector plate.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.4
+      ],
+      "explode_order": 4,
+      "materials": [
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "PF_InjectorPlate",
+      "role": "part",
+      "title": "Injector plate",
+      "description": "Sprays fuel and oxidizer through many small orifices so the streams collide, atomise and mix. The two propellants ignite on contact.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.56
+      ],
+      "explode_order": 5,
+      "materials": [
+        "M_Copper"
+      ]
+    },
+    {
+      "node": "PF_ChamberLiner",
+      "role": "part",
+      "title": "Chamber liner",
+      "description": "Inner wall of the combustion chamber. Fuel runs up the channels milled into its outside and carries the heat away before it is burned. This is regenerative cooling.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.8
+      ],
+      "explode_order": 6,
+      "materials": [
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "PF_ChamberJacket",
+      "role": "part",
+      "title": "Chamber jacket",
+      "description": "Outer shell that closes the coolant channels and holds the chamber pressure.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -1.3
+      ],
+      "explode_order": 7,
+      "materials": [
+        "M_Nickel"
+      ]
+    },
+    {
+      "node": "PF_FuelManifold",
+      "role": "part",
+      "title": "Fuel inlet manifold",
+      "description": "Ring at the aft end of the chamber. Feeds fuel into every coolant channel at once.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -1.42
+      ],
+      "explode_order": 8,
+      "materials": [
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "PF_NozzleBolts",
+      "role": "part",
+      "title": "Nozzle joint bolts",
+      "description": "Fasten the nozzle extension to the chamber exit flange.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -1.52
+      ],
+      "explode_order": 9,
+      "materials": [
+        "M_Fastener"
+      ]
+    },
+    {
+      "node": "PF_NozzleExtension",
+      "role": "part",
+      "title": "Nozzle extension",
+      "description": "Thin bell that expands the exhaust to high speed. It has no coolant: it glows hot and radiates the heat to space.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -1.66
+      ],
+      "explode_order": 10,
+      "materials": [
+        "M_Niobium"
+      ]
+    },
+    {
+      "node": "PF_ValveFuel",
+      "role": "part",
+      "title": "Fuel valve",
+      "description": "Opens to start the fuel flow. Start, stop and restart are just valve commands.",
+      "explode_offset": [
+        0.0,
+        -0.3,
+        -0.1
+      ],
+      "explode_order": 11,
+      "materials": [
+        "M_Steel_Dark",
+        "M_Steel",
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "PF_ValveOxidizer",
+      "role": "part",
+      "title": "Oxidizer valve",
+      "description": "Opens to start the oxidizer flow. Start, stop and restart are just valve commands.",
+      "explode_offset": [
+        0.3,
+        0.0,
+        -0.1
+      ],
+      "explode_order": 11,
+      "materials": [
+        "M_Steel_Dark",
+        "M_Steel",
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "PF_InletLineFuel",
+      "role": "part",
+      "title": "Fuel inlet line",
+      "description": "Carries fuel from the valve down to the manifold at the aft end of the chamber.",
+      "explode_offset": [
+        0.0,
+        -0.22,
+        -1.1
+      ],
+      "explode_order": 12,
+      "materials": [
+        "M_Line_Fuel"
+      ]
+    },
+    {
+      "node": "PF_InletLineOxidizer",
+      "role": "part",
+      "title": "Oxidizer inlet line",
+      "description": "Carries oxidizer from the valve into the dome.",
+      "explode_offset": [
+        0.18,
+        0.0,
+        -0.4
+      ],
+      "explode_order": 12,
+      "materials": [
+        "M_Line_Oxidizer"
+      ]
+    },
+    {
+      "node": "PF_ActuatorPitch",
+      "role": "part",
+      "title": "Pitch actuator",
+      "description": "Linear actuator that tilts the engine about one gimbal axis.",
+      "explode_offset": [
+        0.0,
+        0.3,
+        -0.25
+      ],
+      "explode_order": 13,
+      "materials": [
+        "M_Steel_Dark",
+        "M_Chrome",
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "PF_ActuatorYaw",
+      "role": "part",
+      "title": "Yaw actuator",
+      "description": "Linear actuator that tilts the engine about the other gimbal axis.",
+      "explode_offset": [
+        -0.3,
+        0.0,
+        -0.25
+      ],
+      "explode_order": 13,
+      "materials": [
+        "M_Steel_Dark",
+        "M_Chrome",
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "PF_FeedLineFuel",
+      "role": "part",
+      "title": "Fuel feed line",
+      "description": "Tank outlet line. The flexible bellows lets the engine gimbal without straining the pipe.",
+      "explode_offset": [
+        0.0,
+        -0.3,
+        0.08
+      ],
+      "explode_order": 14,
+      "materials": [
+        "M_Line_Fuel"
+      ]
+    },
+    {
+      "node": "PF_FeedLineOxidizer",
+      "role": "part",
+      "title": "Oxidizer feed line",
+      "description": "Tank outlet line. The flexible bellows lets the engine gimbal without straining the pipe.",
+      "explode_offset": [
+        0.3,
+        0.0,
+        0.08
+      ],
+      "explode_order": 14,
+      "materials": [
+        "M_Line_Oxidizer"
+      ]
+    },
+    {
+      "node": "PF_TankFuel",
+      "role": "context",
+      "title": "Fuel tank",
+      "description": "Must hold more pressure than the combustion chamber, because tank pressure alone drives the flow. Shown schematically, not to scale.",
+      "explode_offset": [
+        0.0,
+        -0.3,
+        0.3
+      ],
+      "explode_order": 15,
+      "materials": [
+        "M_Context_Ghost"
+      ]
+    },
+    {
+      "node": "PF_TankOxidizer",
+      "role": "context",
+      "title": "Oxidizer tank",
+      "description": "Must hold more pressure than the combustion chamber, because tank pressure alone drives the flow. Shown schematically, not to scale.",
+      "explode_offset": [
+        0.3,
+        0.0,
+        0.3
+      ],
+      "explode_order": 15,
+      "materials": [
+        "M_Context_Ghost"
+      ]
+    },
+    {
+      "node": "PF_PressurantLines",
+      "role": "part",
+      "title": "Pressurant lines",
+      "description": "Deliver regulated helium to the top of both propellant tanks.",
+      "explode_offset": [
+        0.15,
+        -0.15,
+        0.5
+      ],
+      "explode_order": 16,
+      "materials": [
+        "M_Line_Pressurant"
+      ]
+    },
+    {
+      "node": "PF_PressureRegulator",
+      "role": "part",
+      "title": "Pressure regulator",
+      "description": "Steps the helium down to a constant tank pressure, which keeps thrust steady as the tanks empty.",
+      "explode_offset": [
+        0.15,
+        -0.15,
+        0.62
+      ],
+      "explode_order": 17,
+      "materials": [
+        "M_Steel_Dark",
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "PF_HeliumTank",
+      "role": "part",
+      "title": "Helium pressurant tank",
+      "description": "High-pressure helium bottle. This stored gas is the engine's only 'pump'.",
+      "explode_offset": [
+        0.15,
+        -0.15,
+        0.78
+      ],
+      "explode_order": 18,
+      "materials": [
+        "M_Composite",
+        "M_Steel"
+      ]
+    }
+  ],
+  "flows": [
+    {
+      "node": "PF_FLOW_Fuel",
+      "medium": "fuel",
+      "color": null,
+      "length_m": 3.002,
+      "style": "streamlines",
+      "period_s": 0.9,
+      "lines": 12
+    },
+    {
+      "node": "PF_FLOW_HotGas",
+      "medium": "hot_gas",
+      "color": null,
+      "length_m": 2.08,
+      "style": "streamlines",
+      "period_s": 0.32,
+      "lines": 35
+    },
+    {
+      "node": "PF_FLOW_Oxidizer",
+      "medium": "oxidizer",
+      "color": null,
+      "length_m": 1.844,
+      "style": "streamlines",
+      "period_s": 0.9,
+      "lines": 8
+    },
+    {
+      "node": "PF_FLOW_Pressurant",
+      "medium": "pressurant",
+      "color": null,
+      "length_m": 0.778,
+      "style": "streamlines",
+      "period_s": 0.8,
+      "lines": 6
+    }
+  ]
+}

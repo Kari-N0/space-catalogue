@@ -1,0 +1,56 @@
+{
+  "asset": "hero section video + poster",
+  "status": "DRAFT. Written at integration (2026-10-04), updated 2026-10-06 for the hero cut v3 and its phone encode.",
+  "used_for": "hero.video + hero.poster_image in content/explorers/rocket-engines.json (autoplay muted loop; poster shown under it and for reduced-motion visitors). The poster is also the page's share image (og:image).",
+  "stages": [
+    {
+      "stage": "source footage",
+      "license": "NASA media — generally free to use; must not imply NASA endorsement. Credited on the page as sources VID_01–VID_03.",
+      "sources": [
+        {
+          "label": "VID_01",
+          "text": "Hero video: Apollo 11 launch, Saturn V first-stage engines filmed at 500 frames per second, 1969. NASA. Wikimedia Commons.",
+          "url": "https://commons.wikimedia.org/wiki/Special:Search?search=Apollo+11+Saturn+V+launch+500+fps&ns6=1"
+        },
+        {
+          "label": "VID_02",
+          "text": "Hero video: RS-25 engine test, NASA Stennis Space Center, 20 June 2025. NASA.",
+          "url": "https://images.nasa.gov/details/SSC_2025-06-20_RS-25_Engine_Test",
+          "note": "Link supplied by Kari on 2026-10-06 as the place the clip was downloaded from. Centre and date are read from the item's identifier (SSC = Stennis Space Center, 2025-06-20); the burnt-in timecode in the shot starts with day 171, which is 20 June. The item page itself was not read when this was written."
+        },
+        {
+          "label": "VID_03",
+          "text": "Hero video: Rotating detonation rocket engine test, NASA Marshall Space Flight Center, 27 September 2023. NASA.",
+          "url": "https://images.nasa.gov/details/PN068%20HF-12-hd%2009-27-2023"
+        }
+      ],
+      "note": "Raw clips: X:\\projects\\farsidelab\\rocket_engines\\concept-002\\assets\\hero\\source\\ (about 6.5 GB, 30+ clips, outside the repo and never to be committed). Which clip and time range each shot uses is recorded only in the edit file. VID_01's link is a Wikimedia Commons search URL, not a file page — replace it with the exact file page. Cut v3 (2026-10-06) uses three shots: the Apollo 11 footage (VID_01), an RS-25 test (VID_02) and the rotating detonation engine test (VID_03)."
+    },
+    {
+      "stage": "edit",
+      "by": "Kari",
+      "source": "Cut v3: X:\\projects\\farsidelab\\hero_v3_rs25.mp4 (18,860,524 B, sha256 5ba7f97e1e41b465a753b1da14220937ed83c158dfbd9a7f7ebeb2ee3d3735e5, written 2026-10-06 07:20 +03:00; H.264 High, 1920x1080, 29.97 fps, 510 frames, 17.0 s, about 8.9 Mbit/s, no B-frames, no audio, container tag Lavf62.12.100). Outside the repo. The first cut's edit file was rocket_engines\\concept-002\\assets\\hero\\hero_cut.blend; which edit file produced v3 is not recorded.",
+      "tool": "Blender video sequencer (assumed from the first cut and the Lavf tag); version and export settings UNKNOWN"
+    },
+    {
+      "stage": "web files",
+      "date": "2026-10-06",
+      "products": "apps/web/public/assets/rocket-engines/hero/hero_v3.mp4 (12647901 B, sha256 a3277da9a94fc222beac09fea0dd0361bb4adff98a2c2c60c2e433f7b49e12af) — H.264 High level 4.0, 1920x1080, 29.97 fps, 510 frames, 17.0 s, about 5.9 Mbit/s, no audio, index at the front of the file (fast start); apps/web/public/assets/rocket-engines/hero/hero_poster_v3.webp (48948 B, sha256 6681a3901888b24bdd11cded2c9c2e3e5c3cc451996847da9236381c12c3d090) — 1920x1080 WebP, the first frame",
+      "note": "New file names on purpose: Cloudflare caches .mp4 at the edge for a day, and a new name needs no purge. The first cut's files (hero.mp4, hero_poster.webp) were removed from the working tree in the same commit; they remain in the branch history. The files were encoded on Kari's computer on purpose: a first copy encoded in the assistant's cloud workspace and sent over arrived with a C2PA content-credentials block (claim generator Anthropic) added by the transfer channel, 5.9 KB in the mp4 and 5.8 KB in the WebP. Media files for the site should not travel through that channel; text files arrive unchanged.",
+      "by": "Claude, at Kari's request ('web-optimised, keep the quality')",
+      "tool": "ffmpeg 4.4.2 (libx264, libwebp), run on Kari's computer in the assistant's local sandbox, straight from the cut to the repository folder",
+      "command": "ffmpeg -i hero_v3_rs25.mp4 -an -c:v libx264 -preset slow -crf 22 -profile:v high -level 4.0 -pix_fmt yuv420p -g 60 -keyint_min 30 -colorspace bt709 -color_primaries bt709 -color_trc bt709 -color_range tv -movflags +faststart hero_v3.mp4 ; ffmpeg -i hero_v3_rs25.mp4 -frames:v 1 -c:v libwebp -quality 86 -compression_level 6 hero_poster_v3.webp",
+      "fidelity": "Against the cut it was made from: mean PSNR 45.7 dB, SSIM 0.990 (per shot: Apollo 50.2 dB, RS-25 43.3 dB, detonation engine 47.9 dB; lowest single frame 39.3 dB, right after the cut at 6.1 s). CRF 20 gave 16.3 MB / 47.0 dB and CRF 24 9.7 MB / 44.5 dB; 22 was the smallest that still looked identical at 2x enlargement on the hardest frames."
+    },
+    {
+      "stage": "web file for phones",
+      "date": "2026-10-06",
+      "products": "apps/web/public/assets/rocket-engines/hero/hero_v3_m.mp4 (5139096 B, sha256 acf4a3366ac645a9e86ef5b7e6f24ecb5897a06e3420d62113c3931c4f9fcd71) — H.264 High level 3.1, 1280x720, 29.97 fps, 510 frames, 17.0 s, about 2.4 Mbit/s, no audio, index at the front of the file (fast start)",
+      "note": "Served instead of hero_v3.mp4 when the page's tier rule says phone (hero.video_mobile in the content file; the same rule as the concept template's pickTier, copied into explorer/page.ts: a touch device with a small screen or little memory, or ?tier=mobile). 5.1 MB instead of 12.6 MB. The poster is shared. Encoded on Kari's computer, like the 1080p file.",
+      "by": "Claude, with Kari's go-ahead of 2026-10-06 ('a smaller hero video for phones, as Moon Base has')",
+      "tool": "ffmpeg 4.4.2 (libx264), run on Kari's computer in the assistant's local sandbox, straight from the cut",
+      "command": "ffmpeg -i hero_v3_rs25.mp4 -an -vf scale=1280:720:flags=lanczos -c:v libx264 -preset slow -crf 23 -profile:v high -level 3.1 -pix_fmt yuv420p -movflags +faststart hero_v3_m.mp4",
+      "fidelity": "Against the cut scaled to 720p: mean PSNR 42.5 dB, SSIM 0.984; lowest single frame 35.2 dB."
+    }
+  ]
+}

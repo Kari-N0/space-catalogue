@@ -1,0 +1,559 @@
+{
+  "id": "aerospike",
+  "title": "Linear aerospike engine",
+  "description": "A bell nozzle is only the right shape at one altitude. An aerospike turns the nozzle inside out: the exhaust expands along the outside of a spike, with the open air as its other wall, so it stays efficient from the ground to vacuum. The pumps and plumbing here are a gas-generator cycle. The nozzle is what is new.",
+  "thrust_axis": "+Z in Blender, +Y in glTF",
+  "reference": {
+    "engine": "Rocketdyne XRS-2200 (built for the X-33 spaceplane)",
+    "published": {
+      "thrust_sl_kN": 909,
+      "thrust_vac_kN": 1184,
+      "isp_sl_s": 339,
+      "isp_vac_s": 439,
+      "chamber_pressure_bar": 58,
+      "expansion_ratio": 58,
+      "mixture_ratio": 5.5,
+      "propellants": "LOX / LH2",
+      "length_m": 2.01,
+      "extra": [
+        [
+          "Thrust cells",
+          "20, in two banks of 10"
+        ],
+        [
+          "Status",
+          "Ground-tested, never flown"
+        ]
+      ]
+    },
+    "derived": {
+      "model_width_m": 3.4,
+      "note": "width, ramp contour and powerpack layout are representative"
+    },
+    "note": "The 2.01 m height matches the published figure. The width, ramp contour, powerpack layout and plumbing are representative.",
+    "sources": [
+      "https://en.wikipedia.org/wiki/Rocketdyne_XRS-2200",
+      "https://ntrs.nasa.gov/api/citations/19980174934/downloads/19980174934.pdf"
+    ]
+  },
+  "flow_model": {
+    "caption": "The exhaust runs down two open ramps instead of inside a bell. At low altitude the surrounding air presses it against the ramps, and at high altitude it spreads freely, so the nozzle adapts to altitude by itself. The turbine gas is bled out through the flat base to fill it in. Streak speeds are on a compressed scale.",
+    "note": "All speeds are nominal. The exhaust reaches about 4.3 km/s in vacuum, from the published specific impulse."
+  },
+  "parts": [
+    {
+      "node": "AS_TankFuel",
+      "role": "context",
+      "title": "Fuel tank",
+      "description": "Liquid hydrogen. Shown schematically, not to scale.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        1.3
+      ],
+      "explode_order": 0,
+      "materials": [
+        "M_Context_Ghost"
+      ]
+    },
+    {
+      "node": "AS_TankOxidizer",
+      "role": "context",
+      "title": "Oxidizer tank",
+      "description": "Liquid oxygen. Shown schematically, not to scale.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        1.3
+      ],
+      "explode_order": 0,
+      "materials": [
+        "M_Context_Ghost"
+      ]
+    },
+    {
+      "node": "AS_FeedLineFuel",
+      "role": "part",
+      "title": "Fuel feed line",
+      "description": "Low-pressure liquid hydrogen from the tank to the pump inlet.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        0.85
+      ],
+      "explode_order": 1,
+      "materials": [
+        "M_Line_Fuel"
+      ]
+    },
+    {
+      "node": "AS_FeedLineOxidizer",
+      "role": "part",
+      "title": "Oxidizer feed line",
+      "description": "Low-pressure liquid oxygen from the tank to the pump inlet.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        0.85
+      ],
+      "explode_order": 1,
+      "materials": [
+        "M_Line_Oxidizer"
+      ]
+    },
+    {
+      "node": "AS_ThrustFrame",
+      "role": "part",
+      "title": "Thrust frame",
+      "description": "Carries the thrust of both cell banks into the vehicle. There is no gimbal: the engine steers by throttling one bank against the other.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        0.5
+      ],
+      "explode_order": 2,
+      "materials": [
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "AS_ManifoldOxidizerLeft",
+      "role": "part",
+      "title": "Oxidizer manifold",
+      "description": "Distributes liquid oxygen along one bank of thrust cells.",
+      "explode_offset": [
+        -1.35,
+        0.0,
+        0.45
+      ],
+      "explode_order": 3,
+      "cut": true,
+      "materials": [
+        "M_Line_Oxidizer"
+      ]
+    },
+    {
+      "node": "AS_ManifoldOxidizerRight",
+      "role": "part",
+      "title": "Oxidizer manifold",
+      "description": "Distributes liquid oxygen along one bank of thrust cells.",
+      "explode_offset": [
+        1.35,
+        0.0,
+        0.45
+      ],
+      "explode_order": 3,
+      "cut": true,
+      "materials": [
+        "M_Line_Oxidizer"
+      ]
+    },
+    {
+      "node": "AS_ManifoldFuelLeft",
+      "role": "part",
+      "title": "Fuel manifold",
+      "description": "Distributes hydrogen along one bank of thrust cells.",
+      "explode_offset": [
+        -1.65,
+        0.0,
+        0.0
+      ],
+      "explode_order": 4,
+      "cut": true,
+      "materials": [
+        "M_Line_Fuel"
+      ]
+    },
+    {
+      "node": "AS_ManifoldFuelRight",
+      "role": "part",
+      "title": "Fuel manifold",
+      "description": "Distributes hydrogen along one bank of thrust cells.",
+      "explode_offset": [
+        1.65,
+        0.0,
+        0.0
+      ],
+      "explode_order": 4,
+      "cut": true,
+      "materials": [
+        "M_Line_Fuel"
+      ]
+    },
+    {
+      "node": "AS_ThrustCellsLeft",
+      "role": "part",
+      "title": "Thrust cells",
+      "description": "The second bank of ten. Throttling one bank against the other tilts the thrust and steers the vehicle.",
+      "explode_offset": [
+        -0.95,
+        0.0,
+        0.15
+      ],
+      "explode_order": 5,
+      "cut": true,
+      "materials": [
+        "M_Nickel",
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "AS_ThrustCellsRight",
+      "role": "part",
+      "title": "Thrust cells",
+      "description": "Ten small combustion chambers in a row. Instead of one large chamber, an aerospike has many small ones firing along the top edge of the ramp.",
+      "explode_offset": [
+        0.95,
+        0.0,
+        0.15
+      ],
+      "explode_order": 5,
+      "cut": true,
+      "materials": [
+        "M_Nickel",
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "AS_RampLeft",
+      "role": "part",
+      "title": "Nozzle ramp",
+      "description": "The second half of the spike. Together the two ramps form a wedge, cut short at the bottom to save weight.",
+      "explode_offset": [
+        -0.55,
+        0.0,
+        -0.35
+      ],
+      "explode_order": 6,
+      "cut": true,
+      "materials": [
+        "M_Copper"
+      ]
+    },
+    {
+      "node": "AS_RampRight",
+      "role": "part",
+      "title": "Nozzle ramp",
+      "description": "One half of the spike. The exhaust expands against this curved, cooled wall. The other side of the exhaust is open to the air, which is what lets the nozzle adapt to altitude.",
+      "explode_offset": [
+        0.55,
+        0.0,
+        -0.35
+      ],
+      "explode_order": 6,
+      "cut": true,
+      "materials": [
+        "M_Copper"
+      ]
+    },
+    {
+      "node": "AS_EndFenceBack",
+      "role": "part",
+      "title": "End fence",
+      "description": "Closes the end of the wedge so the exhaust cannot spill sideways.",
+      "explode_offset": [
+        0.0,
+        0.9,
+        0.0
+      ],
+      "explode_order": 7,
+      "materials": [
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "AS_EndFenceFront",
+      "role": "part",
+      "title": "End fence",
+      "description": "Closes the end of the wedge so the exhaust cannot spill sideways.",
+      "explode_offset": [
+        0.0,
+        -0.9,
+        0.0
+      ],
+      "explode_order": 7,
+      "materials": [
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "AS_FuelLines",
+      "role": "part",
+      "title": "High-pressure fuel lines",
+      "description": "Carry hydrogen from the pump out to both fuel manifolds.",
+      "explode_offset": [
+        0.0,
+        -0.45,
+        0.25
+      ],
+      "explode_order": 8,
+      "cut": true,
+      "materials": [
+        "M_Line_Fuel"
+      ]
+    },
+    {
+      "node": "AS_ValvesFuel",
+      "role": "part",
+      "title": "Main fuel valves",
+      "description": "One per bank, so each bank of cells can be throttled separately.",
+      "explode_offset": [
+        0.0,
+        -0.45,
+        0.25
+      ],
+      "explode_order": 8,
+      "cut": true,
+      "materials": [
+        "M_Steel_Dark",
+        "M_Steel",
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "AS_OxidizerLines",
+      "role": "part",
+      "title": "High-pressure oxidizer lines",
+      "description": "Carry liquid oxygen from the pump out to both oxidizer manifolds.",
+      "explode_offset": [
+        0.0,
+        0.45,
+        0.25
+      ],
+      "explode_order": 9,
+      "materials": [
+        "M_Line_Oxidizer"
+      ]
+    },
+    {
+      "node": "AS_ValvesOxidizer",
+      "role": "part",
+      "title": "Main oxidizer valves",
+      "description": "One per bank, so each bank of cells can be throttled separately.",
+      "explode_offset": [
+        0.0,
+        0.45,
+        0.25
+      ],
+      "explode_order": 9,
+      "materials": [
+        "M_Steel_Dark",
+        "M_Steel",
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "AS_PumpFuel",
+      "role": "part",
+      "title": "Fuel pump",
+      "description": "Hydrogen turbopump, housed inside the wedge between the two ramps.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explode_order": 10,
+      "materials": [
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "AS_PumpOxidizer",
+      "role": "part",
+      "title": "Oxidizer pump",
+      "description": "Liquid oxygen turbopump, also inside the wedge.",
+      "explode_offset": [
+        0.0,
+        0.35,
+        0.0
+      ],
+      "explode_order": 10,
+      "materials": [
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "AS_TurbineFuel",
+      "role": "part",
+      "title": "Fuel pump turbine",
+      "description": "Driven by gas from the gas generator, as in a gas-generator engine.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.4
+      ],
+      "explode_order": 11,
+      "materials": [
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "AS_TurbineOxidizer",
+      "role": "part",
+      "title": "Oxidizer pump turbine",
+      "description": "Driven by the same gas after it has passed the fuel turbine.",
+      "explode_offset": [
+        0.0,
+        0.35,
+        -0.35
+      ],
+      "explode_order": 11,
+      "materials": [
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "AS_RotorFuel",
+      "role": "part",
+      "title": "Fuel turbopump rotor",
+      "description": "Pump stages at the top and turbine wheels at the bottom, on one shaft.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -1.35
+      ],
+      "explode_order": 12,
+      "cut": false,
+      "spin": {
+        "axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "rev_per_s": 1.2
+      },
+      "materials": [
+        "M_Steel",
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "AS_RotorOxidizer",
+      "role": "part",
+      "title": "Oxidizer turbopump rotor",
+      "description": "Pump impeller at the top and turbine wheels at the bottom, on one shaft.",
+      "explode_offset": [
+        0.0,
+        0.35,
+        -1.2
+      ],
+      "explode_order": 12,
+      "spin": {
+        "axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "rev_per_s": -0.9
+      },
+      "materials": [
+        "M_Steel",
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "AS_GasGenerator",
+      "role": "part",
+      "title": "Gas generator",
+      "description": "A small burner that makes the hot gas for both turbines.",
+      "explode_offset": [
+        0.0,
+        -0.55,
+        -0.3
+      ],
+      "explode_order": 13,
+      "materials": [
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "AS_TurbineDucts",
+      "role": "part",
+      "title": "Turbine gas ducts",
+      "description": "Lead the gas from one turbine to the next and then down to the base of the wedge.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.65
+      ],
+      "explode_order": 14,
+      "materials": [
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "AS_BasePlate",
+      "role": "part",
+      "title": "Base plate",
+      "description": "The flat bottom of the cut-off spike. The used turbine gas is bled out through it, which raises the pressure there and recovers part of the thrust the missing tip would have given.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -1.95
+      ],
+      "explode_order": 15,
+      "materials": [
+        "M_Inconel",
+        "M_Steel_Dark"
+      ]
+    }
+  ],
+  "flows": [
+    {
+      "node": "AS_FLOW_Fuel",
+      "medium": "fuel",
+      "color": [
+        1.0,
+        0.35,
+        0.08
+      ],
+      "length_m": 8.259,
+      "label": null,
+      "style": "streamlines",
+      "period_s": 0.9,
+      "lines": 10
+    },
+    {
+      "node": "AS_FLOW_HotGas",
+      "medium": "hot_gas",
+      "color": [
+        1.0,
+        0.75,
+        0.3
+      ],
+      "length_m": 3.044,
+      "label": null,
+      "style": "streamlines",
+      "period_s": 0.32,
+      "lines": 40
+    },
+    {
+      "node": "AS_FLOW_Oxidizer",
+      "medium": "oxidizer",
+      "color": [
+        0.15,
+        0.45,
+        1.0
+      ],
+      "length_m": 6.126,
+      "label": null,
+      "style": "streamlines",
+      "period_s": 0.9,
+      "lines": 10
+    },
+    {
+      "node": "AS_FLOW_TurbineGas",
+      "medium": "turbine_gas",
+      "color": [
+        0.7,
+        0.45,
+        0.95
+      ],
+      "length_m": 6.9,
+      "label": null,
+      "style": "streamlines",
+      "period_s": 0.5,
+      "lines": 6
+    }
+  ]
+}

@@ -1,0 +1,298 @@
+{
+  "id": "hybrid",
+  "title": "Hybrid rocket motor",
+  "description": "Solid fuel, liquid oxidizer. The fuel grain sits in the case like a solid motor's, but it contains no oxidizer, so it only burns while oxidizer is sprayed over it. One valve starts, throttles and stops the motor. Safer than a solid and simpler than a liquid engine, but less efficient than either.",
+  "thrust_axis": "+Z in Blender, +Y in glTF",
+  "reference": {
+    "engine": "RocketMotorTwo (Virgin Galactic SpaceShipTwo)",
+    "published": {
+      "propellants": "Nitrous oxide / HTPB rubber",
+      "extra": [
+        [
+          "Thrust",
+          "310 kN"
+        ],
+        [
+          "Burn time",
+          "60 s"
+        ]
+      ]
+    },
+    "derived": {
+      "model_length_m": 5.4,
+      "model_tank_diameter_m": 1.1,
+      "assumed_expansion_ratio": 10.1,
+      "note": "no dimensions are published"
+    },
+    "note": "No dimensions are published for this motor. The size, proportions and every internal detail of the model are representative.",
+    "sources": [
+      "https://en.wikipedia.org/wiki/RocketMotorTwo",
+      "https://www.sncorp.com/press-releases/snc-hybrid-rocket-spaceshiptwo/"
+    ]
+  },
+  "flow_model": {
+    "note": "Streak speed follows local flow speed on a compressed scale. Speeds inside the tank, valve and fuel port are nominal values.",
+    "hot_gas": {
+      "model": "1-D isentropic expansion",
+      "assumed_gamma": 1.24,
+      "assumed_chamber_temp_K": 3300.0,
+      "assumed_molar_mass_g_mol": 26.0,
+      "assumed_expansion_ratio": 10.1,
+      "throat_speed_ms": 1081,
+      "exit_speed_ms": 2518,
+      "exit_mach": 3.4,
+      "exit_temp_K": 1381
+    }
+  },
+  "parts": [
+    {
+      "node": "HY_FillVent",
+      "role": "part",
+      "title": "Fill and vent fitting",
+      "description": "Used to load the oxidizer before flight and to vent it afterwards.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        2.7
+      ],
+      "explode_order": 0,
+      "cut": true,
+      "materials": [
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "HY_OxidizerTank",
+      "role": "part",
+      "title": "Oxidizer tank",
+      "description": "Holds liquid nitrous oxide. Nitrous oxide's own vapour pressure pushes it out, so the motor needs no pump and no separate pressurant.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        2.3
+      ],
+      "explode_order": 1,
+      "materials": [
+        "M_Composite_Grey"
+      ]
+    },
+    {
+      "node": "HY_ThrustFlange",
+      "role": "part",
+      "title": "Thrust flange",
+      "description": "Ring around the tank that passes the thrust into the vehicle's structure. This motor has no gimbal.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        1.75
+      ],
+      "explode_order": 2,
+      "materials": [
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "HY_ThrustSkirt",
+      "role": "part",
+      "title": "Thrust skirt",
+      "description": "Joins the fuel case to the tank and carries the thrust forward. The openings give access to the valve.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        1.3
+      ],
+      "explode_order": 3,
+      "cut": true,
+      "materials": [
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "HY_ValveOxidizer",
+      "role": "part",
+      "title": "Main oxidizer valve",
+      "description": "The motor's throttle and off switch. Closing it stops the oxidizer, and the fire goes out. A solid motor cannot do this.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        0.95
+      ],
+      "explode_order": 4,
+      "cut": true,
+      "materials": [
+        "M_Steel_Dark",
+        "M_Steel",
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "HY_Injector",
+      "role": "part",
+      "title": "Injector",
+      "description": "Sprays the liquid oxidizer into the front of the fuel port.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        0.62
+      ],
+      "explode_order": 5,
+      "materials": [
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "HY_Igniters",
+      "role": "part",
+      "title": "Igniters",
+      "description": "Small pyrotechnic igniters that light the fuel surface as the oxidizer begins to flow.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        0.42
+      ],
+      "explode_order": 6,
+      "cut": false,
+      "materials": [
+        "M_Steel",
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "HY_CaseBolts",
+      "role": "part",
+      "title": "Case bolts",
+      "description": "Fasten the injector and thrust skirt to the front of the fuel case.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        0.2
+      ],
+      "explode_order": 7,
+      "cut": false,
+      "materials": [
+        "M_Fastener"
+      ]
+    },
+    {
+      "node": "HY_Case",
+      "role": "part",
+      "title": "Fuel case",
+      "description": "Composite tube that holds the fuel grain and the combustion pressure. Like a solid motor, the case is the combustion chamber.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explode_order": 8,
+      "materials": [
+        "M_Composite"
+      ]
+    },
+    {
+      "node": "HY_Insulation",
+      "role": "part",
+      "title": "Insulation",
+      "description": "Liner that protects the case as the fuel burns away toward it.",
+      "explode_offset": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "explode_order": 9,
+      "materials": [
+        "M_Insulation"
+      ]
+    },
+    {
+      "node": "HY_Grain",
+      "role": "part",
+      "title": "Fuel grain",
+      "description": "Solid rubber fuel, with no oxidizer mixed in. On its own it cannot burn, which makes it safe to handle. It burns only where oxidizer flows over the surface of the port.",
+      "explode_offset": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "explode_order": 10,
+      "materials": [
+        "M_FuelGrain"
+      ]
+    },
+    {
+      "node": "HY_NozzleBolts",
+      "role": "part",
+      "title": "Nozzle bolts",
+      "description": "Fasten the nozzle to the aft end of the case.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.25
+      ],
+      "explode_order": 11,
+      "cut": false,
+      "materials": [
+        "M_Fastener"
+      ]
+    },
+    {
+      "node": "HY_Throat",
+      "role": "part",
+      "title": "Nozzle throat",
+      "description": "Uncooled throat of carbon material. It survives the flame for the length of the burn.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -0.5
+      ],
+      "explode_order": 12,
+      "materials": [
+        "M_CarbonCarbon"
+      ]
+    },
+    {
+      "node": "HY_ExitCone",
+      "role": "part",
+      "title": "Exit cone",
+      "description": "Composite cone that expands the exhaust to high speed.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "explode_order": 13,
+      "materials": [
+        "M_Composite"
+      ]
+    }
+  ],
+  "flows": [
+    {
+      "node": "HY_FLOW_HotGas",
+      "medium": "hot_gas",
+      "color": [
+        1.0,
+        0.75,
+        0.3
+      ],
+      "length_m": 3.153,
+      "label": null,
+      "style": "streamlines",
+      "period_s": 0.32,
+      "lines": 42
+    },
+    {
+      "node": "HY_FLOW_Oxidizer",
+      "medium": "oxidizer",
+      "color": [
+        0.15,
+        0.45,
+        1.0
+      ],
+      "length_m": 3.189,
+      "label": null,
+      "style": "streamlines",
+      "period_s": 0.9,
+      "lines": 10
+    }
+  ]
+}

@@ -156,6 +156,38 @@ a:hover { color: var(--color-text-emphasis); }
 }
 .nav-lockup span { color: var(--color-text-secondary); }
 
+/* button back to the landing page, which lists the catalogue's concepts
+   (Kari 2026-10-05: "put the Catalog button in the header"). Secondary pill
+   per BRAND §5, sized for the nav. The auto margin keeps it beside the
+   lockup while the credit keeps the right edge. */
+.nav-catalogue {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 auto 0 20px;
+  font-family: var(--font-body);
+  font-size: var(--text-kicker);
+  font-weight: var(--weight-medium);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--color-text-emphasis);
+  border: 1px solid var(--hairline-strong);
+  border-radius: var(--radius-pill);
+  padding: 6px 14px;
+  transition: border-color var(--dur-base) var(--ease-brand);
+}
+.nav-catalogue:hover { border-color: var(--color-text-emphasis); }
+/* phones: no room for the word beside the full credit (kept per Kari
+   2026-07-27), so the button shrinks to its arrow; the word stays there
+   for screen readers. Below 350px not even the arrow fits. */
+@media (max-width: 639px) {
+  .nav-catalogue { margin-left: 8px; padding: 0; width: 28px; height: 28px; justify-content: center; gap: 0; }
+  .nav-catalogue-text { position: absolute; width: 1px; height: 1px; clip-path: inset(50%); overflow: hidden; white-space: nowrap; }
+}
+@media (max-width: 349px) {
+  .nav-catalogue { display: none; }
+}
+
 .vidro-credit {
   display: inline-flex;
   align-items: center;

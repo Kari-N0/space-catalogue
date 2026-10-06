@@ -1,0 +1,463 @@
+{
+  "id": "air-breathing",
+  "title": "Air-breathing rocket engine",
+  "description": "Most of a rocket's lift-off weight is oxygen. This engine takes its oxygen from the air for the first part of the climb, to about five times the speed of sound, then switches to a tank of liquid oxygen and continues as a rocket. One engine does both jobs, which is what a spaceplane that takes off from a runway would need.",
+  "thrust_axis": "+Z in Blender, +Y in glTF",
+  "reference": {
+    "engine": "SABRE (Reaction Engines, United Kingdom; never completed)",
+    "published": {
+      "propellants": "LH2 + air, then LOX",
+      "extra": [
+        [
+          "Specific impulse, air-breathing",
+          "3,600 s"
+        ],
+        [
+          "Specific impulse, rocket",
+          "460 s"
+        ],
+        [
+          "Air-breathing limit",
+          "about Mach 5.4"
+        ],
+        [
+          "Status",
+          "Design concept. Precooler tested 2019"
+        ]
+      ]
+    },
+    "derived": {
+      "model_length_m": 7.0,
+      "model_diameter_m": 1.6,
+      "note": "no dimensions from the real design are used"
+    },
+    "note": "This is a representative layout of the published concept, not the real design. Its size, proportions and every internal detail are my own.",
+    "sources": [
+      "https://en.wikipedia.org/wiki/SABRE_(rocket_engine)",
+      "https://reactionengines.co.uk/about/sabre/"
+    ]
+  },
+  "flow_model": {
+    "caption": "Air-breathing mode. Air rammed into the intake is far too hot to compress, so it is first chilled in the precooler, in a fraction of a second. A closed loop of helium carries that heat away, drives the compressor with it, and hands it to the cold hydrogen fuel. Above about Mach 5 the intake closes and the same chambers burn liquid oxygen from a tank. Streak speeds are on a compressed scale.",
+    "note": "All speeds are nominal.",
+    "variants": [
+      {
+        "id": "air",
+        "label": "Air-breathing",
+        "caption": "Air-breathing mode, from the runway to about Mach 5. Air rammed into the intake is far too hot to compress, so it is first chilled in the precooler, in a fraction of a second. A closed loop of helium carries that heat away, drives the compressor with it, and hands it to the cold hydrogen fuel. Streak speeds are on a compressed scale."
+      },
+      {
+        "id": "rocket",
+        "label": "Rocket",
+        "caption": "Rocket mode, above about Mach 5. The intake is closed and no air enters. Liquid oxygen from its tank takes the place of the air, and the same four chambers burn it with hydrogen as an ordinary rocket would. The helium loop is not drawn in this mode. Streak speeds are on a compressed scale."
+      }
+    ]
+  },
+  "parts": [
+    {
+      "node": "AB_TankFuel",
+      "role": "context",
+      "title": "Hydrogen tank",
+      "description": "Liquid hydrogen: the fuel in both modes, and the cold sink that makes the precooler possible. Shown schematically, not to scale.",
+      "explode_offset": [
+        1.2,
+        0.0,
+        0.0
+      ],
+      "explode_order": 0,
+      "materials": [
+        "M_Context_Ghost"
+      ]
+    },
+    {
+      "node": "AB_TankOxidizer",
+      "role": "context",
+      "title": "Oxygen tank",
+      "description": "Liquid oxygen, used only in rocket mode, once the air is too thin to breathe. Shown schematically, not to scale.",
+      "explode_offset": [
+        -1.2,
+        0.0,
+        0.0
+      ],
+      "explode_order": 0,
+      "materials": [
+        "M_Context_Ghost"
+      ]
+    },
+    {
+      "node": "AB_FeedLineFuel",
+      "role": "part",
+      "title": "Hydrogen feed line",
+      "description": "Liquid hydrogen from the tank to the pump.",
+      "explode_offset": [
+        0.9,
+        0.0,
+        0.0
+      ],
+      "explode_order": 1,
+      "materials": [
+        "M_Line_Fuel"
+      ]
+    },
+    {
+      "node": "AB_FeedLineOxidizer",
+      "role": "part",
+      "title": "Oxygen feed line",
+      "description": "Liquid oxygen from the tank to the pump. It flows only in rocket mode.",
+      "explode_offset": [
+        -0.9,
+        0.0,
+        0.0
+      ],
+      "explode_order": 1,
+      "materials": [
+        "M_Line_Oxidizer"
+      ]
+    },
+    {
+      "node": "AB_NacelleLower",
+      "role": "part",
+      "title": "Nacelle",
+      "description": "Outer shell of the engine. The space between it and the core is a bypass duct: air the core cannot use flows through it and is burned at the back for extra thrust.",
+      "explode_offset": [
+        1.1,
+        0.0,
+        0.0
+      ],
+      "explode_order": 2,
+      "cut": true,
+      "materials": [
+        "M_Composite_Grey"
+      ]
+    },
+    {
+      "node": "AB_NacelleUpper",
+      "role": "part",
+      "title": "Nacelle",
+      "description": "The other half of the outer shell.",
+      "explode_offset": [
+        -1.1,
+        0.0,
+        0.0
+      ],
+      "explode_order": 2,
+      "cut": true,
+      "materials": [
+        "M_Composite_Grey"
+      ]
+    },
+    {
+      "node": "AB_IntakeCone",
+      "role": "part",
+      "title": "Intake cone",
+      "description": "Slows the incoming air from several times the speed of sound to below it. It moves to adjust the intake, and closes it completely for rocket mode.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        1.2
+      ],
+      "explode_order": 3,
+      "materials": [
+        "M_Titanium"
+      ]
+    },
+    {
+      "node": "AB_Precooler",
+      "role": "part",
+      "title": "Precooler",
+      "description": "The part that makes the engine possible: a drum of thousands of hair-thin tubes carrying cold helium. Air flows inward through it and is cooled from about 1,000 °C in a fraction of a second, so that it can be compressed.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        0.5
+      ],
+      "explode_order": 4,
+      "materials": [
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "AB_Compressor",
+      "role": "part",
+      "title": "Air compressor",
+      "description": "Compresses the chilled air to rocket chamber pressure, so the engine can burn it in place of liquid oxygen.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explode_order": 5,
+      "materials": [
+        "M_Titanium"
+      ]
+    },
+    {
+      "node": "AB_CompressorRotor",
+      "role": "part",
+      "title": "Compressor rotor",
+      "description": "Compressor blades at the front, and at the back a turbine spun by the hot helium coming from the precooler.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -1.75
+      ],
+      "explode_order": 6,
+      "cut": false,
+      "spin": {
+        "axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "rev_per_s": 1.3
+      },
+      "materials": [
+        "M_Titanium",
+        "M_Line_Helium"
+      ]
+    },
+    {
+      "node": "AB_HeliumLoop",
+      "role": "part",
+      "title": "Helium loop",
+      "description": "A closed circuit that carries heat from the precooler to the hydrogen. The helium never leaves the engine. It is used because hydrogen itself would make the precooler's metal brittle.",
+      "explode_offset": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "explode_order": 7,
+      "materials": [
+        "M_Line_Helium"
+      ]
+    },
+    {
+      "node": "AB_HeliumCirculator",
+      "role": "part",
+      "title": "Helium circulator",
+      "description": "Pumps the helium around its loop.",
+      "explode_offset": [
+        -0.6,
+        -0.6,
+        0.0
+      ],
+      "explode_order": 8,
+      "materials": [
+        "M_Steel_Dark"
+      ]
+    },
+    {
+      "node": "AB_PumpFuel",
+      "role": "part",
+      "title": "Hydrogen pump",
+      "description": "Raises the liquid hydrogen to working pressure.",
+      "explode_offset": [
+        0.45,
+        0.0,
+        0.0
+      ],
+      "explode_order": 9,
+      "materials": [
+        "M_Aluminium"
+      ]
+    },
+    {
+      "node": "AB_PumpOxidizer",
+      "role": "part",
+      "title": "Oxygen pump",
+      "description": "Raises the liquid oxygen to chamber pressure in rocket mode.",
+      "explode_offset": [
+        -0.45,
+        0.0,
+        0.0
+      ],
+      "explode_order": 9,
+      "materials": [
+        "M_Steel"
+      ]
+    },
+    {
+      "node": "AB_FuelLine",
+      "role": "part",
+      "title": "Hydrogen line",
+      "description": "Carries hydrogen from the pump to the heat exchanger.",
+      "explode_offset": [
+        0.45,
+        0.0,
+        -1.0
+      ],
+      "explode_order": 10,
+      "materials": [
+        "M_Line_Fuel"
+      ]
+    },
+    {
+      "node": "AB_HeatExchanger",
+      "role": "part",
+      "title": "Helium heat exchanger",
+      "description": "Where the helium hands its heat to the cold hydrogen, ready to return to the precooler.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -2.3
+      ],
+      "explode_order": 11,
+      "materials": [
+        "M_Copper"
+      ]
+    },
+    {
+      "node": "AB_Preburner",
+      "role": "part",
+      "title": "Preburner",
+      "description": "Burns some hydrogen with air to top up the helium's heat when the precooler alone does not supply enough.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -2.3
+      ],
+      "explode_order": 12,
+      "materials": [
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "AB_BypassBurners",
+      "role": "part",
+      "title": "Bypass burners",
+      "description": "Burn hydrogen in the surplus air flowing around the core, like a ramjet.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -2.7
+      ],
+      "explode_order": 13,
+      "materials": [
+        "M_Inconel"
+      ]
+    },
+    {
+      "node": "AB_OxidizerManifold",
+      "role": "part",
+      "title": "Oxygen manifold",
+      "description": "Feeds liquid oxygen to the four chambers in rocket mode.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -3.05
+      ],
+      "explode_order": 14,
+      "cut": true,
+      "materials": [
+        "M_Line_Oxidizer"
+      ]
+    },
+    {
+      "node": "AB_ThrustChambers",
+      "role": "part",
+      "title": "Thrust chambers",
+      "description": "Four rocket chambers used in both modes. They burn hydrogen with compressed air in the atmosphere, and with liquid oxygen above it.",
+      "explode_offset": [
+        0.0,
+        0.0,
+        -3.45
+      ],
+      "explode_order": 15,
+      "materials": [
+        "M_Nickel"
+      ]
+    }
+  ],
+  "flows": [
+    {
+      "node": "AB_FLOW_Air",
+      "medium": "air",
+      "color": [
+        0.8,
+        0.86,
+        0.92
+      ],
+      "length_m": 8.065,
+      "label": "Air",
+      "variant": "air",
+      "style": "streamlines",
+      "period_s": 0.6,
+      "lines": 24
+    },
+    {
+      "node": "AB_FLOW_Helium",
+      "medium": "pressurant",
+      "color": [
+        0.2,
+        0.8,
+        0.45
+      ],
+      "length_m": 11.333,
+      "label": "Helium loop",
+      "variant": "air",
+      "style": "streamlines",
+      "period_s": 0.5,
+      "lines": 2
+    },
+    {
+      "node": "AB_FLOW_HotGas",
+      "medium": "hot_gas",
+      "color": [
+        1.0,
+        0.75,
+        0.3
+      ],
+      "length_m": 2.523,
+      "label": null,
+      "variant": null,
+      "style": "streamlines",
+      "period_s": 0.32,
+      "lines": 32
+    },
+    {
+      "node": "AB_FLOW_Hydrogen",
+      "medium": "fuel",
+      "color": [
+        1.0,
+        0.35,
+        0.08
+      ],
+      "length_m": 4.83,
+      "label": "Hydrogen",
+      "variant": "air",
+      "style": "streamlines",
+      "period_s": 0.9,
+      "lines": 6
+    },
+    {
+      "node": "AB_FLOW_HydrogenRocket",
+      "medium": "fuel",
+      "color": [
+        1.0,
+        0.35,
+        0.08
+      ],
+      "length_m": 4.845,
+      "label": "Hydrogen",
+      "variant": "rocket",
+      "style": "streamlines",
+      "period_s": 0.9,
+      "lines": 8
+    },
+    {
+      "node": "AB_FLOW_Oxidizer",
+      "medium": "oxidizer",
+      "color": [
+        0.15,
+        0.45,
+        1.0
+      ],
+      "length_m": 4.383,
+      "label": "Liquid oxygen",
+      "variant": "rocket",
+      "style": "streamlines",
+      "period_s": 0.9,
+      "lines": 8
+    }
+  ]
+}
