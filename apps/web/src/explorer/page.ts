@@ -63,6 +63,53 @@ function trackEvent(name: string): void {
   (window as { plausible?: (event: string) => void }).plausible?.(name);
 }
 
+// Buttondown embed-subscribe endpoint, the same public form address the concept template and the landing page
+// post to (no secret involved; double opt-in is configured on the account).
+const BUTTONDOWN_SUBSCRIBE_URL = "https://buttondown.com/api/emails/embed-subscribe/FarsideLab";
+
+/**
+ * The signup form. Behaviour and wording are a copy of the concept template's (catalogue/page.ts renderSignup):
+ * keep the two in step by hand. Copied, not imported, for the same reason as isPhoneTier below: an import from
+ * the template's code makes the bundler re-split the shared chunks of the whole site.
+ */
+function wireSignup(): void {
+  const form = $opt<HTMLFormElement>(".notify-form");
+  const fieldset = form?.querySelector("fieldset");
+  const input = form?.querySelector<HTMLInputElement>("#notify-email");
+  const status = $opt(".notify-status");
+  if (!form || !fieldset || !input || !status) return;
+  const say = (msg: string): void => {
+    status.textContent = msg;
+    status.hidden = msg === "";
+  };
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const email = input.value.trim();
+    // input[type=email] validity + a basic shape check; server re-validates
+    if (email === "" || !input.checkValidity() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      say("That doesn't look like a valid email address — please check it.");
+      return;
+    }
+    fieldset.disabled = true;
+    say("Sending…");
+    void fetch(BUTTONDOWN_SUBSCRIBE_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ email }),
+    })
+      .then(() => {
+        trackEvent("Signup Completed");
+        // No res.ok branch on purpose (enumeration protection, CLAUDE.md): the answer never reveals whether an
+        // address is on the list. The fieldset stays disabled, so every outcome ends in the same state.
+        say("Thanks — if this address isn't already on the list, a confirmation email is on its way. One click and you're in.");
+      })
+      .catch(() => {
+        say("Network error — nothing was sent. Please try again.");
+        fieldset.disabled = false;
+      });
+  });
+}
+
 interface State {
   content: ExplorerContent | null;
   engine: EngineDef | null;
@@ -121,6 +168,7 @@ async function init(): Promise<void> {
   document.title = `${content.page_title} · FarsideLab`;
   $("#footer-label").textContent = content.footer_label;
   $("#app").innerHTML = renderPage(content);
+  wireSignup();
   const poster = $opt(".hero-poster");
   if (poster) poster.addEventListener("error", () => poster.remove());
   // autoplay can be denied (iOS Low Power Mode, data saver) — a paused video
@@ -209,6 +257,30 @@ function renderPage(c: ExplorerContent): string {
   // the hero status chip is optional: no `hero.status` in the content file, no chip
   const statusChip = c.hero.status ? `<span class="status-chip"><span class="dot" aria-hidden="true"></span>${esc(c.hero.status)}</span>` : "";
 
+  // "Notify" and "Contact": the same two sections as on the concept template (catalogue/page.ts renderSignup
+  // and renderContact), same markup and classes so concept.css styles them identically, in the same place:
+  // before the sources. Written without whitespace between tags, like the template's DOM.
+  const signup = c.signup
+    ? `<section class="notify" aria-labelledby="notify-heading"><div class="container">` +
+      `<span class="kicker">${esc(c.signup.kicker)}</span>` +
+      `<h2 class="notify-title" id="notify-heading">${esc(c.signup.heading_line_1)}<span class="tone-2">${esc(c.signup.heading_line_2)}</span></h2>` +
+      `<form class="notify-form" action="${BUTTONDOWN_SUBSCRIBE_URL}" method="post"><fieldset>` +
+      `<label for="notify-email">${esc(c.signup.label)}</label>` +
+      `<div class="field-row"><input type="email" id="notify-email" name="email" placeholder="${esc(c.signup.placeholder)}" autocomplete="email" required>` +
+      `<button class="pill-primary" type="submit">${esc(c.signup.button)}</button></div>` +
+      `</fieldset></form>` +
+      `<p class="notify-note notify-status" aria-live="polite" hidden></p>` +
+      `<p class="notify-note">${esc(c.signup.note)}</p>` +
+      `</div></section>`
+    : "";
+  const contact =
+    c.contact && c.contact.email
+      ? `<section class="section" aria-labelledby="kicker-contact"><div class="container">` +
+        `<div class="section-head"><span class="kicker" id="kicker-contact">${esc(c.contact.label)}</span></div>` +
+        `<a class="contact-link" href="mailto:${esc(c.contact.email)}">${esc(c.contact.email)}<span class="contact-arrow">→</span></a>` +
+        `</div></section>`
+      : "";
+
   return `
   <section class="hero">
     ${poster ? `<img class="hero-poster" src="${poster}" alt="" aria-hidden="true">` : ""}
@@ -263,6 +335,7 @@ function renderPage(c: ExplorerContent): string {
     </div>
   </section>
 
+  ${signup}${contact}
   <section class="section" aria-labelledby="kicker-sources">
     <div class="container">
       <div class="section-head"><h2 class="kicker" id="kicker-sources">${esc(c.sources.heading)}</h2></div>

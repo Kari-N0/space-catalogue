@@ -763,5 +763,18 @@
         "url": "https://github.com/BabylonJS/Assets"
       }
     ]
+  },
+  "signup": {
+    "kicker": "Notify",
+    "heading_line_1": "Follow the",
+    "heading_line_2": "New Concepts",
+    "label": "Email Address",
+    "placeholder": "you@example.com",
+    "button": "Notify Me",
+    "note": "One email when a new concept or update goes live. Nothing else."
+  },
+  "contact": {
+    "label": "Contact",
+    "email": "kari.nojd@vidro.fi"
   }
 }
