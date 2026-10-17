@@ -161,7 +161,7 @@ export interface PageDoc {
     note: string;
   };
   /** Contact band under the signup (vidro.fi treatment); empty email = section omitted. */
-  contact: { label: string; email: string };
+  contact: { label: string; email: string; text: string };
   footer_label: string;
 }
 
@@ -418,6 +418,8 @@ export function parseConceptPage(raw: unknown): ConceptPage {
     contact: {
       label: str(obj(c.contact).label, "Contact"),
       email: str(obj(c.contact).email),
+      // optional paragraph above the email link ("" = none)
+      text: str(obj(c.contact).text, ""),
     },
     signup: {
       kicker: str(signup.kicker, "Notify"),

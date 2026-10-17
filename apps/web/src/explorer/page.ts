@@ -279,6 +279,7 @@ function renderPage(c: ExplorerContent): string {
     c.contact && c.contact.email
       ? `<section class="section" aria-labelledby="kicker-contact"><div class="container">` +
         `<div class="section-head"><span class="kicker" id="kicker-contact">${esc(c.contact.label)}</span></div>` +
+        (c.contact.text ? `<p class="sources-intro">${esc(c.contact.text)}</p>` : "") +
         `<a class="contact-link" href="mailto:${esc(c.contact.email)}">${esc(c.contact.email)}<span class="contact-arrow">→</span></a>` +
         `</div></section>`
       : "";
