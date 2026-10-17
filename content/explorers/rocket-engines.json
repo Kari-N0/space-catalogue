@@ -20,7 +20,7 @@
     "groups": [
       {
         "id": "today",
-        "title": "Flying today"
+        "title": "Flown"
       },
       {
         "id": "future",
@@ -134,7 +134,7 @@
         "group": "today",
         "title": "Staged combustion",
         "summary": "The turbine gas is not thrown away. Two preburners drive the pumps, and their exhaust flows on into the main chamber and burns there.",
-        "description": "That allows much higher pressure and the best efficiency of any chemical engine.",
+        "description": "That allows much higher chamber pressure than a gas generator. Both RS-25 preburners run fuel-rich; kerosene engines such as the RD-180 run oxygen-rich instead, because burning kerosene fuel-rich leaves soot on the turbine.",
         "reference_engine": "Aerojet Rocketdyne RS-25",
         "status": "live",
         "model": "assets/rocket-engines/engines/staged-combustion_d.glb",
@@ -387,7 +387,7 @@
         "group": "today",
         "title": "Hybrid motor",
         "summary": "A solid fuel grain burned with a liquid or gaseous oxidizer. The grain sits in the case like a solid motor's, but it contains no oxidizer, so it only burns while oxidizer is sprayed over it.",
-        "description": "One valve starts, throttles and stops the motor. Safer than a solid and simpler than a liquid engine, but less efficient than either.",
+        "description": "One valve starts, throttles and stops the motor. Safer than a solid and simpler than a liquid engine, but usually less efficient than a liquid engine.",
         "reference_engine": "RocketMotorTwo",
         "status": "live",
         "model": "assets/rocket-engines/engines/hybrid_d.glb",
@@ -437,7 +437,7 @@
         "group": "today",
         "title": "Ion thruster",
         "summary": "No combustion at all. Electricity ionises the xenon propellant by stripping electrons from its atoms, and an electric field between two grids fires the ions out at about 40 km/s.",
-        "description": "The thrust is tiny, about the weight of a few sheets of paper, but the efficiency is very high: the thruster uses propellant ten times more sparingly than any chemical engine. It can run for years.",
+        "description": "The thrust is tiny, about the weight of a few sheets of paper, but the efficiency is very high: the thruster uses propellant about nine times more sparingly than the best chemical engines. It can run for years.",
         "reference_engine": "NASA NEXT-C",
         "status": "live",
         "model": "assets/rocket-engines/engines/ion_d.glb",
@@ -457,7 +457,7 @@
             {
               "src": "assets/rocket-engines/vehicles/dart-spacecraft-cleanroom.webp",
               "alt": "The DART spacecraft being lowered onto a work stand by technicians in a clean room",
-              "caption": "The DART spacecraft before launch, October 2021. It carried a NEXT-C thruster, the first to fly in space.",
+              "caption": "The DART spacecraft before launch, October 2021. It carried the first NEXT-C thruster to fly in space.",
               "credit": "USSF 30th Space Wing / Aaron Taubman, via NASA",
               "license": "Public domain",
               "source_url": "https://commons.wikimedia.org/wiki/File:51619406234_b05ef2464f_o_Dart_Spacecraft_Launch_Configuration.jpg"
@@ -536,7 +536,7 @@
         "ref": "E_11",
         "group": "future",
         "title": "Rotating detonation",
-        "summary": "In every other engine here the propellant burns as a steady flame. In this one it detonates: a supersonic shock wave travels around a ring-shaped channel without stopping, compressing and burning the propellant as it goes.",
+        "summary": "In the other combustion engines here, the propellant burns as a steady flame. In this one it detonates: a supersonic shock wave travels around a ring-shaped channel without stopping, compressing and burning the propellant as it goes.",
         "description": "That extracts more work from the same propellant, in a much shorter chamber. The hard part is building hardware that survives it.",
         "reference_engine": "NASA RDRE test combustor",
         "status": "live",
@@ -562,7 +562,7 @@
         "ref": "E_12",
         "group": "future",
         "title": "Nuclear thermal",
-        "summary": "A fission reactor replaces the combustion chamber. Hydrogen is pumped through the hot reactor core, which heats it directly, and expands out of the nozzle without burning anything.",
+        "summary": "A fission reactor replaces the combustion chamber, so there is no injector. Hydrogen is pumped through the hot reactor core, which heats it directly, and expands out of the nozzle without burning anything.",
         "description": "Because the exhaust is pure hydrogen, the lightest gas there is, it leaves about twice as fast as any chemical exhaust. That makes the engine roughly twice as efficient as the best chemical engines, so it needs about half the propellant for the same job.",
         "reference_engine": "NERVA XE Prime",
         "status": "live",
@@ -775,6 +775,7 @@
   },
   "contact": {
     "label": "Contact",
+    "text": "Bringing space and aerospace concepts to life with technical precision and interactive design. Available for freelance projects, mission visualizations, and custom viewers like this one:",
     "email": "kari.nojd@vidro.fi"
   }
 }

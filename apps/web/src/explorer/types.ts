@@ -79,7 +79,7 @@ export interface ExplorerContent {
     note: string;
   };
   /** The "Contact" section. Leave it out (or the email empty) for no section. */
-  contact?: { label: string; email: string };
+  contact?: { label: string; email: string; text?: string };
 }
 
 /* ---------------- engine manifest (Blender export) ------------------------ */

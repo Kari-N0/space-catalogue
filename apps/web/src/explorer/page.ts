@@ -169,6 +169,8 @@ async function init(): Promise<void> {
   $("#footer-label").textContent = content.footer_label;
   $("#app").innerHTML = renderPage(content);
   wireSignup();
+  // analytics goal "Contact Click" (same definition as the concept template)
+  $opt(".contact-link")?.addEventListener("click", () => trackEvent("Contact Click"));
   const poster = $opt(".hero-poster");
   if (poster) poster.addEventListener("error", () => poster.remove());
   // autoplay can be denied (iOS Low Power Mode, data saver) — a paused video
@@ -277,6 +279,7 @@ function renderPage(c: ExplorerContent): string {
     c.contact && c.contact.email
       ? `<section class="section" aria-labelledby="kicker-contact"><div class="container">` +
         `<div class="section-head"><span class="kicker" id="kicker-contact">${esc(c.contact.label)}</span></div>` +
+        (c.contact.text ? `<p class="sources-intro">${esc(c.contact.text)}</p>` : "") +
         `<a class="contact-link" href="mailto:${esc(c.contact.email)}">${esc(c.contact.email)}<span class="contact-arrow">→</span></a>` +
         `</div></section>`
       : "";

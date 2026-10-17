@@ -1,7 +1,7 @@
 {
   "id": "nuclear-thermal",
   "title": "Nuclear thermal engine",
-  "description": "A reactor replaces the combustion chamber. Hydrogen is pumped through a hot reactor core and expands out of the nozzle without burning anything. Because the exhaust is pure hydrogen, the lightest gas there is, it leaves about twice as fast as any chemical exhaust, so the engine needs about half the propellant for the same job.",
+  "description": "A reactor replaces the combustion chamber, so there is no injector. Hydrogen is pumped through a hot reactor core and expands out of the nozzle without burning anything. Because the exhaust is pure hydrogen, the lightest gas there is, it leaves about twice as fast as any chemical exhaust, so the engine needs about half the propellant for the same job.",
   "thrust_axis": "+Z in Blender, +Y in glTF",
   "reference": {
     "engine": "NERVA XE Prime (ground-tested at Jackass Flats, Nevada, 1969)",

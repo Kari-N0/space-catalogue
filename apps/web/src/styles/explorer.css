@@ -40,8 +40,8 @@ button { font: inherit; color: inherit; background: none; border: 0; }
     linear-gradient(to right, rgba(3, 3, 4, .75) 0%, transparent 60%);
 }
 
-/* sources: left-aligned intro, and rows may carry links */
-.sources-intro { margin: 0 0 24px; }
+/* sources: intro laid out as on Concept 001 (centred block, left-aligned lines; Kari 2026-10-17), and rows may carry links */
+.sources-intro { margin: 0 auto 24px; }
 .source-row a { text-decoration: underline; text-underline-offset: 3px; }
 
 /* -- 2. the explorer (verbatim from the approved demo) ------------------- */

@@ -1,7 +1,7 @@
 {
   "id": "ion",
   "title": "Gridded ion thruster",
-  "description": "No combustion at all. Electricity strips electrons from xenon atoms, and an electric field between two grids fires the ions out at about 40 km/s. The thrust is tiny, about the weight of a few sheets of paper, but it uses propellant ten times more sparingly than any chemical engine and can run for years.",
+  "description": "No combustion at all. Electricity strips electrons from xenon atoms, and an electric field between two grids fires the ions out at about 40 km/s. The thrust is tiny, about the weight of a few sheets of paper, but it uses propellant about nine times more sparingly than the best chemical engines and can run for years.",
   "thrust_axis": "+Z in Blender, +Y in glTF",
   "reference": {
     "engine": "NASA NEXT-C (flown on the DART spacecraft)",
@@ -44,7 +44,7 @@
     ]
   },
   "flow_model": {
-    "caption": "Xenon gas drifts slowly into the chamber, is ionised there, and is flung out through the grids at about 40 km/s, more than ten times faster than any chemical exhaust. Streak speeds are on a compressed scale.",
+    "caption": "Xenon gas drifts slowly into the chamber, is ionised there, and is flung out through the grids at about 40 km/s, roughly nine times faster than the best chemical exhaust. Streak speeds are on a compressed scale.",
     "note": "Xenon and electron speeds are nominal. Ion speed follows from the published specific impulse.",
     "ion_exit_speed_ms": 41000
   },

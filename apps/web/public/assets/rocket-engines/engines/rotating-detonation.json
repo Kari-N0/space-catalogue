@@ -1,7 +1,7 @@
 {
   "id": "rotating-detonation",
   "title": "Rotating detonation engine",
-  "description": "In every other engine here the propellant burns as a steady flame. In this one it detonates: a supersonic shock wave travels around a ring-shaped channel without stopping, compressing and burning the propellant as it goes. That extracts more work from the same propellant, in a much shorter chamber. The hard part is building hardware that survives it.",
+  "description": "In the other combustion engines here, the propellant burns as a steady flame. In this one it detonates: a supersonic shock wave travels around a ring-shaped channel without stopping, compressing and burning the propellant as it goes. That extracts more work from the same propellant, in a much shorter chamber. The hard part is building hardware that survives it.",
   "thrust_axis": "+Z in Blender, +Y in glTF",
   "reference": {
     "engine": "NASA rotating detonation rocket engine (test combustor, Marshall Space Flight Center)",
