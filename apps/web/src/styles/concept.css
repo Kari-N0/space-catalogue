@@ -831,6 +831,8 @@ a:hover { color: var(--color-text-emphasis); }
 /* -- contact band (vidro.fi treatment: kicker + large mailto with arrow;
       centered per Kari 2026-07-27) -- */
 section[aria-labelledby="kicker-contact"] .container { text-align: center; }
+/* paragraph above the email: same box as .sources-intro, lines left-aligned like it (Kari 2026-10-17) */
+section[aria-labelledby="kicker-contact"] .sources-intro { text-align: left; margin-left: auto; margin-right: auto; }
 .contact-link {
   display: inline-flex;
   align-items: baseline;
