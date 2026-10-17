@@ -322,7 +322,6 @@ function renderContact(data: ConceptPage): HTMLElement | null {
   // vidro.fi contact treatment: uppercase tracked kicker + large mailto with a
   // trailing arrow (BRAND.md §5 secondary-action language)
   const { root, container } = section("kicker-contact", contact.label);
-  if (contact.text) container.appendChild(el("p", "sources-intro", contact.text));
   const link = el("a", "contact-link", contact.email);
   link.href = `mailto:${contact.email}`;
   link.append(el("span", "contact-arrow", "→"));
