@@ -1,7 +1,7 @@
 {
   "id": "staged-combustion",
   "title": "Staged-combustion engine",
-  "description": "The turbine gas is not thrown away. Two preburners drive the pumps, and their exhaust flows on into the main chamber and burns there. That allows very high pressure and the best efficiency of any chemical engine.",
+  "description": "The turbine gas is not thrown away. Two preburners drive the pumps, and their exhaust flows on into the main chamber and burns there. That allows much higher chamber pressure than a gas generator. Both RS-25 preburners run fuel-rich; kerosene engines such as the RD-180 run oxygen-rich instead, because burning kerosene fuel-rich leaves soot on the turbine.",
   "thrust_axis": "+Z in Blender, +Y in glTF",
   "reference": {
     "engine": "Aerojet Rocketdyne RS-25 (Space Shuttle Main Engine, now on the Space Launch System)",
@@ -261,7 +261,7 @@
       "node": "SC_PreburnerFuel",
       "role": "part",
       "title": "Fuel preburner",
-      "description": "Burns most of the hydrogen with a little oxygen. The gas is hydrogen-rich and only moderately hot, which the turbine below it can survive.",
+      "description": "Burns a little oxygen in a large flow of hydrogen. Only a small part of the hydrogen reacts, so the gas stays hydrogen-rich and only moderately hot, which the turbine below it can survive.",
       "explode_offset": [
         0.9,
         0.0,

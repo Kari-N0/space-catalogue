@@ -1,7 +1,7 @@
 {
   "id": "hybrid",
   "title": "Hybrid rocket motor",
-  "description": "Solid fuel, liquid oxidizer. The fuel grain sits in the case like a solid motor's, but it contains no oxidizer, so it only burns while oxidizer is sprayed over it. One valve starts, throttles and stops the motor. Safer than a solid and simpler than a liquid engine, but less efficient than either.",
+  "description": "Solid fuel, liquid oxidizer. The fuel grain sits in the case like a solid motor's, but it contains no oxidizer, so it only burns while oxidizer is sprayed over it. One valve starts, throttles and stops the motor. Safer than a solid and simpler than a liquid engine, but usually less efficient than a liquid engine.",
   "thrust_axis": "+Z in Blender, +Y in glTF",
   "reference": {
     "engine": "RocketMotorTwo (Virgin Galactic SpaceShipTwo)",

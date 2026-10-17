@@ -123,7 +123,7 @@
       "node": "FF_PreburnerOxidizer",
       "role": "part",
       "title": "Oxygen-rich preburner",
-      "description": "Burns nearly all of the oxygen with a little fuel. The result is hot, oxygen-rich gas, which is what makes this cycle 'full flow'.",
+      "description": "Burns a little methane in nearly all of the oxygen, so the gas is oxygen-rich and only moderately hot. Running the oxygen through its own preburner and turbine is what makes this cycle 'full flow'.",
       "explode_offset": [
         0.0,
         0.0,
@@ -269,7 +269,7 @@
       "node": "FF_ChamberJacket",
       "role": "part",
       "title": "Chamber jacket",
-      "description": "Outer shell that closes the coolant channels and holds the chamber pressure: 300 bar, the highest of any engine in service.",
+      "description": "Outer shell that closes the coolant channels and holds the chamber pressure: about 300 bar in the Raptor 2, among the highest of any rocket engine.",
       "explode_offset": [
         0.0,
         0.0,
@@ -329,7 +329,7 @@
       "node": "FF_PreburnerFuel",
       "role": "part",
       "title": "Fuel-rich preburner",
-      "description": "Burns nearly all of the methane with a little oxygen. The fuel-rich gas drives the fuel pump's turbine.",
+      "description": "Burns a little oxygen in nearly all of the methane. The fuel-rich gas drives the fuel pump's turbine.",
       "explode_offset": [
         0.8,
         0.0,
